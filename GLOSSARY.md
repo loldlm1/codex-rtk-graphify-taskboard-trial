@@ -5,5 +5,5 @@
 - **Board**: all saved tasks, including an intentionally empty list.
 - **Starter**: runnable application state before the saved-status-view change.
 - **Task contract**: fixed behavior, exclusions, and acceptance for one selected task.
-- **Status view**: the future selection of All statuses or one existing status.
+- **Status view**: the selection of All statuses or one existing status.
   Changing a view changes visibility, not stored tasks or task status.
