@@ -140,15 +140,28 @@ and Canvas `a4031c0da42d95f97d3b2e0fed4bdbcd76dd3087`. All mutation proofs used
 sacrificial worktrees. Baseline graphs had 88 nodes/146 edges and 104/174,
 respectively. Both answered real stdio node/search queries with verified source
 locations. The native coordinator answered web `loadTasks()` at
-`src/storage.ts L6`; its actual fresh child answered Canvas `GameController`
+`src/storage.ts L6`; its newly spawned child thread answered Canvas `GameController`
 at `src/controller.ts L14`, using separate graph servers/output directories.
 The child's process cwd remained web and its explicit Canvas server/project_path
-selected Canvas correctly. No application implementation took place.
+selected Canvas correctly. The child inherited parent history: the spawn supplied
+only `task_name` and `message`, and the child source retains copied parent context.
+This is not evidence of a fresh-context worker. No application implementation took
+place.
 
 For each fixture, a harmless exported sentinel in an uncommitted edit was refused
-as stale. Touching the old graph caused the raw upstream server to reload but did
-not reveal the new source symbol. A fresh rebuild returned its exact source and
-line. A branch switch at the same commit was refused until rebuilt. A separate
+as stale. The original raw-reload logs instead contain `graph.json not found`
+routing errors, despite upstream returning `isError=false`; their broad not-found
+assertion was invalid. Those failed logs remain preserved and are excluded from
+the reload claim. A corrected direct stdio diagnostic used new sacrificial copies
+of both starters and each server's exact default graph, omitting `project_path`.
+The known `loadTasks()` / `GameController` control succeeded at the source locations
+above. After adding an uncommitted harmless sentinel, touching the old graph changed
+its mtime while preserving its bytes and SHA256. The same raw server still answered
+the control and returned the exact successful no-match response for the sentinel.
+A fresh code-only rebuild in that same worktree then returned the sentinel at
+`src/storage.ts L28` / `src/controller.ts L49`, while the control still succeeded.
+The [projection](graphify-preflight-v1.json) records corrected evidence digests.
+A branch switch at the same commit was refused until rebuilt. A separate
 worktree initially lacked the symbol, used a distinct output directory, then
 refused its old graph after fast-forward integration; rebuilding returned the
 integrated symbol. Queries directed to another worktree were refused.
@@ -156,7 +169,8 @@ integrated symbol. Queries directed to another worktree were refused.
 Native 0.167.0 produced four actual MCP tool calls across one coordinator and one
 child. Ordinary turn-context metadata recorded gpt-6.1-sol/ultra for both, with no
 spawn model/effort overrides; this preflight observation is separate from #16's
-child xhigh observation. Keep measured-arm policy frozen and audit actual settings.
+child xhigh observation. #22 and the measured arms retain their fresh-worker and
+frozen child xhigh requirements; audit actual settings before those runs.
 Native proof usage was 175,750 coordinator + 90,081 child = 265,831 tokens. This
 is a native-proof subset; the complete shared-B allocation also includes outer
 research/setup/test/review/retry usage and is owned by the central usage registry.

@@ -55,6 +55,26 @@
         "branch_switch_refused": true,
         "separate_worktree_output": true,
         "integration_stale_refused": true
+      },
+      "raw_reload_corrected_proof": {
+        "known_symbol": "loadTasks",
+        "known_symbol_line": 6,
+        "sentinel": "spec13RawReloadWebEvidence",
+        "sentinel_source": "src/storage.ts",
+        "sentinel_line": 28,
+        "selected_configured_default_graph": true,
+        "project_path_omitted": true,
+        "same_raw_server_through_touch_and_rebuild": true,
+        "control_before_touch_after_touch_and_after_rebuild": true,
+        "old_graph_sha256_before_touch": "6520cc8c10b58bf3ef418b923cf7f78aeff7116e3a78d423e3fe64bada3b713a",
+        "old_graph_sha256_after_touch": "6520cc8c10b58bf3ef418b923cf7f78aeff7116e3a78d423e3fe64bada3b713a",
+        "old_graph_bytes": 51125,
+        "mtime_changed": true,
+        "sentinel_after_touch": "No node matching 'spec13RawReloadWebEvidence' found.",
+        "fresh_graph_sha256": "5603b66bc14aabab8fca8767d0e7e96896080d2494b212103467d72d728eb4c9",
+        "fresh_rebuild_exact_source_and_line": true,
+        "wire_log_sha256": "244f722d52035ec70b4355a9f5a28cff85aad6502eda62b44c31274bf615d591",
+        "original_failed_wire_log_sha256": "6d5c9ae022ef5acff06bfce330cff92e31074ee30c570bd722a3619cf6fd281e"
       }
     },
     {
@@ -75,6 +95,26 @@
         "branch_switch_refused": true,
         "separate_worktree_output": true,
         "integration_stale_refused": true
+      },
+      "raw_reload_corrected_proof": {
+        "known_symbol": "GameController",
+        "known_symbol_line": 14,
+        "sentinel": "spec13RawReloadCanvasEvidence",
+        "sentinel_source": "src/controller.ts",
+        "sentinel_line": 49,
+        "selected_configured_default_graph": true,
+        "project_path_omitted": true,
+        "same_raw_server_through_touch_and_rebuild": true,
+        "control_before_touch_after_touch_and_after_rebuild": true,
+        "old_graph_sha256_before_touch": "ce795816af51f2bb97388c11a3e65cfeed6eb153ef891ac226cbbc226384f8f1",
+        "old_graph_sha256_after_touch": "ce795816af51f2bb97388c11a3e65cfeed6eb153ef891ac226cbbc226384f8f1",
+        "old_graph_bytes": 64401,
+        "mtime_changed": true,
+        "sentinel_after_touch": "No node matching 'spec13RawReloadCanvasEvidence' found.",
+        "fresh_graph_sha256": "4304aa2f8ba0eacc76f9a46f8a1c48a506b5e4f81929391fd4bededca1f703dd",
+        "fresh_rebuild_exact_source_and_line": true,
+        "wire_log_sha256": "4267c03c66eddcb7941e3e39a71f298faf8a117b033c5bf608e74050933ce6fd",
+        "original_failed_wire_log_sha256": "c12c2dea538e2b909d0763b39c80cb240b2d1c65f65df819bca837ffd1488e91"
       }
     }
   ],
@@ -86,7 +126,6 @@
     "actual_child_effort": "ultra",
     "spawn_model_or_effort_overrides": false,
     "coordinator_count": 1,
-    "fresh_child_count": 1,
     "actual_mcp_calls": 4,
     "coordinator_source": "src/storage.ts L6",
     "child_source": "src/controller.ts L14",
@@ -100,7 +139,12 @@
       "reasoning_output_tokens": 209,
       "total_tokens": 265831
     },
-    "complete_cost": "Central registry owns all outer/native setup, retry/review costs and fixed half allocation to each B; subset is not the complete preflight total"
+    "complete_cost": "Central registry owns all outer/native setup, retry/review costs and fixed half allocation to each B; subset is not the complete preflight total",
+    "actual_spawned_child_count": 1,
+    "child_inherited_parent_history": true,
+    "fresh_context_claim": false,
+    "context_provenance": "Newly spawned child thread with inherited parent history; spawn supplied only task_name/message",
+    "future_worker_policy": "Fresh workers and frozen child xhigh remain required for #22 and measured arms; audit actual metadata"
   },
   "reproduction": {
     "fresh_second_prefix_install_from_hashlock": true,
@@ -156,6 +200,17 @@
     "token_budget is not a strict cap; Canvas 500 preference returned approximately 655 with notice",
     "No large-corpus, other-OS or upstream branch-coverage claim",
     "Actual preflight child ultra differs from earlier baseline child xhigh observation; measured settings remain frozen and must be audited",
-    "Outer disk-full-era partial usage rows remain private and require central reconciliation before a complete allocation claim"
-  ]
+    "Outer disk-full-era partial usage rows remain private and require central reconciliation before a complete allocation claim",
+    "Native child inherited parent context; this preflight does not prove a fresh-context worker"
+  ],
+  "evidence_correction": {
+    "original_raw_reload_evidence": "Preserved routing failures: project_path selected absent fixture graph; upstream isError=false did not establish success; broad not-found predicate invalid",
+    "original_raw_reload_claim_supported": false,
+    "corrected_direct_stdio_proof": "Both exact sacrificial starters; successful known-symbol control, unchanged old graph bytes/SHA after mtime touch, exact sentinel no-match, then fresh code-only rebuild and exact sentinel source/line in the same raw process",
+    "corrected_proof_sha256": "21b7fefa031a83498eaa4293081728cf640cda6224be08c254534f77394e5c1f",
+    "original_failed_evidence_inventory_sha256": "d13900bdd6b8f1aafb1517015eda6c25a070e8c55b993d9a724ce1ee89eecb2a",
+    "native_provenance_sha256": "13cf68c63835de1496c183afd6119aaecfb61a8a7bb9432af9fa30085c80282a",
+    "production_executables_changed": false,
+    "new_native_or_model_proof": false
+  }
 }
