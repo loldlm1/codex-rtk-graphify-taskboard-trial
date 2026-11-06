@@ -71,6 +71,9 @@ Complete the feature's frozen build, type, unit, browser, future-feature accepta
 and all-application-source coverage commands and direct desktop/mobile interactions.
 Use relevant installed ECC verification/e2e/security guidance proportionately. Report
 actual RED/GREEN, counts, screenshots, coverage and gaps; lint is unconfigured.
+Record actual start/end/elapsed and activation/indexing durations, peak reported
+input and available native context-limit/utilization metadata without guessing;
+separate RTK output estimates from complete-workflow usage.
 Run actual installed Matt code-review with separate fresh Standards and Spec axes,
 respecting native capacity; fix concrete findings using the same sole ECC cycle,
 and repeat affected checks. Required missing evidence blocks completion.

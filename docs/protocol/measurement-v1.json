@@ -53,8 +53,8 @@
   "isolation": "Separate arm native sessions, branches/worktrees, Codex homes/configuration, accounting/ECC/CLV2 stores and generated graph/npm/temp/XDG/cache/recall state; no solution/generated-context reuse or account/trust/session/cache copying. Fresh arm-owned node_modules includes default Vite/Vitest result and transformed-module caches; never reuse preflight/other-arm trees.",
   "allocation": "Per-arm implementation/review/fix/retry/compaction/recovery; B own activation/initial indexing plus exactly half shared B preflight each; common update/fixture/probe/comparative evaluation outside per-arm gate.",
   "contract_files_sha256": {
-    "docs/protocol/measurement-v1.md": "48e45b296650b0b6a553f7a872a5d4b8b6c75bedfda8f5b6b6e4103b59abf28f",
-    "docs/protocol/arm-prompt-v1.md": "e6241cddf8213a6b5b9e09024928ebd3dc67a928f2a616bde93de0f7fb0509d0",
+    "docs/protocol/measurement-v1.md": "931dc1bb708e683bcd12467b658949f58f9d4adf5a0c8ee1d6f153bb3de68dc9",
+    "docs/protocol/arm-prompt-v1.md": "e402e7c5f1fd822326a8b00ead19d72e116323f37c1792d577178677a3b145e1",
     "docs/protocol/usage-v1.md": "c0e4f1a3a527d988aa4870aa4bd58c84045a931e7275c84a4b85207ee3f21357",
     "docs/protocol/rtk-v1.md": "acac818ccc153e00d3d269d61248fe3288320d560c82435bb6bda6b5d9f6b90e",
     "docs/protocol/graphify-local-v1.md": "5ff344d8e5b1d7615fd0e9b9a342f11a3c6acef6efb9511c8858182283e45db3",

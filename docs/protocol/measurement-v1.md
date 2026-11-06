@@ -92,6 +92,10 @@ and its intentionally RED future-feature acceptance becoming GREEN. Lint is
 unconfigured. Record actual RED/GREEN, counts, coverage/gaps, browser interactions
 and desktop/mobile screenshots. Required missing evidence keeps the arm incomplete.
 Do not weaken tests or replace application behavior with graph/source checks.
+Record actual wall-clock start/end and elapsed time, activation/indexing duration,
+peak reported input and available native context-limit/utilization metadata with
+their limits. Keep RTK's command-output estimates separate from complete-workflow
+usage. Never infer automatic near-limit quality from the short manual probe.
 
 Apply [usage v1](usage-v1.md) unchanged. Each arm owns its implementation, separate
 Standards/Spec review, fixes, retries, compactions and recovery. B additionally owns
