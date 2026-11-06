@@ -1,4 +1,4 @@
-# Public workflow-trial fixture conventions
+# Task-board conventions
 
 The assigned local task contract owns scope and acceptance. Root coordination uses
 Matt implement-spec; implementation and review-fix workers use ecc:tdd-workflow as
@@ -10,6 +10,14 @@ Read the assigned contract, GLOSSARY.md, actual files/dependencies and applicabl
 instructions before editing. Use the actual package manager and validation commands.
 Keep the application ordinary and small; add no speculative framework or machinery.
 First-time project-convention setup stays explicitly selected; do not auto-run it.
+
+Use npm and the locked dependencies. `npm run verify` checks strict TypeScript,
+the Vite build, all-source V8 coverage, and the actual Chrome starter journeys.
+There is no configured linter. `npm run test:feature` is separate future acceptance:
+it intentionally fails on the starter until the saved-status-view task is selected.
+See README.md for reproduction and docs/tasks/saved-status-filter-v1.md for the
+frozen task. Keep native controls, labels, keyboard operation, responsive layout,
+literal task text, and focus restoration intact. No server or external data exists.
 
 The coordinator owns shared GitHub progress and publication. Workers must not push,
 create/edit issues or PRs, change repo settings, merge a final target, release or
