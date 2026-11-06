@@ -158,12 +158,20 @@
   },
   "isolation": {
     "reviewed_home_used_in_place": true,
-    "task_owned_tool_state": true,
+    "native_ecc_clv2_rtk_graph_npm_temp_xdg_state_task_owned": true,
     "account_or_runtime_state_transferred_between_homes": false,
     "browser_same_npx_launch_vector": true,
     "browser_full_runtime_files": 362,
     "browser_full_runtime_sha256": "bdc7a7cd36d764faf7fa02b1db9b951675a2d9b1e21aff62b68d48154dad8ac4",
     "browser_dependency_closure_matches_accepted": true
+  },
+  "toolchain_reuse_limit": {
+    "explicitly_borrowed_pinned_preflight_dependency_tree": true,
+    "preexisting_vite_vitest_results_and_module_cache_directories_shared": true,
+    "cold_toolchain_claim": false,
+    "all_16_probe_tests_actually_ran": true,
+    "no_measured_feature_or_outcome": true,
+    "arm_policy": "Fresh arm-owned node_modules including default .vite/.vitest-cache; never reuse preflight/other-arm trees."
   },
   "resumed_tools": {
     "rtk_test_passed": true,

@@ -15,6 +15,14 @@ contracts preserve one concise committed record. Separate fresh Standards and Sp
 reviewers inspect the integrated result, within the unchanged native concurrency
 cap. No extra orchestration or RED/GREEN checkpoint commits are selected.
 
+To avoid another install, the fixture explicitly borrowed the already pinned
+preflight npm dependency tree. Final inspection found shared Vite/Vitest result,
+duration and transformed-module cache directories inside that tree. All 16 current
+fixture tests actually ran, including the intended RED; no measured feature or
+outcome exists. This probe makes no cold-toolchain or cache-performance claim.
+The measured arms require fresh arm-owned dependencies and these default caches,
+with no preflight/other-arm tree reuse.
+
 Workers use `fork_turns: none`, inherited gpt-6.1-sol and explicit `xhigh`; root
 retains accepted `ultra/default/cap2`. The implementation has its own worktree and
 dedicated exact-worktree Graphify server. Read-only reviewers use the integrated

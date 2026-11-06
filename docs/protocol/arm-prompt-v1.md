@@ -30,8 +30,13 @@ contract is TASK. Read that task, this checkout's AGENTS.md and established chec
 the frozen common measurement/quality policy supplied by the outer coordinator,
 and the active CODEX_HOME/workflow/{execute,recover}.md. Do not read another arm's
 solution, added tests, review, generated context or transcript. No other feature,
-extra experiment, install, stack migration, hook/model/configuration change or
+extra experiment, new dependency, stack migration, hook/model/configuration change or
 automatic-compaction threshold change is selected.
+
+Use only fresh arm-owned application dependencies and generated caches. Workers
+may use their own arm's node_modules tree; never point this arm at a preflight or
+another arm's tree. Vite/Vitest default result/module caches live under node_modules
+and are not isolated by XDG alone. Preserve the frozen starter scripts/arguments.
 
 Use the selected installed Matt implement-spec coordinator and the installed hybrid
 contract. Explicitly replace every delegated Matt tdd call with actual installed

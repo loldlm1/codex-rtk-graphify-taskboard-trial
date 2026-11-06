@@ -61,6 +61,12 @@ never copy account material, trust hashes, sessions, caches or keys between home
 No arm reads another arm's solution, tests added by that arm, review findings,
 generated graph/context, recall store or transcript. Common immutable source,
 approved task/check/rubric pointers and verified installed executables are reusable.
+Install each application's locked dependencies into a fresh arm-owned
+`node_modules` tree; workers may use only their own arm's tree. Vite/Vitest store
+default result/duration and transformed-module caches under `node_modules/.vite`
+and `node_modules/.vitest-cache`, independently of XDG. Never point an arm at
+preflight/other-arm dependency trees or their generated caches. Preserve the frozen
+starter scripts and arguments; setting XDG alone does not prove this isolation.
 
 A has no RTK treatment policy/activation or Graphify graph/server. B recreates its
 RTK config/databases and initial graph for that workload. Each B worker gets a
