@@ -46,6 +46,9 @@ input[aria-invalid="true"] { border-color: #9d4239; }
 .heading-dot { color: #a66c3c; }
 .task-count { padding: 7px 11px; border: 1px solid #d4dbcd; border-radius: 20px; color: #596b5c; font-size: 11px; white-space: nowrap; }
 .board-stats { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 20px; }
+.status-view { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-bottom: 20px; }
+.status-view label { margin: 0; }
+.status-view select { width: 180px; max-width: 100%; }
 .stat { display: inline-flex; align-items: center; gap: 7px; border-radius: 6px; background: #eae9e0; padding: 8px 10px; color: #556454; font-size: 10px; }
 .stat strong { font-size: 10px; font-weight: 650; margin-left: 5px; }
 .stat-dot { width: 5px; height: 5px; background: #7a806c; border-radius: 50%; }

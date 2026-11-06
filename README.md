@@ -9,6 +9,12 @@ with six fictional tasks. Deleting every task keeps an empty board after reload.
 Unavailable browser storage leaves the board usable for the session and displays
 a warning. User text is rendered as text, including text that looks like HTML.
 
+Use **Status view** to show all tasks or just one status. The selection is saved
+separately from task data and restored after reload. Missing, invalid, or unreadable
+preferences use All statuses. If the preference cannot be saved, the selected view
+still works in the current tab and a warning explains the reload limitation.
+Hidden tasks stay on the board; changing the view never changes their status.
+
 ## Run locally
 
 Use Node.js 24 and npm 11. The preparation environment was Node 24.6.0 / npm 11.5.1.
@@ -30,6 +36,7 @@ npm test
 npm run test:coverage
 npm run test:browser
 npm run verify
+npm run test:feature
 ```
 
 The browser suite uses Playwright's `chrome` channel and a new isolated browser
@@ -43,11 +50,11 @@ includes every `src/**/*.ts` file, with 80% minimum statements, branches, functi
 and lines. CSS and browser rendering are assessed through the actual browser
 journeys and screenshots, rather than assigned a JavaScript coverage percentage.
 
-The separate future task is frozen in
+The saved status view contract is frozen in
 [saved-status-filter-v1.md](docs/tasks/saved-status-filter-v1.md).
-`npm run test:feature` runs its acceptance suite and is **intentionally RED on this
-starter** because saved status views have not been implemented. It is excluded
-from `npm run verify`. Do not implement the future task as part of starter fixes.
+`npm run test:feature` runs its independent acceptance suite, including filtering,
+preference recovery, filtered task operations, keyboard focus, and mobile layout.
+Run it alongside `npm run verify`, which retains the starter checks.
 
 ## Structure and provenance
 
@@ -56,7 +63,7 @@ from `npm run verify`. Do not implement the future task as part of starter fixes
 - `src/app.ts`: native, labeled DOM controls and focus management.
 - `src/main.ts`, `src/styles.css`: application entry and responsive presentation.
 - `tests/unit/`, `tests/browser/`: starter checks.
-- `tests/acceptance/`: frozen future behavior, separately runnable.
+- `tests/acceptance/`: frozen saved status view behavior, separately runnable.
 
 This starter was built through a maintainer-directed Codex workflow: the human
 defined scope and approvals; agents implemented, tested, and reviewed the code.
