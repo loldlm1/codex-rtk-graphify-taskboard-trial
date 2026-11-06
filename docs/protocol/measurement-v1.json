@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "purpose": "Frozen before all four measured implementations; no outcome is asserted.",
-  "method_parent_commit": "f86fc4fd9cc653b1eed9af766f566f8df7fdb88e",
+  "method_parent_commit": "4b0b3759c9f446dc8eab0b85f816e51fc8b15088",
   "original_public_review_baseline": "14ae1c0462e42df8eaff2848e7786811cefc06e8",
   "accepted_stack_profile_sha256": "51ed50320fff77610a9030e0846fbe6f532c39ba6c766466ffb0f1026b4d2f97",
   "runtime": {
@@ -55,18 +55,18 @@
   "contract_files_sha256": {
     "docs/protocol/measurement-v1.md": "eeec368125b6102a85e6cbbb473cc3d8adb9f807aff360367d301c74210ec4cb",
     "docs/protocol/arm-prompt-v1.md": "e402e7c5f1fd822326a8b00ead19d72e116323f37c1792d577178677a3b145e1",
-    "docs/protocol/usage-v1.md": "6b8afe8448032a356f76ce79a1cb7e95094bac55cd56543790092d2bfe0e3f71",
+    "docs/protocol/usage-v1.md": "13cd8fe76961d0c8e14ff32aa32cbd86fdbce4048199ebffb7b7e50f332c53b5",
     "docs/protocol/rtk-v1.md": "acac818ccc153e00d3d269d61248fe3288320d560c82435bb6bda6b5d9f6b90e",
     "docs/protocol/graphify-local-v1.md": "5ff344d8e5b1d7615fd0e9b9a342f11a3c6acef6efb9511c8858182283e45db3",
     "docs/protocol/quality-review-v1.md": "e92f64e58e1f2147de4685c6edd49de97407131fc37ee86249e924efb8129f48",
     "docs/protocol/starters-v1.json": "5151d37fb54046410d075cd7fe0d231f28748801cfd3bd9f522fb97b29b8b23f",
     "examples/rtk-v1/config.toml": "3df51c04af866033ce59ff2c603f955222cf06a57236fde9b7d62bdf4c1eec34",
     "examples/rtk-v1/AGENTS.fragment.md": "3f19d9760063fa2d8e3a1dabaafa458326e93af7f4e646701dbea267f18718bb",
-    "tools/usage_report.py": "f29817ce100d31e7c0258e3edfd32cbd5ab1898bf85947b373ac58d6e983ea2c",
+    "tools/usage_report.py": "93e1cc6a21bc6dbd1a805b3a90975bd4c807d7a4cc261fd7d33e1d3648a6d8be",
     "tools/graphify_local.py": "76be9a0de8b7e0a7fc90a217ddd7eaff079d5f7b8a801b4e478de8d367dbcec4",
     "docs/protocol/graphify-requirements.lock": "c514ea6579929007b6a6dd21ac542976977c34276ac862480324b6be7632b1b6",
     "docs/protocol/graphify-tools-v1.json": "ad4cf7889bf2ff4e7ae93e5da6a93eaf3f38729f483bc1ed3414b7ce6cf38fe3"
   },
-  "collector_source_sha256": "f29817ce100d31e7c0258e3edfd32cbd5ab1898bf85947b373ac58d6e983ea2c",
+  "collector_source_sha256": "93e1cc6a21bc6dbd1a805b3a90975bd4c807d7a4cc261fd7d33e1d3648a6d8be",
   "collector_mode": "Strict default for closed native/arm runs; separately verified operator-root response-boundary window never claims root-turn completion."
 }

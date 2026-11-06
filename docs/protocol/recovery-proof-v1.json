@@ -323,7 +323,8 @@
     "source-inventory.json": "55072c318bcc06232ddd5abf598c4c314ba70bea4cff4921522605b19e9bd387",
     "native/summary.json": "af242d593c040228a49f7f16f123723a4fb65cf2407c70551c1496e51483fa1b",
     "native/recovery-summary.json": "f299ad88af99ae7082cb46c9ee5caf6289d5c1881de25c650576932af2d12ace",
-    "accepted-collector-sync/comparison.json": "eefe1cebd2d379a1f2402535771e010be1b9c74b9c314210a1e28affa838ca29"
+    "accepted-collector-sync/comparison.json": "eefe1cebd2d379a1f2402535771e010be1b9c74b9c314210a1e28affa838ca29",
+    "native-starts-collector-comparison.json": "9ca8b2845603a3e6ead4f905ee6101847536ab8adbe8923a8da467437cca4bde"
   },
   "limits": [
     "Manual short probe only; no automatic near-limit or greater-than-100k-quality claim.",
@@ -332,15 +333,29 @@
     "No measured application feature, outcome, saving or adoption."
   ],
   "collector_revalidation": {
-    "accepted_canonical_commit": "f86fc4fd9cc653b1eed9af766f566f8df7fdb88e",
-    "source_sha256": "f29817ce100d31e7c0258e3edfd32cbd5ab1898bf85947b373ac58d6e983ea2c",
+    "accepted_canonical_commit": "4b0b3759c9f446dc8eab0b85f816e51fc8b15088",
+    "source_sha256": "93e1cc6a21bc6dbd1a805b3a90975bd4c807d7a4cc261fd7d33e1d3648a6d8be",
     "mode": "strict closed-run default; no window_closure opt-in",
     "same_original_manifests_and_raw_sources": true,
     "both_reports_byte_identical": true,
     "all_response_identities_ownership_counters_checkpoints_replays_unchanged": true,
     "peak_input_unchanged": true,
-    "protocol_tests_passed": 70,
+    "protocol_tests_passed": 78,
     "protocol_tests_skipped": 0,
     "new_native_or_model_probe": false
-  }
+  },
+  "previous_collector_revalidations": [
+    {
+      "accepted_canonical_commit": "f86fc4fd9cc653b1eed9af766f566f8df7fdb88e",
+      "source_sha256": "f29817ce100d31e7c0258e3edfd32cbd5ab1898bf85947b373ac58d6e983ea2c",
+      "mode": "strict closed-run default; no window_closure opt-in",
+      "same_original_manifests_and_raw_sources": true,
+      "both_reports_byte_identical": true,
+      "all_response_identities_ownership_counters_checkpoints_replays_unchanged": true,
+      "peak_input_unchanged": true,
+      "protocol_tests_passed": 70,
+      "protocol_tests_skipped": 0,
+      "new_native_or_model_probe": false
+    }
+  ]
 }
