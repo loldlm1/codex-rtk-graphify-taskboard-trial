@@ -27,7 +27,8 @@ trust/configuration and generated caches will remain private. Routine future upg
 start with proportional compatibility/recovery checks; full comparisons need a
 material reason, and tasks rotate when contamination or relevance requires it.
 
-Current phase: bootstrap published; runnable starter and measured evidence pending.
+Current phase: both immutable runnable starters and tool preflights are published;
+the single short recovery/readiness gate precedes measured implementations.
 No measured solution, release or deployment is present.
 
 The shared [native usage protocol](docs/protocol/usage-v1.md) provides a standard-library
@@ -40,3 +41,10 @@ The isolated [Graphify local preflight](docs/protocol/graphify-local-v1.md) reco
 the official pinned runtime, hash-locked provisioning, per-worktree freshness guard
 and actual native coordinator/worker query evidence. It does not activate tooling
 for a normal checkout or establish a measured savings result.
+
+The [short recovery protocol](docs/protocol/recovery-v1.md) requires two installed
+manual compactions, exact-thread process restart, real resumed RTK/MCP behavior
+and strict compaction/replay reconciliation. The
+[four-run measurement contract](docs/protocol/measurement-v1.md) fixes runtime,
+fresh-worker policy, isolation, counterbalanced order, quality checks and first-use
+allocation before any measured outcome.

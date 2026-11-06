@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "purpose": "Frozen before all four measured implementations; no outcome is asserted.",
+  "method_parent_commit": "3be879478fedd2f44e9581746df6815df9136cd3",
+  "original_public_review_baseline": "14ae1c0462e42df8eaff2848e7786811cefc06e8",
+  "accepted_stack_profile_sha256": "51ed50320fff77610a9030e0846fbe6f532c39ba6c766466ffb0f1026b4d2f97",
+  "runtime": {
+    "native": "0.167.0",
+    "native_sha256": "cdcb45aaa01d0f14e298985e09465aebccd47f64ecd298aea44814af7b62bbda",
+    "model": "gpt-6.1-sol",
+    "root_effort": "ultra",
+    "child_effort": "xhigh",
+    "child_fork_turns": "none",
+    "child_model": "inherited",
+    "service_tier": "default",
+    "native_concurrency": 2,
+    "node": "24.6.0",
+    "npm": "11.5.1",
+    "python": "3.12.8",
+    "chrome": "155.0.8059.39",
+    "browser_mcp": "1.10.1",
+    "browser_launch": "npx -y chrome-devtools-mcp@1.10.1",
+    "browser_runtime_files_sha256": "bdc7a7cd36d764faf7fa02b1db9b951675a2d9b1e21aff62b68d48154dad8ac4"
+  },
+  "order": [
+    {
+      "workload": "web",
+      "arm": "A",
+      "issue": 23
+    },
+    {
+      "workload": "web",
+      "arm": "B",
+      "issue": 24
+    },
+    {
+      "workload": "canvas",
+      "arm": "B",
+      "issue": 26
+    },
+    {
+      "workload": "canvas",
+      "arm": "A",
+      "issue": 25
+    }
+  ],
+  "implementation_runs": 4,
+  "adoption_gate": {
+    "each_workload_minimum_first_use_allocated_token_reduction_percent": 10,
+    "quality": "no meaningful regression; six attributes remain separate",
+    "pooling": false
+  },
+  "isolation": "Separate arm native sessions, branches/worktrees, Codex homes/configuration, accounting/ECC/CLV2 stores and generated graph/npm/temp/XDG/cache/recall state; no solution/generated-context reuse or account/trust/session/cache copying.",
+  "allocation": "Per-arm implementation/review/fix/retry/compaction/recovery; B own activation/initial indexing plus exactly half shared B preflight each; common update/fixture/probe/comparative evaluation outside per-arm gate.",
+  "contract_files_sha256": {
+    "docs/protocol/measurement-v1.md": "f85208a61cdd241fac5c4ec1fad547f3dd1065322da04c00191717d556de602d",
+    "docs/protocol/arm-prompt-v1.md": "aac77a6e699134d009dd1754c288785e5a4270594379493c7957c75574afaf78",
+    "docs/protocol/usage-v1.md": "c0e4f1a3a527d988aa4870aa4bd58c84045a931e7275c84a4b85207ee3f21357",
+    "docs/protocol/rtk-v1.md": "acac818ccc153e00d3d269d61248fe3288320d560c82435bb6bda6b5d9f6b90e",
+    "docs/protocol/graphify-local-v1.md": "5ff344d8e5b1d7615fd0e9b9a342f11a3c6acef6efb9511c8858182283e45db3",
+    "docs/protocol/quality-review-v1.md": "e92f64e58e1f2147de4685c6edd49de97407131fc37ee86249e924efb8129f48",
+    "docs/protocol/starters-v1.json": "5151d37fb54046410d075cd7fe0d231f28748801cfd3bd9f522fb97b29b8b23f",
+    "examples/rtk-v1/config.toml": "3df51c04af866033ce59ff2c603f955222cf06a57236fde9b7d62bdf4c1eec34",
+    "examples/rtk-v1/AGENTS.fragment.md": "3f19d9760063fa2d8e3a1dabaafa458326e93af7f4e646701dbea267f18718bb",
+    "tools/usage_report.py": "a7b40af96ea63ff7d6d1dae31ac1dfe2a4564757f4743ac2a1276a5c7561ae4b",
+    "tools/graphify_local.py": "76be9a0de8b7e0a7fc90a217ddd7eaff079d5f7b8a801b4e478de8d367dbcec4",
+    "docs/protocol/graphify-requirements.lock": "c514ea6579929007b6a6dd21ac542976977c34276ac862480324b6be7632b1b6",
+    "docs/protocol/graphify-tools-v1.json": "ad4cf7889bf2ff4e7ae93e5da6a93eaf3f38729f483bc1ed3414b7ce6cf38fe3"
+  }
+}
