@@ -16,7 +16,7 @@ was published 2026-10-25 from commit
 The extracted `rtk` executable reports `rtk 1.1.0`, SHA-256
 `0b80810970ce2c79c92deaa474bbcf6f1cf01ac93baab0e273ee6cb4ef950d10`.
 
-The [release README](https://github.com/rtk-ai/rtk/blob/v1.1.0/README.md#editions)
+The [release README](https://github.com/rtk-ai/rtk/blob/v1.1.0/README.md#what-you-install)
 distinguishes OSS command filters from the compression engine and the separately
 shipped provider proxy. Download only this OSS archive, compare its digest with
 the pinned value and release checksums, inspect/extract `rtk` and `LICENSE` into
