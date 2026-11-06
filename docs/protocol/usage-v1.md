@@ -41,7 +41,7 @@ public logical labels (`[a-z][a-z0-9-]{0,47}`); do not put private names in them
 - Each source has logical `id`, `kind: native` or `notifications`, local `path`,
   and exact full-file lowercase `sha256`. Capture the digest at a durable boundary;
   changes during ingestion fail closed. Native sources are plaintext canonical
-  JSONL with one session metadata identity per file. Include completed descendants,
+  JSONL with one canonical owner per file. Include completed descendants,
   archived sources and earlier snapshots needed for full cumulative reconciliation.
   Required compressed/encrypted/unknown metadata is unsupported; do not decrypt it.
 - A phase has logical `id`, fixed `category`, UTC `start` and exclusive UTC `end`
@@ -70,6 +70,37 @@ separately; they are not charged to its arms. UTC response timestamps determine
 phase membership, including descendant/retry/recovery responses. Replayed standalone
 records must preserve original timestamps; a checkpoint alone cannot establish the
 original response time and therefore yields incomplete phase evidence.
+
+The pinned writer can leave a truncated JSONL row and retry the same queued item
+after reopening. The reader accepts a narrowly verified partial-write retry: an
+immediately following complete row, the same next ordinal after the preceding
+valid row, a strictly later native timestamp, and an exact serialized byte prefix
+after the timestamp. The fragment must contain a complete native timestamp,
+ordinal and supported record type. The next ordinal, if present, must advance once.
+The full retry must be a valid usage record or `item_completed` event with owning
+thread/turn identities; the pending item's ordinal never replaces a provider
+response ID. A fragment may end before its payload because the pinned writer
+retains that exact queued item at that ordinal until a successful write. Both
+timestamps must stay in the same declared phase and window membership. Only the
+complete valid record contributes identities or counters. The full source digest
+still includes every byte. Each accepted pair appears in its source's
+`partial_write_recoveries` with line numbers, ordinal, type and both row digests.
+Unmatched, incomplete/ambiguous envelopes, changed, intervening, repeated malformed,
+unsupported or cross-boundary fragments remain incomplete; source objects reject
+duplicate JSON keys.
+This does not recover omitted records or infer provider response identities.
+
+A forked child may contain copied parent metadata/context after its initial own
+metadata. Exclusion requires an explicit integer `subagent_history_start_ordinal`,
+own metadata at ordinal zero, `forked_from_id` equal to its distinct actual parent,
+and contiguous ordinals through the stated boundary. Copied metadata at ordinal
+one must match a separately ingested canonical parent source. Earlier context
+counters, completion and abort markers do not belong to the child. Inherited usage
+records must match an independently present original parent record; they add zero.
+Unknown/malformed history, inherited accounting types without supported ownership
+proof, missing boundaries/parents and foreign metadata remain incomplete. The
+source's `inherited_history` reports the boundary, excluded row count and parent
+hash. A generic first-metadata-wins rule is insufficient.
 
 ## Accounting and fixed allocation
 
@@ -141,6 +172,14 @@ The native format is pinned to source commit
 [checkpoint persistence](https://github.com/openai/codex/blob/rust-v0.167.0/codex-rs/core/src/session/mod.rs#L4631),
 and [foreground compaction](https://github.com/openai/codex/blob/rust-v0.167.0/codex-rs/core/src/compact_remote_v2.rs#L375)
 are version-specific implementation evidence, not a stable public API contract.
+[Writer recovery](https://github.com/openai/codex/blob/086ccc833bc9cf01024ad2dd6af7dbd421b6bf9a/codex-rs/rollout/src/recorder.rs#L1828)
+keeps pending items and advances ordinals only after successful writes; reopening
+terminates partial rows, and serialization supplies a fresh timestamp on retry.
+[Fork history metadata](https://github.com/openai/codex/blob/086ccc833bc9cf01024ad2dd6af7dbd421b6bf9a/codex-rs/protocol/src/protocol.rs#L3485)
+defines the first own-history ordinal;
+[thread creation](https://github.com/openai/codex/blob/086ccc833bc9cf01024ad2dd6af7dbd421b6bf9a/codex-rs/thread-store/src/local/create_thread.rs#L61)
+passes that boundary to the recorder. These facts justify only the checked
+conditions above, not general corruption recovery or universal completeness.
 Cumulative-only notifications lack per-response identity. Internal raw-event state
 can disappear on a cold resume, and diagnostic traces expose request material while
 omitting V2 compaction usage. None replaces persisted identity/counter evidence.
