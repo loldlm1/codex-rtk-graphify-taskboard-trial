@@ -139,13 +139,27 @@ def validate_manifest(manifest):
     all_threads = set()
     for run in manifest['runs']:
         fields(run, ('id', 'root_thread_id', 'session_id', 'closed',
-                     'expected_threads', 'sources', 'phases'))
+                     'expected_threads', 'sources', 'phases'), ('window_closure',))
         if label(run['id']) in ids:
             raise Invalid('duplicate_run')
         ids.add(run['id'])
         identity(run['root_thread_id']); identity(run['session_id'])
         if type(run['closed']) is not bool:
             raise Invalid('unsupported_manifest_schema')
+        if 'window_closure' in run:
+            closure = run['window_closure']
+            fields(closure, ('kind', 'source_id', 'turn_id', 'response_id', 'response_ordinal',
+                             'source_bytes', 'last_ordinal', 'cutoff'))
+            if (closure['kind'] != 'root-response-boundary' or run['closed'] or end is None
+                    or timestamp(closure['cutoff']) != end):
+                raise Invalid('invalid_window_closure')
+            label(closure['source_id'])
+            identity(closure['turn_id']); identity(closure['response_id'])
+            if (any(type(closure[k]) is not int or closure[k] < 0 for k in
+                    ('response_ordinal', 'source_bytes', 'last_ordinal'))
+                    or closure['source_bytes'] == 0
+                    or closure['last_ordinal'] < closure['response_ordinal']):
+                raise Invalid('invalid_window_closure')
         if not isinstance(run['expected_threads'], list) or not run['expected_threads']:
             raise Invalid('missing_run_inventory')
         parents = {}
@@ -321,6 +335,13 @@ class Reporter:
             state['boundary_reached'] = True
         ordinal = event.get('ordinal')
         state['ordinal'] = ordinal if type(ordinal) is int else None
+        if data['closure'] is not None and isinstance(payload, dict):
+            owning = kind in ('token_usage_record', 'turn_context') or (
+                kind == 'event_msg' and payload.get('type') in ('task_started', 'turn_started', 'task_complete'))
+            if owning and payload.get('turn_id') is not None:
+                turn = identity(payload['turn_id'])
+                data['owning_turns'][sid].add(turn)
+                state['last_owning_turn'] = turn
         if kind in IGNORED_NATIVE:
             return
         when = timestamp(event.get('timestamp'))
@@ -362,6 +383,9 @@ class Reporter:
                      inherited_meta_seen=False, boundary_reached=False, recovery_next=None)
         pending = None
         recoveries = []
+        prefix = data['closure'] is not None and data['closure']['source_id'] == sid
+        state.update(byte_count=0, responses={}, ordinary_positions=[], latest_timestamp=None,
+                     last_owning_turn=None)
         try:
             path = Path(source['path'])
             if not path.is_absolute():
@@ -369,6 +393,9 @@ class Reporter:
             with path.open('rb') as stream:
                 for line, raw in enumerate(stream, 1):
                     digest.update(raw)
+                    state['byte_count'] += len(raw)
+                    if prefix and not raw.endswith(b'\n'):
+                        self.issue('invalid_window_snapshot', sid)
                     try:
                         event = json.loads(raw, object_pairs_hook=unique_object)
                         if not isinstance(event, dict):
@@ -388,7 +415,21 @@ class Reporter:
                                     'retry_sha256': hashlib.sha256(raw).hexdigest()})
                             else:
                                 self.issue('malformed_source', sid)
+                        if prefix:
+                            expected = 0 if state['ordinal'] is None else state['ordinal'] + 1
+                            if type(event.get('ordinal')) is not int or event['ordinal'] != expected:
+                                self.issue('invalid_window_snapshot', sid)
+                            when = timestamp(event.get('timestamp'))
+                            latest = state['latest_timestamp']
+                            state['latest_timestamp'] = max(latest, when) if latest else when
                         self.native_row(event, raw, data, sid, state)
+                        if prefix and event.get('type') == 'token_usage_record':
+                            state['responses'].setdefault(event['payload']['response_id'],
+                                (event['payload'], event['ordinal'], timestamp(event['timestamp'])))
+                        if (prefix and event.get('type') == 'event_msg'
+                                and event['payload'].get('type') == 'token_count'
+                                and event['payload'].get('info') is not None):
+                            state['ordinary_positions'].append((event['ordinal'], timestamp(event['timestamp'])))
                         if recovered:
                             state['recovery_next'] = event['ordinal'] + 1
                     except (json.JSONDecodeError, UnicodeDecodeError, ValueError, TypeError):
@@ -418,6 +459,8 @@ class Reporter:
                 'excluded_rows': state['inherited_rows'],
                 'parent_thread_id_hash': hashed(state['owner']['parent_thread_id'])}
         data['sources'].append(summary)
+        if prefix:
+            data['source_states'][sid] = state
 
     def native_event(self, payload, when, data, sid, inherited=False):
         if not isinstance(payload, dict):
@@ -491,14 +534,63 @@ class Reporter:
         elif method in ('thread/rawResponse/completed', 'response/completed'):
             data['completions'].append((params, sid, True))
 
+    def window_boundary(self, run, start, end, data, source_threads, records):
+        """Certify a closed window, without claiming the active root turn ended."""
+        closure = data['closure']
+        if closure is None:
+            return None
+        sid = closure['source_id']
+        state = data['source_states'].get(sid)
+        anchor = self.records.get(closure['response_id'])
+        if state is None or anchor is None or anchor['embedded']:
+            self.issue('invalid_window_anchor', run['id'])
+            return None
+        responses = list(state['responses'].values())
+        phases = [p for p in run['phases'] if anchor['timestamp'] >= timestamp(p['start'])
+                  and p['end'] is not None and anchor['timestamp'] < timestamp(p['end'])]
+        root_ids = {r['payload']['response_id'] for r in records
+                    if r['payload']['thread_id'] == run['root_thread_id']}
+        source_ids = {p['response_id'] for p, _, _ in responses}
+        if (source_threads.get(sid) != run['root_thread_id']
+                or not responses or responses[-1][0] != anchor['payload']
+                or responses[-1][1] != closure['response_ordinal']
+                or responses[-1][2] != anchor['timestamp']
+                or anchor['payload']['thread_id'] != run['root_thread_id']
+                or anchor['payload']['session_id'] != run['session_id']
+                or state['last_owning_turn'] != closure['turn_id']
+                or anchor['payload']['turn_id'] != closure['turn_id']
+                or anchor['payload']['root_turn_id'] != closure['turn_id']
+                or root_ids != source_ids or not start <= anchor['timestamp'] < end
+                or len(phases) != 1 or phases[0]['category'] == 'administration'
+                or any(p['end'] is None for p in run['phases'])
+                or state['latest_timestamp'] is None or state['latest_timestamp'] >= end
+                or not any(ordinal > closure['response_ordinal'] and when >= anchor['timestamp']
+                           for ordinal, when in state['ordinary_positions'])):
+            self.issue('invalid_window_anchor', run['id'])
+            return None
+        if (state['byte_count'] != closure['source_bytes']
+                or state['ordinal'] != closure['last_ordinal']):
+            self.issue('invalid_window_snapshot', sid)
+            return None
+        source = next(s for s in data['sources'] if s['id'] == sid)
+        return {'kind': closure['kind'], 'accounting_window': 'closed',
+                'root_turn_completion': 'unclaimed',
+                'response_id_hash': hashed(closure['response_id']),
+                'turn_id_hash': hashed(closure['turn_id']), 'source_id': sid,
+                'source_sha256': source['sha256'], 'source_bytes': state['byte_count'],
+                'response_ordinal': closure['response_ordinal'], 'last_ordinal': state['ordinal'],
+                'cutoff': closure['cutoff']}
+
     def run(self, run, start, end):
         data = {'metadata': {}, 'ordinary': [], 'completed': set(), 'completions': [],
                 'started': set(), 'checkpoints': [], 'sources': [], 'notification_totals': [],
                 'compaction_markers': set(), 'inherited_metadata': [], 'inherited_records': [],
-                'phases': run['phases'], 'window': (start, end)}
+                'phases': run['phases'], 'window': (start, end),
+                'closure': run.get('window_closure'), 'source_states': {}, 'owning_turns': defaultdict(set)}
         ordinary_by_thread = {}
         source_threads = {}
         completed_by_thread = defaultdict(set)
+        owning_by_thread = defaultdict(set)
         before = set(self.records)
         for source in run['sources']:
             # Ordinary counters belong to the source's session metadata, including
@@ -512,6 +604,7 @@ class Reporter:
                 tid = next(iter(local['source_threads']))
                 source_threads[source['id']] = tid
                 completed_by_thread[tid].update(local['completed'])
+                owning_by_thread[tid].update(data['owning_turns'][source['id']])
                 if local['ordinary']:
                     latest = max(local['ordinary'], key=lambda x: x[0])
                     previous = ordinary_by_thread.get(tid)
@@ -547,6 +640,7 @@ class Reporter:
                 self.issue('missing_descendant_start', run['id'])
         run_record_ids = self.records.keys() - before
         records = [self.records[rid] for rid in run_record_ids]
+        boundary = self.window_boundary(run, start, end, data, source_threads, records)
         root_turns = {r['payload']['turn_id'] for r in records if r['payload']['thread_id'] == run['root_thread_id']}
         grouped = defaultdict(list)
         for entry in records:
@@ -648,7 +742,10 @@ class Reporter:
                         thread_compaction = add(thread_compaction, self.records[rid]['payload']['usage'])
                 if delta != zero() and delta != thread_compaction:
                     self.issue('ordinary_reconciliation', run['id'])
-            if run['closed'] and any(turn not in completed_by_thread[tid] for turn in turns):
+            if (run['closed'] or data['closure'] is not None) and any(
+                    turn not in completed_by_thread[tid]
+                    and not (boundary is not None and tid == run['root_thread_id']
+                             and turn == data['closure']['turn_id']) for turn in turns.keys() | owning_by_thread[tid]):
                 self.issue('missing_turn_completion', run['id'])
             for notification_tid, counters in data['notification_totals']:
                 if notification_tid == tid and tuple(counters.values()) not in prefixes:
@@ -688,12 +785,17 @@ class Reporter:
                     raise Invalid('completion_reconciliation')
             except Invalid as error:
                 self.issue(str(error), sid)
-        if not run['closed']:
+        if not run['closed'] and boundary is None:
             self.issue('open_run', run['id'])
         self.runs.append({'id': run['id'], 'sources': data['sources'], 'threads': threads,
                           'ledger_usage': ledger_total, 'ordinary_usage': ordinary_total,
                           'ordinary_compaction_delta': subtract(ledger_total, ordinary_total),
                           'checkpoints': checkpoints})
+        if data['closure'] is not None:
+            self.runs[-1]['window_closure'] = boundary or {
+                'kind': data['closure']['kind'], 'accounting_window': 'unverified',
+                'root_turn_completion': 'unclaimed',
+                'evidence_status': 'incomplete'}
 
     def report(self):
         allocated = {arm: {k: str(Fraction(v) + (Fraction(self.shared[k], 2) if arm.endswith('-B') else 0))
