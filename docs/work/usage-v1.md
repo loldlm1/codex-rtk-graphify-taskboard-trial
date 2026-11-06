@@ -6,12 +6,12 @@
 | Approved decisions | Native coordinator/descendant/response identities, retry/recovery/compaction usage and exact reconciliation; cached input/reasoning subsets; explicit incomplete results; fixed first-use allocation. |
 | Authorization | Maintainer approved the public fixture/method and selected hybrid implementation. Scoped local commits/integration/publication authorized; root owns GitHub. No final measured-solution merge, release or deployment. |
 | Review baseline | Original common bootstrap main14ae1c0462e42df8eaff2848e7786811cefc06e8; immutable. |
-| Working pointers | Integration protocol/v1; actual assigned worker branch/check evidence are returned to root. |
-| Phase | Accounting contract committed before implementation; no measured arm launched. |
-| Integration and validation evidence | Validated stack profile51ed50320fff77610a9030e0846fbe6f532c39ba6c766466ffb0f1026b4d2f97. Existing ordinary delegated/restart sample is available privately; compaction validation belongs to the same future short probe. |
-| Blockers | None yet; known best-effort native-ledger blind spots must remain explicit. |
+| Working pointers | Integration protocol/v1; original implementation79618c0b and boundary-fix f3cb0aa1 independently reviewed and integrated by32faea040b1fe774a48e9ee0f15c444a90846bd6. Application starters stay on separate starter/v1 branches. |
+| Phase | Ordinary delegated/restart ingestion accepted and integrated; final live compaction/restart readiness pending the single approved recovery probe. No measured arm launched. |
+| Integration and validation evidence | Validated stack profile51ed50320fff77610a9030e0846fbe6f532c39ba6c766466ffb0f1026b4d2f97. Renewed independent Standards0/Spec0;24/24 public CLI checks and3/3 original false-success reproductions PASS before/after integration. Fresh statement coverage446/491=90.84%, branches unmeasured. Compilation/example/links/targeted privacy/whitespace PASS. Selected ordinary sample108responses/nine threads/5,778,005tokens; restart49 replay records addzero and retain108responses. Public sanitized sample/limitations in docs/protocol/. |
+| Blockers | Same required short probe must establish two successful installed compactions, exact-thread process restart and live accounting/tool recovery. No live compacted record exists in ordinary sample; billing_completeness remains not-proven and measurement_readiness pending. Known best-effort ledger limits remain explicit. |
 | Amendment | None. |
-| Next action | Implement/test strict public ingestion/reporting with sanitized native fixtures and reconcile the existing ordinary sample; keep final compaction/restart readiness pending the approved probe. |
+| Next action | Finish/freeze both reviewed starters, then tool preflights and the single recovery/accounting probe before measured arms. The six-attribute [quality supplement](../protocol/quality-review-v1.md) is fixed now before outcomes and supplements unchanged local task rubrics; no averaging/pooled rescue. |
 
 The fixed first-use policy is settled before outcomes: each arm owns all of its
 native implementation/review/retry/recovery usage; each candidate owns its own
