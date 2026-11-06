@@ -46,6 +46,24 @@ def count(total, second=9):
                            'info': {'total_token_usage': total}}, second)
 
 
+def native_line(event, ordinal):
+    event = dict(timestamp=event['timestamp'], ordinal=ordinal,
+                 type=event['type'], payload=event['payload'])
+    if event['type'] == 'token_usage_record':
+        event['payload'] = {k: event['payload'][k] for k in
+                            ('thread_id', 'turn_id', 'session_id', 'root_turn_id', 'response_id',
+                             'usage', 'turn_token_usage', 'thread_token_usage')}
+    # Match the pinned Rust writer's envelope and compact serialization.
+    event['timestamp'] = event['timestamp'].replace('Z', '.000Z')
+    return json.dumps(event, separators=(',', ':')).encode() + b'\n'
+
+
+def partial_retry(event, ordinal=1, cut=None):
+    complete = native_line(event, ordinal)
+    retry = complete.replace(b'.000Z', b'.100Z', 1)
+    return complete[:cut or len(complete) - 5] + b'\n', retry
+
+
 class ReportCLI(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -98,6 +116,226 @@ class ReportCLI(unittest.TestCase):
         self.assertEqual(report['billing_completeness'], 'not-proven')
         self.assertEqual(report['measurement_readiness'], 'pending-live-compaction-restart-validation')
         self.assertEqual(report['runs'][0]['threads'][0]['response_count'], 1)
+
+    def test_verified_partial_write_retries_count_complete_usage_once(self):
+        first, retry = partial_retry(record('response-one'))
+        item = row('event_msg', {'type': 'item_completed', 'thread_id': 'root', 'turn_id': 'turn',
+                                 'item': {'type': 'CommandExecution', 'private': 'private-canary'}})
+        partial_item, retry_item = partial_retry(item, 2)
+        raw = (native_line(meta(), 0) + first + retry + partial_item + retry_item
+               + native_line(count(usage()), 3)
+               + native_line(row('event_msg', {'type': 'task_complete', 'turn_id': 'turn'}), 4))
+        code, report = self.run_report({'root': raw})
+        self.assertEqual(code, 0, report)
+        self.assertEqual(report['unique_responses'], 1)
+        self.assertEqual(report['duplicate_records'], 0)
+        self.assertEqual(report['window_observed_usage'], usage())
+        source = report['runs'][0]['sources'][0]
+        self.assertEqual(source['sha256'], hashlib.sha256(raw).hexdigest())
+        recoveries = source['partial_write_recoveries']
+        self.assertEqual([(x['partial_line'], x['retry_line'], x['ordinal'], x['type']) for x in recoveries],
+                         [(2, 3, 1, 'token_usage_record'), (4, 5, 2, 'event_msg')])
+        self.assertEqual(recoveries[0]['partial_sha256'], hashlib.sha256(first).hexdigest())
+        self.assertEqual(recoveries[0]['retry_sha256'], hashlib.sha256(retry).hexdigest())
+        self.assertNotIn('private-canary', json.dumps(report))
+
+    def test_partial_recovery_rejects_unmatched_changed_and_ambiguous_rows(self):
+        first, retry = partial_retry(record('response-one'))
+        cases = {
+            'ordinal': (first, retry.replace(b'"ordinal":1', b'"ordinal":2')),
+            'type': (first, retry.replace(b'"type":"token_usage_record"', b'"type":"compacted"')),
+            'owner': (first, retry.replace(b'"thread_id":"root"', b'"thread_id":"other"')),
+            'counter': (first, retry.replace(b'"input_tokens":10', b'"input_tokens":11')),
+            'timestamp': (first, retry.replace(b'.100Z', b'.000Z')),
+            'unknown-malformed': (b'{"private":"private-canary"\n', retry),
+            'short-prefix': (first[:50] + b'\n', retry),
+            'unmatched': (first, b''),
+            'intervening': (first, native_line(row('response_item', {}), 1) + retry),
+            'multiple-partials': (first, first + retry),
+            'non-prefix': (first[:-2] + b'!\n', retry),
+            'invalid-retry': (first, retry[:-2] + b'!\n'),
+            'prior-ordinal': (first, retry),
+        }
+        for name, (partial, complete) in cases.items():
+            with self.subTest(name=name):
+                owner = native_line(meta(), 5 if name == 'prior-ordinal' else 0)
+                raw = owner + partial + complete + native_line(count(usage()), 2)
+                raw += native_line(row('event_msg', {'type': 'task_complete', 'turn_id': 'turn'}), 3)
+                code, report = self.run_report({'root': raw})
+                self.assertEqual(code, 2, report)
+                self.assertIn('malformed_source', {x['code'] for x in report['issues']})
+                self.assertIsNone(report['allocated_arm_usage'])
+
+    def test_partial_recovery_requires_unambiguous_envelope_and_full_retry(self):
+        for bad in ('incomplete-ordinal', 'incomplete-type', 'event-without-owner', 'event-foreign-owner', 'duplicate-json-key'):
+            with self.subTest(bad=bad):
+                event = record('response-one')
+                if bad.startswith('event-'):
+                    event = row('event_msg', {'type': 'item_completed', 'item': {}})
+                    if bad == 'event-foreign-owner':
+                        event['payload'].update(thread_id='other', turn_id='turn')
+                partial, retry = partial_retry(event)
+                if bad == 'incomplete-ordinal':
+                    partial = partial[:partial.index(b'"ordinal":') + len(b'"ordinal":')] + b'\n'
+                elif bad == 'incomplete-type':
+                    partial = partial[:partial.index(b'"type":"') + len(b'"type":"token_')] + b'\n'
+                elif bad == 'duplicate-json-key':
+                    retry = retry[:-2] + b',"type":"response_item"}\n'
+                raw = native_line(meta(), 0) + partial + retry + native_line(count(usage()), 2)
+                raw += native_line(row('event_msg', {'type': 'task_complete', 'turn_id': 'turn'}), 3)
+                code, report = self.run_report({'root': raw})
+                self.assertEqual(code, 2, report)
+                self.assertIn('malformed_source', {x['code'] for x in report['issues']})
+
+    def test_same_ordinal_known_type_retry_recovers_short_native_header(self):
+        item = row('event_msg', {'type': 'item_completed', 'thread_id': 'root', 'turn_id': 'turn', 'item': {}})
+        for event in (item, record('response-one')):
+            with self.subTest(kind=event['type']):
+                partial, retry = partial_retry(event)
+                partial = partial[:partial.index(b'"payload":') + 3] + b'\n'
+                rows = native_line(meta(), 0) + partial + retry
+                total = usage()
+                next_ordinal = 2
+                if event['type'] == 'event_msg':
+                    rows += native_line(record('response-one', second=2), next_ordinal)
+                    next_ordinal += 1
+                rows += native_line(count(total), next_ordinal)
+                rows += native_line(row('event_msg', {'type': 'task_complete', 'turn_id': 'turn'}), next_ordinal+1)
+                code, report = self.run_report({'root': rows})
+                self.assertEqual(code, 0, report)
+                self.assertEqual(report['window_observed_usage'], total)
+                self.assertEqual(len(report['runs'][0]['sources'][0]['partial_write_recoveries']), 1)
+
+    def test_recovery_requires_following_ordinal_and_explained_cumulative_totals(self):
+        for bad in ('next-ordinal', 'missing-next-ordinal', 'ledger-gap', 'ordinary-gap'):
+            partial, retry = partial_retry(record('response-one'))
+            following = count(usage(20) if bad == 'ordinary-gap' else usage())
+            if bad == 'ledger-gap':
+                event = record('response-one', cumulative=usage(20))
+                partial, retry = partial_retry(event)
+            next_row = native_line(following, 9 if bad == 'next-ordinal' else 2)
+            if bad == 'missing-next-ordinal':
+                next_row = next_row.replace(b'"ordinal":2,', b'')
+            raw = native_line(meta(), 0) + partial + retry + next_row
+            raw += native_line(row('event_msg', {'type': 'task_complete', 'turn_id': 'turn'}), 3)
+            code, report = self.run_report({'root': raw})
+            self.assertEqual(code, 2, report)
+            expected = {'next-ordinal': 'invalid_retry_ordinal', 'missing-next-ordinal': 'invalid_retry_ordinal',
+                        'ledger-gap': 'ledger_reconciliation', 'ordinary-gap': 'ordinary_reconciliation'}[bad]
+            self.assertIn(expected, {x['code'] for x in report['issues']})
+            self.assertIsNone(report['allocated_arm_usage'])
+
+    def test_partial_recovery_cannot_cross_phase_or_window_boundaries(self):
+        first, retry = partial_retry(record('response-one'))
+        raw = native_line(meta(), 0) + first + retry + native_line(count(usage()), 2)
+        raw += native_line(row('event_msg', {'type': 'task_complete', 'turn_id': 'turn'}), 3)
+        for boundary in ('phase', 'window'):
+            def change(m):
+                if boundary == 'window':
+                    m['window']['start'] = '2026-01-01T00:00:01.050Z'
+                else:
+                    phase = m['runs'][0]['phases'][0]
+                    phase['end'] = '2026-01-01T00:00:01.050Z'
+                    m['runs'][0]['phases'].append(dict(phase, id='next', start=phase['end'], end='2026-01-01T00:01:00Z'))
+            code, report = self.run_report({'root': raw}, change)
+            self.assertEqual(code, 2, report)
+            self.assertIn('malformed_source', {x['code'] for x in report['issues']})
+
+    def test_recovered_rows_still_require_source_hash_and_valid_counters(self):
+        for bad in ('hash', 'counters', 'source-owner'):
+            event = record('response-one')
+            if bad == 'counters':
+                event['payload']['usage']['total_tokens'] = 99
+            if bad == 'source-owner':
+                event['payload']['thread_id'] = 'child'
+            first, retry = partial_retry(event)
+            raw = native_line(meta(), 0) + first + retry + native_line(count(usage()), 2)
+            raw += native_line(row('event_msg', {'type': 'task_complete', 'turn_id': 'turn'}), 3)
+            def change(m):
+                if bad == 'hash':
+                    m['runs'][0]['sources'][0]['sha256'] = '0' * 64
+            code, report = self.run_report({'root': raw}, change)
+            self.assertEqual(code, 2, report)
+            self.assertIn({'hash': 'source_digest_mismatch', 'counters': 'invalid_category_totals',
+                           'source-owner': 'record_ownership'}[bad], {x['code'] for x in report['issues']})
+
+    def fork_files(self):
+        own = meta('child', 'root')
+        own['payload'].update(forked_from_id='root', subagent_history_start_ordinal=4)
+        inherited = [meta(), count(usage(999)), row('event_msg', {'type': 'turn_aborted'})]
+        rows = [own] + inherited + [record('child-response', 'child', 'child-turn'),
+                                   count(usage()), row('event_msg', {'type': 'task_complete', 'turn_id': 'child-turn'})]
+        files = {'root': [meta(), record('response-one'), count(usage()),
+                          row('event_msg', {'type': 'task_complete', 'turn_id': 'turn'})],
+                 'child': rows,
+                 'events': [{'method': 'item/started', 'params': {'threadId': 'root',
+                    'item': {'type': 'subAgentActivity', 'kind': 'started', 'agentThreadId': 'child'}}}]}
+        return files
+
+    def run_fork(self, files, change=None):
+        files = copy.deepcopy(files)
+        if isinstance(files['child'], list):
+            files['child'] = b''.join(native_line(r, i) for i, r in enumerate(files['child']))
+        def manifest(m):
+            m['runs'][0]['expected_threads'].append({'thread_id': 'child', 'parent_thread_id': 'root'})
+            if change:
+                change(m)
+        return self.run_report(files, manifest)
+
+    def test_explicit_fork_boundary_keeps_canonical_child_owner(self):
+        code, report = self.run_fork(self.fork_files())
+        self.assertEqual(code, 0, report)
+        self.assertEqual(report['unique_responses'], 2)
+        self.assertEqual(report['window_observed_usage'], plus(usage(), usage()))
+        self.assertEqual(report['runs'][0]['ordinary_compaction_delta'], dict.fromkeys(KEYS, 0))
+        child = report['runs'][0]['sources'][1]['inherited_history']
+        self.assertEqual(child['start_ordinal'], 4)
+        self.assertEqual(child['excluded_rows'], 3)
+        self.assertEqual(child['parent_thread_id_hash'], hashlib.sha256(b'root').hexdigest())
+
+    def test_fork_boundary_rejects_missing_invalid_or_foreign_metadata(self):
+        for bad in ('missing', 'null', 'bool', 'negative', 'no-parent', 'wrong-fork', 'foreign', 'conflict', 'after-boundary', 'never-reached', 'missing-ordinal', 'gap'):
+            with self.subTest(bad=bad):
+                files = self.fork_files(); rows = files['child']; own = rows[0]['payload']
+                if bad == 'missing': own.pop('subagent_history_start_ordinal')
+                elif bad in ('null', 'bool', 'negative'): own['subagent_history_start_ordinal'] = {'null':None, 'bool':True, 'negative':-1}[bad]
+                elif bad == 'no-parent': own['parent_thread_id'] = None
+                elif bad == 'wrong-fork': own['forked_from_id'] = 'other'
+                elif bad == 'foreign': rows[1]['payload']['id'] = 'other'
+                elif bad == 'conflict': rows[1]['payload']['cli_version'] = 'other'
+                elif bad == 'after-boundary': rows[4] = meta()
+                elif bad == 'never-reached': own['subagent_history_start_ordinal'] = 100
+                elif bad == 'missing-ordinal': files['child'] = ''.join(json.dumps(r)+'\n' for r in rows).encode()
+                elif bad == 'gap': files['child'] = b''.join(native_line(r, i if i < 2 else i+1) for i,r in enumerate(rows))
+                code, report = self.run_fork(files)
+                self.assertEqual(code, 2, report)
+                self.assertIsNone(report['allocated_arm_usage'])
+
+    def test_inherited_usage_requires_matching_original_parent_record(self):
+        for bad in (False, True):
+            files = self.fork_files()
+            files['child'][2] = record('response-one')
+            if bad:
+                files['child'][2]['payload']['usage'] = usage(20)
+            code, report = self.run_fork(files)
+            self.assertEqual(code, 2 if bad else 0, report)
+            self.assertEqual(report['unique_responses'], 2)
+            if bad:
+                self.assertIn('inherited_usage_mismatch', {x['code'] for x in report['issues']})
+
+    def test_fork_history_does_not_hide_unknown_or_missing_parent_evidence(self):
+        for bad in ('unknown', 'malformed', 'checkpoint', 'missing-parent', 'foreign-usage'):
+            files = self.fork_files()
+            if bad == 'unknown': files['child'][2] = row('new_accounting', {})
+            elif bad == 'checkpoint': files['child'][2] = row('compacted', {})
+            elif bad == 'missing-parent': files.pop('root')
+            elif bad == 'foreign-usage': files['child'][2] = record('unseen-parent-response')
+            elif bad == 'malformed':
+                files['child'] = b''.join(native_line(r, i) if i != 2 else b'{"private":"private-canary"\n'
+                                          for i, r in enumerate(files['child']))
+            code, report = self.run_fork(files)
+            self.assertEqual(code, 2, report)
+            self.assertIsNone(report['allocated_arm_usage'])
 
     def test_descendants_retry_replay_and_embedded_compaction(self):
         first = record('response-one')
