@@ -2,6 +2,7 @@
 # Recreate it for each treatment run; never reuse preflight databases.
 [tracking]
 enabled = true
+history_days = 90
 
 [telemetry]
 enabled = false

@@ -36,6 +36,14 @@ prefix on `PATH`, `XDG_CONFIG_HOME`, `XDG_DATA_HOME`, `XDG_CACHE_HOME`, `TMPDIR`
 Give workers the same run's environment and verify their actual command workdir.
 Do not copy preflight databases, recall entries, sessions or caches into an arm.
 
+Before nominal wrapped commands or native activation, run the pinned `rtk config`
+under that same environment and require exit 0. Inspect its effective settings:
+tracking enabled with `history_days = 90`, telemetry disabled, sqlite recall,
+`awareness.level = "full"` and hook-warning suppression enabled. Also run
+`rtk telemetry status` and require the environment opt-out to report blocked.
+RTK 1.1.0 can silently fall back to defaults on wrapped command paths when config
+loading fails, so a passing wrapped command alone cannot validate activation.
+
 Add [the project policy](../../examples/rtk-v1/AGENTS.fragment.md) outside any
 managed instruction section in the selected treatment checkout, preserving existing
 instructions. Recreate it for each worktree. A has neither this policy nor RTK
@@ -50,6 +58,17 @@ hook is installed or claimed.** Native hook review and trust remain untouched;
 future hook activation would require native review. Do not run global `rtk init`.
 
 ## Actual fidelity results
+
+Independent review found that the original published config omitted the required
+`tracking.history_days`: pinned `rtk config` returned 1 even though a nominal
+wrapped typecheck returned 0. Adding `history_days = 90` makes `rtk config` return
+0. Its full effective TOML, excluding the config-path header, is byte-for-byte
+equal to the actual preflight config, which selected tracking defaults by omitting
+that whole section. Both resolve awareness to `full`, suppress the hook warning
+and disable telemetry. Fresh isolated checks also verified the blocked telemetry
+environment override, wrapped typecheck success, and actual tracking/recall
+database writes using explicit paths and XDG defaults. The existing 75-command
+and native evidence remains applicable; this correction adds no native run.
 
 [The public projection](../../examples/rtk-v1/preflight.json) records every command
 comparison, exits and log digests. Disposable copies came from web
