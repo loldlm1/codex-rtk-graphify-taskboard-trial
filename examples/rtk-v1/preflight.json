@@ -1,0 +1,1087 @@
+{
+  "schema_version": 1,
+  "scope": "B-only preflight; no measured feature implementation",
+  "runtime": "0.167.0",
+  "activation": "explicit project awareness; no automatic rewrite hook",
+  "rtk": {
+    "version": "1.1.0",
+    "edition": "oss",
+    "source_commit": "753a3b0e939f2e4490fc24e3a1984010f40a103c",
+    "platform": "x86_64-unknown-linux-musl",
+    "archive_sha256": "4dec94a64035e08189ae82fd5408fe4ae9ae27a665fc07e3e3ec3c4c2d8e8a3e",
+    "executable_sha256": "0b80810970ce2c79c92deaa474bbcf6f1cf01ac93baab0e273ee6cb4ef950d10"
+  },
+  "native_proof": {
+    "coordinator": {
+      "workload": "web",
+      "command": [
+        "rtk",
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit": 0,
+      "policy_read": true
+    },
+    "actual_spawned_worker": {
+      "workload": "canvas",
+      "command": [
+        "rtk",
+        "npm",
+        "test",
+        "--",
+        "--run",
+        "tests/unit/input.test.ts"
+      ],
+      "exit": 0,
+      "passed_tests": 3,
+      "policy_read": true,
+      "explicit_command_workdir": true,
+      "inherited_thread_cwd": "coordinator"
+    },
+    "coordinator_bypass": {
+      "command": [
+        "rtk",
+        "bypass",
+        "node",
+        "-e",
+        "console.log(\"RTK_NATIVE_BYPASS\")"
+      ],
+      "exit": 0,
+      "expected_marker_observed": true
+    },
+    "model": "gpt-6.1-sol",
+    "effort": "ultra",
+    "service_tier": "default",
+    "hooks": "existing trusted ECC SessionStart only; no native trust mutation",
+    "process_exit": 0,
+    "manual_compactions": 0,
+    "process_restarts": 0
+  },
+  "coverage": {
+    "web": {
+      "lines": {
+        "total": 142,
+        "covered": 142,
+        "skipped": 0,
+        "pct": 100
+      },
+      "statements": {
+        "total": 164,
+        "covered": 164,
+        "skipped": 0,
+        "pct": 100
+      },
+      "functions": {
+        "total": 33,
+        "covered": 33,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 48,
+        "covered": 48,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": "Unknown"
+      }
+    },
+    "canvas": {
+      "lines": {
+        "total": 148,
+        "covered": 147,
+        "skipped": 0,
+        "pct": 99.32
+      },
+      "statements": {
+        "total": 179,
+        "covered": 177,
+        "skipped": 0,
+        "pct": 98.88
+      },
+      "functions": {
+        "total": 24,
+        "covered": 24,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 75,
+        "covered": 71,
+        "skipped": 0,
+        "pct": 94.66
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": "Unknown"
+      }
+    }
+  },
+  "commands": [
+    {
+      "workload": "web",
+      "label": "typecheck-raw",
+      "exit": 0,
+      "bytes": 57,
+      "sha256": "b443cfe9f57ecacbf1076600a1adc83db601bd35365f332978ab336029ff2cb5",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "typecheck-rtk",
+      "exit": 0,
+      "bytes": 15,
+      "sha256": "41510730ac803caf8ff6cba50d89778a42e2375cbffcd9098d191df95cb75fc7",
+      "command": [
+        "rtk",
+        "npm",
+        "run",
+        "typecheck"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "build-raw",
+      "exit": 0,
+      "bytes": 389,
+      "sha256": "f3c39986bd32451a06d3204c256f7a6d7409128108967cc3ffb391013a95eb3d",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "build-rtk",
+      "exit": 0,
+      "bytes": 349,
+      "sha256": "b94dd67fd819939f5de4d000d9c0d1d7076fd1ad5fd77dac53bb8e355840cd22",
+      "command": [
+        "rtk",
+        "npm",
+        "run",
+        "build"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "unit-raw",
+      "exit": 0,
+      "bytes": 568,
+      "sha256": "86d42a14b99605f73ebd71183674b6f4ea1ff8beffbd126e9cc6b9f682e37eff",
+      "command": [
+        "npm",
+        "test"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "unit-rtk",
+      "exit": 0,
+      "bytes": 512,
+      "sha256": "a6005347423545dbd0ea1be6813154822568a9fa0ec018f4e24c02637a93b76d",
+      "command": [
+        "rtk",
+        "npm",
+        "test"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "coverage-raw",
+      "exit": 0,
+      "bytes": 988,
+      "sha256": "67e36485232b891c74dceea3b3a03cce84720dcb4d744c9da92dca2eb9dd1e9e",
+      "command": [
+        "npm",
+        "run",
+        "test:coverage"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "coverage-rtk",
+      "exit": 0,
+      "bytes": 936,
+      "sha256": "93d8f40c3ffbf3b79c184a49b2699531f00254e2cc85ac25cdba307dd5eb12a2",
+      "command": [
+        "rtk",
+        "npm",
+        "run",
+        "test:coverage"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "browser-raw",
+      "exit": 0,
+      "bytes": 1126,
+      "sha256": "65a88b5eed49f44efa7c19ae307a5779f193685af4b76e701a874ccdf41edc04",
+      "command": [
+        "npm",
+        "run",
+        "test:browser"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "browser-rtk",
+      "exit": 0,
+      "bytes": 1077,
+      "sha256": "024350fee3ff4a5848f5ca15cc4a8234eb75c559fa7f399efe84782e5ee88b0e",
+      "command": [
+        "rtk",
+        "npm",
+        "run",
+        "test:browser"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "vitest-json-raw",
+      "exit": 0,
+      "bytes": 91,
+      "sha256": "5866eb11afb31e56f3543599ed01fe3be91ac1842035c5cace32e1ffcdebb1a9",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--reporter=json"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "vitest-json-rtk",
+      "exit": 0,
+      "bytes": 149,
+      "sha256": "08f0d21ad8d61d8ae6d33318cd327133b05a81b2919e09a2a7b6460b50952fc0",
+      "command": [
+        "rtk",
+        "vitest",
+        "run"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "playwright-json-raw",
+      "exit": 0,
+      "bytes": 7099,
+      "sha256": "822fd3adbeeb5130a1011aba36de0238dc023d16ea31e57f415f50cdf94983a7",
+      "command": [
+        "npx",
+        "--no-install",
+        "playwright",
+        "test",
+        "--reporter=json"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "playwright-json-rtk",
+      "exit": 0,
+      "bytes": 32,
+      "sha256": "92c13f7e8b0def018aadf9ec03290b5fa08f78931f0f8256b15c95de162bf46c",
+      "command": [
+        "rtk",
+        "playwright",
+        "test"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "red-unit-raw",
+      "exit": 1,
+      "bytes": 1566,
+      "sha256": "6db52994c998c464d03a885b94f8579f62d12f3dbc6560c7a9f49b656ac340c0",
+      "command": [
+        "npm",
+        "test"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "red-unit-rtk",
+      "exit": 1,
+      "bytes": 1516,
+      "sha256": "57c2316414d048ee81a9513aecf9f048047b32c61bdcc690c1eb7c8b6279a9bc",
+      "command": [
+        "rtk",
+        "npm",
+        "test"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "red-vitest-json-raw",
+      "exit": 1,
+      "bytes": 91,
+      "sha256": "5866eb11afb31e56f3543599ed01fe3be91ac1842035c5cace32e1ffcdebb1a9",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--reporter=json"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "red-vitest-json-rtk",
+      "exit": 1,
+      "bytes": 149,
+      "sha256": "08f0d21ad8d61d8ae6d33318cd327133b05a81b2919e09a2a7b6460b50952fc0",
+      "command": [
+        "rtk",
+        "vitest",
+        "run"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "red-vitest-default-raw",
+      "exit": 1,
+      "bytes": 1715,
+      "sha256": "0b2aebd56391b669116ec306addce8681cf7f1227a9b390742e52598393abb26",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--reporter=default"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "red-vitest-default-rtk",
+      "exit": 1,
+      "bytes": 1714,
+      "sha256": "6b0b959f5811ec0946bcdeb9ac1fe8a1419cd1d459f373127a1cb8fc0c35ba11",
+      "command": [
+        "rtk",
+        "vitest",
+        "run",
+        "--reporter=default"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "bypass",
+      "exit": 1,
+      "bytes": 1552,
+      "sha256": "6ba12f43784c408be4f6aa2269246b196474791f3dfda9ac71969119d1df0368",
+      "command": [
+        "rtk",
+        "bypass",
+        "npm",
+        "test"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "unavailable-recall",
+      "exit": 1,
+      "bytes": 1716,
+      "sha256": "3091c10407f8f078c7a105b5db748c28ef0205b5d5fc8b1e4e896a59cdf34eac",
+      "command": [
+        "rtk",
+        "vitest",
+        "run",
+        "--reporter=default"
+      ],
+      "recovery_mode": "database path beneath a regular file"
+    },
+    {
+      "workload": "web",
+      "label": "disabled-recall",
+      "exit": 1,
+      "bytes": 1716,
+      "sha256": "9395dc2b6f41c1cc1d779ed22daacd7843a4b65b8cfa18fc304f8b26df7d54d1",
+      "command": [
+        "rtk",
+        "vitest",
+        "run",
+        "--reporter=default"
+      ],
+      "recovery_mode": "RTK_RECALL=0"
+    },
+    {
+      "workload": "web",
+      "label": "green-unit-raw",
+      "exit": 0,
+      "bytes": 579,
+      "sha256": "ba053aba843416534c59fa3fc2a86ca1991e95c7e11228e7ac861f52d8a0b3ce",
+      "command": [
+        "npm",
+        "test"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "green-unit-rtk",
+      "exit": 0,
+      "bytes": 523,
+      "sha256": "6057a81fa21b4111bd4084a64117ea3bdee12dc9e48b3ec9d0b506fdc643138b",
+      "command": [
+        "rtk",
+        "npm",
+        "test"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "recall-list",
+      "exit": 0,
+      "bytes": 163,
+      "sha256": "aea9189949f244fc4ec87fa92296366b8793335b1e4cfaf1bb365055a01d016b",
+      "command": [
+        "rtk",
+        "recall",
+        "--list"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "recall",
+      "exit": 0,
+      "bytes": 1714,
+      "sha256": "6b0b959f5811ec0946bcdeb9ac1fe8a1419cd1d459f373127a1cb8fc0c35ba11",
+      "command": [
+        "rtk",
+        "recall",
+        "6e411da65d1b786a",
+        "--full"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "red-typecheck-raw",
+      "exit": 1,
+      "bytes": 195,
+      "sha256": "ef81188e107458b80ab21ffbcadf9dacb5f842c31278c03faadc3c7393e7042e",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "red-typecheck-rtk",
+      "exit": 1,
+      "bytes": 153,
+      "sha256": "ea45f3a5dfe036a94b1033756ed35f8ea5d6ed2f8a67e5c84a2eaa9ddea20737",
+      "command": [
+        "rtk",
+        "npm",
+        "run",
+        "typecheck"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "red-build-raw",
+      "exit": 1,
+      "bytes": 2103,
+      "sha256": "2c4548958c9e449296cf5d7160d2f114bb47547109a884929a9be8b1e31f370a",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "red-build-rtk",
+      "exit": 1,
+      "bytes": 2063,
+      "sha256": "8c2e2e3c5391318aafa57e89ab94b2333f6820e8c1167c206c5915b1de10b685",
+      "command": [
+        "rtk",
+        "npm",
+        "run",
+        "build"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "restored-build-raw",
+      "exit": 0,
+      "bytes": 389,
+      "sha256": "aa5953804170dcff978aedf443c9fb4e9b64f1014be24a3433cc4ff694358990",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "restored-build-rtk",
+      "exit": 0,
+      "bytes": 350,
+      "sha256": "d92ffe63e83c461a1ea65d43ee4d4da7c3afe1a86a479bf00f40071c310c88fd",
+      "command": [
+        "rtk",
+        "npm",
+        "run",
+        "build"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "red-browser-raw",
+      "exit": 1,
+      "bytes": 3896,
+      "sha256": "ecd05b44ec7e0a8c3c1fea788469c82178abe6922dd27e2d008ad24907120a05",
+      "command": [
+        "npm",
+        "run",
+        "test:browser"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "red-browser-rtk",
+      "exit": 1,
+      "bytes": 3838,
+      "sha256": "ca7f1a5e6f05452c82036c735a4f135a413d9107e98de6cbee3836333133d40e",
+      "command": [
+        "rtk",
+        "npm",
+        "run",
+        "test:browser"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "red-playwright-json-raw",
+      "exit": 1,
+      "bytes": 14617,
+      "sha256": "d9032890a1715cc503d27bcb3a7c0985a24dd74a7bb33159aa171fb92b2d4167",
+      "command": [
+        "npx",
+        "--no-install",
+        "playwright",
+        "test",
+        "--reporter=json"
+      ]
+    },
+    {
+      "workload": "web",
+      "label": "red-playwright-json-rtk",
+      "exit": 1,
+      "bytes": 911,
+      "sha256": "5f04e940f915c54766cc24a20cba95fdf9bbee2fa735d3d0f6b4e1b499e5a62b",
+      "command": [
+        "rtk",
+        "playwright",
+        "test"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "typecheck-raw",
+      "exit": 0,
+      "bytes": 53,
+      "sha256": "b5a32cd0fab57988a43d1278d09d2e6629f50173399529cf99fe3cb69f28704e",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "typecheck-rtk",
+      "exit": 0,
+      "bytes": 15,
+      "sha256": "41510730ac803caf8ff6cba50d89778a42e2375cbffcd9098d191df95cb75fc7",
+      "command": [
+        "rtk",
+        "npm",
+        "run",
+        "typecheck"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "build-raw",
+      "exit": 0,
+      "bytes": 386,
+      "sha256": "9f16a8c65de59ab3d5d30614229854e595a3884a6df5bff88b451ff2d9b25c97",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "build-rtk",
+      "exit": 0,
+      "bytes": 351,
+      "sha256": "602ae85e28484039a9a13ee9d2bac8aad0b1cd901d0d06024a708a4b2fa7db3b",
+      "command": [
+        "rtk",
+        "npm",
+        "run",
+        "build"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "unit-raw",
+      "exit": 0,
+      "bytes": 555,
+      "sha256": "9f723c304773210da7e8ac403c1e8f106e881b2fda31b8824c9acc728e58a177",
+      "command": [
+        "npm",
+        "test"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "unit-rtk",
+      "exit": 0,
+      "bytes": 528,
+      "sha256": "3b19b8a5da330fa6d781a2a6ff84e9f5279d20e172bed07b97a204992486f518",
+      "command": [
+        "rtk",
+        "npm",
+        "test"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "coverage-raw",
+      "exit": 0,
+      "bytes": 1553,
+      "sha256": "c797d778fe8e4c9d0d304c9a30502b71bd41c106f68b77ffa7df931ee17ed960",
+      "command": [
+        "npm",
+        "run",
+        "test:coverage"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "coverage-rtk",
+      "exit": 0,
+      "bytes": 1505,
+      "sha256": "f9291314e9d1bd54080a20cf3a69c720e38c9fb0188a3095d2a320a9f3ce186a",
+      "command": [
+        "rtk",
+        "npm",
+        "run",
+        "test:coverage"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "browser-raw",
+      "exit": 0,
+      "bytes": 1001,
+      "sha256": "448655d23579ec7423542c63bb8ec37a4ef2ca2d3a503274e1896280285b8b75",
+      "command": [
+        "npm",
+        "run",
+        "test:browser"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "browser-rtk",
+      "exit": 0,
+      "bytes": 957,
+      "sha256": "1b0781c1d0d90031a4da9638f23d836636ebbbebee7f5aa1e117ca8da7ecf518",
+      "command": [
+        "rtk",
+        "npm",
+        "run",
+        "test:browser"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "vitest-json-raw",
+      "exit": 0,
+      "bytes": 94,
+      "sha256": "9b45ce7006b5455c86be0d4400f78b7e98d55de052cf64b52f32323723c07a8d",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--reporter=json"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "vitest-json-rtk",
+      "exit": 0,
+      "bytes": 152,
+      "sha256": "2a84d240a76011b168612ed9e51fb3393b9f3235ec3fe1b2284e6a0b11c43f90",
+      "command": [
+        "rtk",
+        "vitest",
+        "run"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "playwright-json-raw",
+      "exit": 0,
+      "bytes": 6068,
+      "sha256": "40ff68598715ae14ce209d9eb2c8b6caf8d8e10ad1833f4cbadce73471f2cdfa",
+      "command": [
+        "npx",
+        "--no-install",
+        "playwright",
+        "test",
+        "--reporter=json"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "playwright-json-rtk",
+      "exit": 0,
+      "bytes": 32,
+      "sha256": "e3e3e7f8401947a18872b4d9e12d241e4541ade66cd7263e99e94a3ae56a55ab",
+      "command": [
+        "rtk",
+        "playwright",
+        "test"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "red-unit-raw",
+      "exit": 1,
+      "bytes": 1564,
+      "sha256": "0ec91aa27687a5b2b275f63885edd999c032315623eee56a18781a929e1fe718",
+      "command": [
+        "npm",
+        "test"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "red-unit-rtk",
+      "exit": 1,
+      "bytes": 1520,
+      "sha256": "962bff8621e9ecf2b996dcb5252ebf30f49706b5ac10175f943ce7cc7b8b8596",
+      "command": [
+        "rtk",
+        "npm",
+        "test"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "red-vitest-json-raw",
+      "exit": 1,
+      "bytes": 94,
+      "sha256": "9b45ce7006b5455c86be0d4400f78b7e98d55de052cf64b52f32323723c07a8d",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--reporter=json"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "red-vitest-json-rtk",
+      "exit": 1,
+      "bytes": 152,
+      "sha256": "2a84d240a76011b168612ed9e51fb3393b9f3235ec3fe1b2284e6a0b11c43f90",
+      "command": [
+        "rtk",
+        "vitest",
+        "run"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "red-vitest-default-raw",
+      "exit": 1,
+      "bytes": 1735,
+      "sha256": "5e75c5944c94bb317e6451d49758f9ccc1415ae98698416e7256eb7928fed4e5",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--reporter=default"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "red-vitest-default-rtk",
+      "exit": 1,
+      "bytes": 1720,
+      "sha256": "657dc4026d644b3266e82dd1641ba0764a3ae427754f72558d761ca2e4a6b6fa",
+      "command": [
+        "rtk",
+        "vitest",
+        "run",
+        "--reporter=default"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "recall-list",
+      "exit": 0,
+      "bytes": 321,
+      "sha256": "77e84aa738d2ec76c378aa1683c55bd1aa35239260a8410ffc3f14ea2c9aaf8b",
+      "command": [
+        "rtk",
+        "recall",
+        "--list"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "recall",
+      "exit": 0,
+      "bytes": 1714,
+      "sha256": "6b0b959f5811ec0946bcdeb9ac1fe8a1419cd1d459f373127a1cb8fc0c35ba11",
+      "command": [
+        "rtk",
+        "recall",
+        "6e411da65d1b786a",
+        "--full"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "bypass",
+      "exit": 1,
+      "bytes": 1553,
+      "sha256": "38d731d87e2375b672a825ca891ed3c20fbbd28aae81261732ec54f656aedaec",
+      "command": [
+        "rtk",
+        "bypass",
+        "npm",
+        "test"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "unavailable-recall",
+      "exit": 1,
+      "bytes": 1735,
+      "sha256": "d8eb79e0a04d77f920bec08af12a12767daa559a426a26ec06de912272949a81",
+      "command": [
+        "rtk",
+        "vitest",
+        "run",
+        "--reporter=default"
+      ],
+      "recovery_mode": "database path beneath a regular file"
+    },
+    {
+      "workload": "canvas",
+      "label": "disabled-recall",
+      "exit": 1,
+      "bytes": 1736,
+      "sha256": "7de536fa8ed25f7ffccb7da809316340c1560e6053d289b0c4df821e75810d12",
+      "command": [
+        "rtk",
+        "vitest",
+        "run",
+        "--reporter=default"
+      ],
+      "recovery_mode": "RTK_RECALL=0"
+    },
+    {
+      "workload": "canvas",
+      "label": "green-unit-raw",
+      "exit": 0,
+      "bytes": 578,
+      "sha256": "5aed5e2b1995e089ca0193f9053099e1deb18d44476fe25ae36edf322d1e92ea",
+      "command": [
+        "npm",
+        "test"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "green-unit-rtk",
+      "exit": 0,
+      "bytes": 540,
+      "sha256": "9d9ffe05b0aa80792a992f1663a1b292723d6dbb29fc639c7300b6ac39892070",
+      "command": [
+        "rtk",
+        "npm",
+        "test"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "red-typecheck-raw",
+      "exit": 1,
+      "bytes": 191,
+      "sha256": "0e727768cd36ec055cb73ba6ade2a890780df7cbfde94f51db658d134d3f0a6f",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "red-typecheck-rtk",
+      "exit": 1,
+      "bytes": 153,
+      "sha256": "ea45f3a5dfe036a94b1033756ed35f8ea5d6ed2f8a67e5c84a2eaa9ddea20737",
+      "command": [
+        "rtk",
+        "npm",
+        "run",
+        "typecheck"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "red-build-raw",
+      "exit": 1,
+      "bytes": 2099,
+      "sha256": "9050ededb1f54d90144918ddafcef3beb90335797021fb6875f8449d1a311ce9",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "red-build-rtk",
+      "exit": 1,
+      "bytes": 2063,
+      "sha256": "c52f1feb28bd9456fae0dbdc23e6ba462708886169601e3d3b703d87a7c6b18b",
+      "command": [
+        "rtk",
+        "npm",
+        "run",
+        "build"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "restored-build-raw",
+      "exit": 0,
+      "bytes": 386,
+      "sha256": "3d1acc7dd664e49e7c698b1863fc689c5c3aed60d341d26472c04a69b26d2ba4",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "restored-build-rtk",
+      "exit": 0,
+      "bytes": 351,
+      "sha256": "df21df9b6557e603d06691379096baa90b00927f5dcec5393b9523eabd790992",
+      "command": [
+        "rtk",
+        "npm",
+        "run",
+        "build"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "red-browser-raw",
+      "exit": 1,
+      "bytes": 3621,
+      "sha256": "e16290dcffd4a82373c32fa5b24b1669820672e8fa0dd20d474eec18843ff953",
+      "command": [
+        "npm",
+        "run",
+        "test:browser"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "red-browser-rtk",
+      "exit": 1,
+      "bytes": 3567,
+      "sha256": "f224b9afab4bb3eabfdbeebac7d22aa5588c6efb7b9dba9939bc486ecb89018a",
+      "command": [
+        "rtk",
+        "npm",
+        "run",
+        "test:browser"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "red-playwright-json-raw",
+      "exit": 1,
+      "bytes": 13765,
+      "sha256": "03f04cd4bd2a9bd04ee07a0c4eca8ddf6e2118f77be6789e55d1b59bd0d3530b",
+      "command": [
+        "npx",
+        "--no-install",
+        "playwright",
+        "test",
+        "--reporter=json"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "red-playwright-json-rtk",
+      "exit": 1,
+      "bytes": 942,
+      "sha256": "b18521059178358e3dd35f3b72c7980d578a07d3fe50e5f2f75bef76924eee64",
+      "command": [
+        "rtk",
+        "playwright",
+        "test"
+      ]
+    },
+    {
+      "workload": "canvas",
+      "label": "recall-current",
+      "exit": 0,
+      "bytes": 1720,
+      "sha256": "657dc4026d644b3266e82dd1641ba0764a3ae427754f72558d761ca2e4a6b6fa",
+      "command": [
+        "rtk",
+        "recall",
+        "b6349c3b8a78d6c0",
+        "--full"
+      ]
+    }
+  ],
+  "limitations": [
+    "Bare rtk vitest JSON route excluded: Vitest5 report path only.",
+    "Specialized Playwright JSON route can omit standalone warnings; keep npm script.",
+    "RTK npm filter strips npm WARN and notices; use raw installation/audit.",
+    "Small/successful/evicted output or unavailable storage may not have usable recall.",
+    "Native usage source inventory remains private and must reconcile through usage-v1.",
+    "No savings/adoption/recovery-gate claim."
+  ],
+  "attribution": {
+    "category": "shared-b-preflight",
+    "allocation": "one half to web-B and one half to canvas-B",
+    "includes": "research, provisioning, retries, diagnosis, bypass, native coordinator/worker and complete outer worker work"
+  }
+}

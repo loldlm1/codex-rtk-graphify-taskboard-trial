@@ -1,0 +1,22 @@
+# Linux process-local RTK config. Place under this run's XDG_CONFIG_HOME/rtk/.
+# Recreate it for each treatment run; never reuse preflight databases.
+[tracking]
+enabled = true
+history_days = 90
+
+[telemetry]
+enabled = false
+
+[retriever]
+mode = "sqlite"
+max_entry_bytes = 10485760
+max_entries = 200
+retention_days = 30
+compression = true
+
+[hooks]
+# This pilot uses explicit command prefixes, with no automatic rewrite hook.
+suppress_hook_warning = true
+
+[awareness]
+level = "full"
