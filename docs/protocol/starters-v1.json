@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "purpose": "Immutable application starters and common review policy fixed before the four implementations; no outcome is asserted.",
+  "accepted_stack_profile_sha256": "51ed50320fff77610a9030e0846fbe6f532c39ba6c766466ffb0f1026b4d2f97",
+  "quality_supplement_sha256": "e92f64e58e1f2147de4685c6edd49de97407131fc37ee86249e924efb8129f48",
+  "quality_supplement_path": "docs/protocol/quality-review-v1.md",
+  "starters": [
+    {
+      "workload": "web",
+      "repository": "https://github.com/loldlm1/codex-rtk-graphify-taskboard-trial",
+      "tag": "starter-v1.0.0",
+      "commit": "01dbac8f5a60a1a5a5be89238971fd13badb3b56",
+      "original_review_baseline": "14ae1c0462e42df8eaff2848e7786811cefc06e8",
+      "reviewed_integration": "454b95a116ffe0cee8da6b73d9396cfaef3b5dcf",
+      "remote_tag_verified": true,
+      "sha256": {
+        "package-lock.json": "d176b94998418fdea34ea339f2011fc7830b7ea80ea0fd8e9ed395fd17f3a88b",
+        "docs/tasks/saved-status-filter-v1.md": "330e940f5b9e10fbacbc7df169d29285b0de4194609671ea331aa3559eba3c2c",
+        "tests/acceptance/saved-status-filter.spec.ts": "1fc3ef343780929d3e3e94b39031bc0c1dbc0b327c7d16d8c31da3562589d149"
+      },
+      "future_feature": "intentionally absent; separate acceptance is RED",
+      "lint": "unconfigured"
+    },
+    {
+      "workload": "canvas",
+      "repository": "https://github.com/loldlm1/codex-rtk-graphify-breakout-trial",
+      "tag": "starter-v1.0.0",
+      "commit": "a4031c0da42d95f97d3b2e0fed4bdbcd76dd3087",
+      "original_review_baseline": "223ce7462ebbb7cda1961e62f2860a2c3f0dcc65",
+      "reviewed_integration": "9ccaa4c5a0b9b033869a85916a123d3253cc85d8",
+      "remote_tag_verified": true,
+      "sha256": {
+        "package-lock.json": "f0f8a2dbd3e93d48e2a31082a1bac14107ecf856111756032c98bf0d6f8cd61f",
+        "docs/tasks/pause-resume-restart-v1.md": "9633016a6875d13e72a2a0a3deb3c0207c51a42344554ee9d393612ed7e278fa",
+        "tests/feature/unit/pause-restart.test.ts": "fbfaa329fc9a2cf28f34fb141622210ee46fb86d7065b63f427b4e36d9eb4b65",
+        "tests/feature/browser/pause-restart.spec.ts": "862f07bd94577f66a193d8738d9eb34c4ec5dff8aa08b9483ed98c8d803bf5ab"
+      },
+      "future_feature": "intentionally absent; separate acceptance is RED",
+      "lint": "unconfigured"
+    }
+  ]
+}
