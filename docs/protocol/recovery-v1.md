@@ -115,6 +115,16 @@ ledger-minus-ordinary difference. Per-thread counters are in the proof. This is 
 closed native tree, not the complete common-probe preparation bill: outer root,
 worker, repair and review costs remain separately classified by the coordinator.
 
+The independently accepted current collector at
+`f86fc4fd9cc653b1eed9af766f566f8df7fdb88e`, source SHA256
+`f29817ce100d31e7c0258e3edfd32cbd5ab1898bf85947b373ac58d6e983ea2c`, re-ingested
+the same original closed/replay manifests in strict default mode. Both reports are
+byte-for-byte identical to the original results, including all response ownership,
+six counters, checkpoints and replay counts. All manifest/raw source hashes and
+the reported peaks remain unchanged. The current full protocol suite passed
+**70/70**, zero skips. This is an ingestion revalidation, without another native
+or model probe.
+
 The unchanged CLI keeps its conservative `measurement_readiness` label. Actual
 installation/restart acceptance comes from this live evidence and root review;
 parsing alone cannot establish it. Full-window closure and independent acceptance

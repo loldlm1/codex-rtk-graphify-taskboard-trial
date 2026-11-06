@@ -111,6 +111,12 @@ and report-evidence freeze; later publication is administration outside the wind
 An active-turn snapshot cannot be relabelled a closed run to hide missing tails.
 Unsupported, conflicting or missing required evidence stays incomplete. The selected
 ledger cannot prove universal upstream billing completeness, even when reconciled.
+The accepted collector is pinned by commit and source digest in the
+[integrity manifest](measurement-v1.json). Closed native/arm runs use its strict
+default. Its separately declared operator-root response boundary can certify a
+closed accounting window while retaining `closed: false` and leaving root-turn
+completion unclaimed; source, ordinal, turn, cumulative and cutoff checks must all
+pass. It does not relax descendant completion or counter reconciliation.
 
 Independent comparative assessment uses neutral artifact labels and conceals arm
 labels/token totals where practical until quality observations are frozen. Preserve
