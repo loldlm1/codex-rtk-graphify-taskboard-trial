@@ -64,6 +64,16 @@ The closed ordinary validation sample is only a selected sample, not the complet
 trial measurement window. Before final reporting, close evaluation at the assessment
 and report-evidence freeze and classify later administration outside the window.
 
+Persisted native `item_started` / `item_completed` events can supply descendant
+births when their item has exact native `type: SubAgentActivity`, `kind: started`
+and `agent_thread_id`. Their required `thread_id` must equal the canonical source
+owner, the child must be distinct, and their required `turn_id` must match that
+source's observed current, uncompleted owning turn. Missing/malformed identities
+or foreign parent/turn provenance are incomplete. Notification starts retain their
+existing separate format. Waiting/activity targets cannot supply births, and starts
+inside verified inherited parent history remain excluded from the child's inventory.
+Every declared child still needs its actual native source and matching lineage.
+
 Full source ledgers are reconciled even when the window starts partway through a
 long-lived coordinator thread. Records outside the selected window are shown
 separately; they are not charged to its arms. UTC response timestamps determine
@@ -78,11 +88,13 @@ valid row, a strictly later native timestamp, and an exact serialized byte prefi
 after the timestamp. The fragment must contain a complete native timestamp,
 ordinal and supported record type. The next ordinal, if present, must advance once.
 The full retry must be a valid usage record or `item_completed` event with owning
-thread/turn identities; the pending item's ordinal never replaces a provider
-response ID. A fragment may end before its payload because the pinned writer
+thread/turn identities, or an already ignored `response_item`; the pending item's
+ordinal never replaces a provider response ID. A fragment may end before its payload because the pinned writer
 retains that exact queued item at that ordinal until a successful write. Both
-timestamps must stay in the same declared phase and window membership. Only the
-complete valid record contributes identities or counters. The full source digest
+timestamps must stay in the same declared phase and window membership. Ignored
+response items contribute no identities or counters and require no payload inspection
+or decryption. Only complete valid accounting records contribute identities
+or counters. The full source digest
 still includes every byte. Each accepted pair appears in its source's
 `partial_write_recoveries` with line numbers, ordinal, type and both row digests.
 Unmatched, incomplete/ambiguous envelopes, changed, intervening, repeated malformed,
