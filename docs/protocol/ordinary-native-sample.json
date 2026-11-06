@@ -1,0 +1,178 @@
+{
+  "billing_completeness": "not-proven",
+  "duplicate_records": 0,
+  "evidence_status": "reconciled",
+  "issues": [],
+  "limitations": [
+    "Native persistence is a version-pinned internal format, not a stable public API.",
+    "Null upstream usage, skipped writes, hidden WebSocket retries and background or speculative requests can be unobservable.",
+    "Reconciliation proves consistency of observed records, not universal provider billing completeness.",
+    "The same separate recovery probe must verify two live compactions and exact-thread restart before measured arms start."
+  ],
+  "measurement_readiness": "pending-live-compaction-restart-validation",
+  "native_source_commit": "086ccc833bc9cf01024ad2dd6af7dbd421b6bf9a",
+  "ordinary_compaction_delta": {
+    "cache_write_input_tokens": 0,
+    "cached_input_tokens": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "reasoning_output_tokens": 0,
+    "total_tokens": 0
+  },
+  "ordinary_restart_reingestion": {
+    "after_observed_usage": {
+      "cache_write_input_tokens": 0,
+      "cached_input_tokens": 5521280,
+      "input_tokens": 5722558,
+      "output_tokens": 55447,
+      "reasoning_output_tokens": 17424,
+      "total_tokens": 5778005
+    },
+    "after_unique_responses": 108,
+    "before_observed_usage": {
+      "cache_write_input_tokens": 0,
+      "cached_input_tokens": 5044224,
+      "input_tokens": 5226817,
+      "output_tokens": 50138,
+      "reasoning_output_tokens": 14989,
+      "total_tokens": 5276955
+    },
+    "before_unique_responses": 103,
+    "evidence_status": "reconciled",
+    "new_responses": 5,
+    "replayed_records_added_zero": 49
+  },
+  "persisted_compaction_count": 0,
+  "runtime_version": "0.167.0",
+  "schema_version": 1,
+  "scope": "Existing ordinary delegated native validation sample only; not complete trial totals or measured arms. No new native process or model call was launched for this report.",
+  "thread_count": 9,
+  "threads": [
+    {
+      "ledger_usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 3525760,
+        "input_tokens": 3601983,
+        "output_tokens": 30172,
+        "reasoning_output_tokens": 10053,
+        "total_tokens": 3632155
+      },
+      "parent_thread_id_hash": null,
+      "response_count": 54,
+      "thread_id_hash": "7155492f334a072b52773d0f65df0e568d52bd62cd11934509d8d0d7874d6387"
+    },
+    {
+      "ledger_usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 595328,
+        "input_tokens": 631356,
+        "output_tokens": 7724,
+        "reasoning_output_tokens": 2596,
+        "total_tokens": 639080
+      },
+      "parent_thread_id_hash": "7155492f334a072b52773d0f65df0e568d52bd62cd11934509d8d0d7874d6387",
+      "response_count": 14,
+      "thread_id_hash": "ec9a89806fc5d9416a90cf63570bdf45bcd9e2a8a01e9c5438cbbcce0b2bd29e"
+    },
+    {
+      "ledger_usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 154112,
+        "input_tokens": 160638,
+        "output_tokens": 1153,
+        "reasoning_output_tokens": 116,
+        "total_tokens": 161791
+      },
+      "parent_thread_id_hash": "7155492f334a072b52773d0f65df0e568d52bd62cd11934509d8d0d7874d6387",
+      "response_count": 5,
+      "thread_id_hash": "a4d55bc2355fb82c936502b7092d6a3f45d1f17a4f5c3c835403c61854b147b7"
+    },
+    {
+      "ledger_usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 158336,
+        "input_tokens": 167700,
+        "output_tokens": 1339,
+        "reasoning_output_tokens": 229,
+        "total_tokens": 169039
+      },
+      "parent_thread_id_hash": "7155492f334a072b52773d0f65df0e568d52bd62cd11934509d8d0d7874d6387",
+      "response_count": 5,
+      "thread_id_hash": "88ff024589fe8268d90de325d7b5e7a69bde518d8ca7b6fe2d8d20b822cca127"
+    },
+    {
+      "ledger_usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 122240,
+        "input_tokens": 130794,
+        "output_tokens": 1502,
+        "reasoning_output_tokens": 190,
+        "total_tokens": 132296
+      },
+      "parent_thread_id_hash": "7155492f334a072b52773d0f65df0e568d52bd62cd11934509d8d0d7874d6387",
+      "response_count": 4,
+      "thread_id_hash": "dae95e7c15ec26b0b98270b14eb6746c6a09a5287b336a93e54c403171c9aaa0"
+    },
+    {
+      "ledger_usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 453888,
+        "input_tokens": 472355,
+        "output_tokens": 6290,
+        "reasoning_output_tokens": 2235,
+        "total_tokens": 478645
+      },
+      "parent_thread_id_hash": "7155492f334a072b52773d0f65df0e568d52bd62cd11934509d8d0d7874d6387",
+      "response_count": 11,
+      "thread_id_hash": "cb21379939917abf64a3db6817948e6821d07d977f28fccfc295c805065489a5"
+    },
+    {
+      "ledger_usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 200960,
+        "input_tokens": 211644,
+        "output_tokens": 2327,
+        "reasoning_output_tokens": 476,
+        "total_tokens": 213971
+      },
+      "parent_thread_id_hash": "7155492f334a072b52773d0f65df0e568d52bd62cd11934509d8d0d7874d6387",
+      "response_count": 6,
+      "thread_id_hash": "48444032cfd0cf6a0afb12499db759c3b961529931cb7a8c685f67bca1127166"
+    },
+    {
+      "ledger_usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 171904,
+        "input_tokens": 189689,
+        "output_tokens": 1923,
+        "reasoning_output_tokens": 589,
+        "total_tokens": 191612
+      },
+      "parent_thread_id_hash": "7155492f334a072b52773d0f65df0e568d52bd62cd11934509d8d0d7874d6387",
+      "response_count": 5,
+      "thread_id_hash": "3ad73c172245ce7cd98659a3e200eb2853dc8ff001a74f2bd1382f84ba7c4fa5"
+    },
+    {
+      "ledger_usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 138752,
+        "input_tokens": 156399,
+        "output_tokens": 3017,
+        "reasoning_output_tokens": 940,
+        "total_tokens": 159416
+      },
+      "parent_thread_id_hash": "7155492f334a072b52773d0f65df0e568d52bd62cd11934509d8d0d7874d6387",
+      "response_count": 4,
+      "thread_id_hash": "e6135ba2e59c1e6ab843346f583666f6ae605ddc6d87f98d202ca796c72d4b51"
+    }
+  ],
+  "unique_responses": 108,
+  "window_observed_usage": {
+    "cache_write_input_tokens": 0,
+    "cached_input_tokens": 5521280,
+    "input_tokens": 5722558,
+    "output_tokens": 55447,
+    "reasoning_output_tokens": 17424,
+    "total_tokens": 5778005
+  }
+}

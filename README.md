@@ -29,3 +29,9 @@ material reason, and tasks rotate when contamination or relevance requires it.
 
 Current phase: bootstrap published; runnable starter and measured evidence pending.
 No measured solution, release or deployment is present.
+
+The shared [native usage protocol](docs/protocol/usage-v1.md) provides a standard-library
+CLI, synthetic runnable example, strict incomplete results and fixed first-use
+allocation on `protocol/v1`. Ordinary native delegation/restart has reconciled;
+measurement readiness remains pending the same separate live compaction/restart
+probe. [Validation evidence](docs/protocol/usage-v1-validation.md) records its limits.
