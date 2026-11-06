@@ -105,8 +105,13 @@ hash. A generic first-metadata-wins rule is insufficient.
 ## Explicit active-root window closure
 
 The default remains a strict closed run: `closed: true` requires actual completion
-of every observed owning turn. `closed: false` without the opt-in below is always
-incomplete. A completed provider response is not completion of its owning turn.
+of every observed owning turn, including started turns without usage rows. A
+completed turn without model usage does not require a synthetic usage row.
+`task_started` and its `turn_started` alias require a valid nonempty string
+`turn_id`; missing, null or malformed identities are incomplete. Missing/null
+`turn_context.turn_id` remains supported by the pinned optional context schema.
+`closed: false` without the opt-in below is always incomplete. A completed provider
+response is not completion of its owning turn.
 
 When the original coordinator must finish its assessment and report during its own
 still-active terminal turn, that run may use `closed: false` with one additional
@@ -135,7 +140,8 @@ otherwise omitted root response. Embedded-only, earlier, foreign or missing anch
 and mismatched byte/ordinal provenance are incomplete.
 
 Every other root turn and every child turn, including a started owning turn with no
-usage row, still requires actual completion. The full earlier history, source and
+usage row, still requires actual completion. A later invalid start leaves the root
+boundary unverified. The full earlier history, source and
 spawn inventory, phases, ordinary/ledger counters, compaction bindings, completion
 counters and omission indicators receive the same checks. Any issue keeps allocation
 null; neither billing completeness nor live compaction/restart readiness is promoted.

@@ -228,3 +228,29 @@ coordinator must finish/check assessment and report in its owning turn, freeze
 immutable inputs before later administration, and obtain independent review before
 integration. No watcher, later unverified publisher, measured arm, final target
 merge, release or deployment was introduced.
+
+### Owning-start identity correction
+
+Independent review reproduced four false successes when a later `task_started` or
+`turn_started` omitted `turn_id` or supplied null. The focused CLI RED confirmed
+all four, plus four child-start variants. Twelve malformed-identity variants also
+confirmed that the earlier root boundary must not remain certified. In the opt-in
+path every start now requires the existing valid-string identity check; a later
+invalid start leaves the root boundary unverified. A further strict-mode CLI RED
+confirmed four unfinished-start false successes and sixteen malformed/missing/null
+identity false successes. Owning-turn tracking and required start identity checks
+now apply in both modes; completed nonmodel turns need no synthetic usage. The
+pinned optional `turn_context.turn_id` contract is preserved, with absent/null and
+valid context IDs and both valid start-event spellings checked in strict and
+opt-in modes.
+
+The same targets passed after the fix. Final verification passed **70/70 tests**:
+all previous 64 plus six new public CLI methods. The independent original four
+reproductions and earlier three false-success regressions passed. Fresh CLI
+statement-line coverage measured **634/680 = 93.24%** from 245 CLI processes;
+46 statement lines remain uncovered and branch coverage remains unmeasured. The
+retained native-21 full, strict-prefix and opt-in-prefix reports remain exactly
+unchanged: nine responses / 265,831 tokens, all six deltas zero, strict prefix
+rejected only for missing completion, and opt-in root completion unclaimed. No new
+native probe or runtime/configuration change was made. Independent re-review is
+required before integration.

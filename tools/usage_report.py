@@ -335,11 +335,15 @@ class Reporter:
             state['boundary_reached'] = True
         ordinal = event.get('ordinal')
         state['ordinal'] = ordinal if type(ordinal) is int else None
-        if data['closure'] is not None and isinstance(payload, dict):
-            owning = kind in ('token_usage_record', 'turn_context') or (
-                kind == 'event_msg' and payload.get('type') in ('task_started', 'turn_started', 'task_complete'))
-            if owning and payload.get('turn_id') is not None:
-                turn = identity(payload['turn_id'])
+        if isinstance(payload, dict):
+            started = kind == 'event_msg' and payload.get('type') in ('task_started', 'turn_started')
+            owning = started or kind in ('token_usage_record', 'turn_context') or (
+                kind == 'event_msg' and payload.get('type') == 'task_complete')
+            if started:
+                # An invalid later start cannot leave an earlier anchor terminal.
+                state['last_owning_turn'] = None
+            if owning and (started or payload.get('turn_id') is not None):
+                turn = identity(payload.get('turn_id'))
                 data['owning_turns'][sid].add(turn)
                 state['last_owning_turn'] = turn
         if kind in IGNORED_NATIVE:
