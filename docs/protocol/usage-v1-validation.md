@@ -115,3 +115,57 @@ be unobservable. The [protocol limits](usage-v1.md) remain part of every result.
 No full-trial total, adoption gate, token saving, target merge, release or deployment
 is claimed. The next permitted step is independent root review/integration, followed
 by the already approved shared probe when its other dependencies are satisfied.
+
+## Native writer retry and fork-history repair
+
+Actual preflight files exposed two supported-runtime ingestion gaps: truncated
+writes followed by the writer's same-ordinal retry, and child files containing
+inherited parent context before their explicit own-history boundary. The pinned
+[writer](https://github.com/openai/codex/blob/086ccc833bc9cf01024ad2dd6af7dbd421b6bf9a/codex-rs/rollout/src/recorder.rs#L1828)
+retains unwritten queued items and their ordinal, reopens and terminates the partial
+line, then serializes the same item with a fresh timestamp. The
+[boundary definition](https://github.com/openai/codex/blob/086ccc833bc9cf01024ad2dd6af7dbd421b6bf9a/codex-rs/protocol/src/protocol.rs#L3485)
+separates inherited model context from the child's own projected history. The
+[reader contract](usage-v1.md) records the exact accepted conditions and audit fields.
+
+ECC TDD remained the sole implementation cycle; no checkpoint commits were made.
+The existing 24 tests passed while new public CLI assertions produced four intended
+failures for missing retry/fork handling and source ownership. A second RED exposed
+five ambiguous-prefix/owner/duplicate-key cases. The pinned queue/ordinal proof then
+justified accepting a complete known envelope truncated before its payload: the
+actual short-header positive and ordinal-neighborhood negative produced three
+further intended failures before the final fix. Every corresponding target was
+rerun to GREEN. Final `python3 -m unittest discover -s tests -v`: **35/35 passed**.
+The 11 added tests include parameterized changed ordinals/types/owners/counters,
+missing/foreign fork metadata, missing canonical parents, unknown/malformed inherited
+rows, unmatched/nonadjacent retries, incomplete envelopes, duplicate keys, phase and
+window crossings, source hashes, and unexplained cumulative differences. Only full
+valid response records supply provider identities and counters. The original three
+independent false-success reproductions also remain **3/3 PASS**.
+
+Fresh statement-line coverage after the final repair: **568/617 = 92.06%**, measured
+with the same task-local stdlib subprocess trace and AST method. Branch coverage is
+unmeasured. Remaining lines mostly cover additional malformed manifest, notification,
+metadata and omission variants. Compilation, the 14-token example, whitespace,
+changed-file privacy/output projection and scoped source review passed. There is no
+configured third-party build, type checker, linter or security scanner; no dependency
+or runtime/configuration/trace change was introduced.
+
+The public CLI read unchanged, fully hashed native sources and actual notification
+files for two closed native preflight trees. One reconciled **7 responses / 211,391
+tokens**, the other **9 responses / 265,831 tokens**, each with its actual root and
+child, zero ordinary/ledger delta, and zero issues. The original ordinary and restart
+manifests remain **108 / 0 duplicates / 5,778,005 tokens**, **103 / 0 / 5,276,955**
+before restart, and **108 / 49 / 5,778,005** after replay.
+
+Focused parser/counter audits of their two outer coordinator workers recovered all
+five observed adjacent partial-write retry pairs from the full unchanged files.
+Their actual parent/session lineage was retained. Per-turn/thread accumulation and
+final ordinary counters match: **68 responses / 7,649,442 tokens** and **76 responses
+/ 10,207,101 tokens**. These are selected-source audits; the ongoing preparation
+root and recursive inventory still require the coordinator's complete open-run
+report. No outer worker was relabeled as a root, source was normalized, partial row
+was charged separately, or missing provider identity was synthesized. Raw files,
+private manifests, digests and detailed evidence remain outside Git. Universal
+billing completeness and the same two-compaction/process-restart live gate remain
+unproven; no full-trial total or readiness acceptance is claimed.

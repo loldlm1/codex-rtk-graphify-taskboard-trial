@@ -22,6 +22,9 @@ CATEGORIES = {'common-upgrade', 'fixture', 'evaluation', 'probe',
               'shared-b-preflight', 'arm', 'activation', 'indexing', 'administration'}
 IGNORED_NATIVE = {'response_item', 'world_state', 'turn_context',
                   'inter_agent_communication_metadata'}
+RETRY_ENVELOPE = re.compile(
+    rb'^\{"timestamp":"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z)"'
+    rb'(,"ordinal":(0|[1-9][0-9]*),"type":"(token_usage_record|event_msg)"[^\n]*)\n$')
 LIMITS = [
     'Native persistence is a version-pinned internal format, not a stable public API.',
     'Null upstream usage, skipped writes, hidden WebSocket retries and background or speculative requests can be unobservable.',
@@ -89,6 +92,33 @@ def usage(value):
             or value['reasoning_output_tokens'] > value['output_tokens']):
         raise Invalid('invalid_category_subset')
     return dict(value)
+
+
+def record_payload(payload):
+    required = {'thread_id', 'session_id', 'turn_id', 'root_turn_id', 'response_id',
+                'usage', 'turn_token_usage', 'thread_token_usage'}
+    if not isinstance(payload, dict) or set(payload) != required:
+        raise Invalid('unsupported_native_schema')
+    for key in ('thread_id', 'session_id', 'turn_id', 'root_turn_id', 'response_id'):
+        identity(payload[key])
+    for key in ('usage', 'turn_token_usage', 'thread_token_usage'):
+        usage(payload[key])
+
+
+def session_metadata(payload):
+    if not isinstance(payload, dict):
+        raise Invalid('unsupported_native_schema')
+    identity(payload.get('id'))
+    return {k: payload.get(k) for k in ('id', 'session_id', 'parent_thread_id', 'cli_version')}
+
+
+def unique_object(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError('duplicate JSON key')
+        result[key] = value
+    return result
 
 
 def validate_manifest(manifest):
@@ -197,16 +227,7 @@ class Reporter:
 
     def accept_record(self, payload, when, source, embedded=False):
         try:
-            if not isinstance(payload, dict):
-                raise Invalid('unsupported_native_schema')
-            required = {'thread_id', 'session_id', 'turn_id', 'root_turn_id', 'response_id',
-                        'usage', 'turn_token_usage', 'thread_token_usage'}
-            if set(payload) != required:
-                raise Invalid('unsupported_native_schema')
-            for key in ('thread_id', 'session_id', 'turn_id', 'root_turn_id', 'response_id'):
-                identity(payload[key])
-            for key in ('usage', 'turn_token_usage', 'thread_token_usage'):
-                usage(payload[key])
+            record_payload(payload)
             rid = payload['response_id']
             if rid in self.records:
                 previous = self.records[rid]
@@ -221,60 +242,161 @@ class Reporter:
         except Invalid as error:
             self.issue(str(error), source)
 
+    def verified_retry(self, partial, raw, event, state, data):
+        """Only the pinned writer's same-ordinal, immediate exact-prefix retry."""
+        left = RETRY_ENVELOPE.fullmatch(partial)
+        right = RETRY_ENVELOPE.fullmatch(raw)
+        if not left or not right or state['owner'] is None or state['owner']['cli_version'] != RUNTIME:
+            return False
+        ordinal = int(left[3])
+        if (left[3] != right[3] or state['ordinal'] != ordinal - 1
+                or not right[2].startswith(left[2]) or len(left[2]) >= len(right[2])
+                or (state['boundary'] is not None and ordinal < state['boundary'])):
+            return False
+        payload = event.get('payload')
+        if not isinstance(payload, dict) or payload.get('thread_id') != state['owner']['id']:
+            return False
+        try:
+            identity(payload.get('turn_id'))
+            if left[4] == b'token_usage_record':
+                record_payload(payload)
+            elif payload.get('type') != 'item_completed' or not isinstance(payload.get('item'), dict):
+                return False
+        except Invalid:
+            return False
+        earlier = timestamp(left[1].decode('ascii'))
+        later = timestamp(right[1].decode('ascii'))
+        if earlier >= later:
+            return False
+        def allocation(when):
+            phases = tuple(p['id'] for p in data['phases'] if when >= timestamp(p['start'])
+                           and (p['end'] is None or when < timestamp(p['end'])))
+            start, end = data['window']
+            return phases, when >= start and (end is None or when < end)
+        before = allocation(earlier)
+        return len(before[0]) == 1 and before == allocation(later)
+
+    def native_row(self, event, raw, data, sid, state):
+        kind = event.get('type')
+        payload = event.get('payload')
+        if state['recovery_next'] is not None:
+            expected = state['recovery_next']
+            state['recovery_next'] = None
+            if type(event.get('ordinal')) is not int or event['ordinal'] != expected:
+                raise Invalid('invalid_retry_ordinal')
+        if state['owner'] is None:
+            if kind != 'session_meta':
+                raise Invalid('missing_session_metadata')
+            owner = session_metadata(payload)
+            state['owner'] = owner
+            if 'subagent_history_start_ordinal' in payload:
+                boundary = payload['subagent_history_start_ordinal']
+                parent = owner['parent_thread_id']
+                if (type(boundary) is not int or boundary < 2 or event.get('ordinal') != 0
+                        or not isinstance(parent, str) or not parent or parent == owner['id']
+                        or payload.get('forked_from_id') != parent or owner['cli_version'] != RUNTIME):
+                    raise Invalid('invalid_fork_history_boundary')
+                state['boundary'] = boundary
+        elif state['boundary'] is not None:
+            ordinal = event.get('ordinal')
+            if type(ordinal) is not int or ordinal != state['ordinal'] + 1:
+                raise Invalid('invalid_fork_history_boundary')
+            if ordinal < state['boundary']:
+                state['inherited_rows'] += 1
+                if kind == 'session_meta':
+                    candidate = session_metadata(payload)
+                    if ordinal != 1 or candidate['id'] != state['owner']['parent_thread_id']:
+                        raise Invalid('invalid_inherited_metadata')
+                    data['inherited_metadata'].append((candidate, sid))
+                    state['inherited_meta_seen'] = True
+                elif kind == 'token_usage_record':
+                    record_payload(payload)
+                    data['inherited_records'].append((payload, state['owner']['parent_thread_id'], sid))
+                elif kind == 'event_msg':
+                    self.native_event(payload, timestamp(event.get('timestamp')), data, sid, inherited=True)
+                elif kind not in IGNORED_NATIVE:
+                    raise Invalid('unsupported_inherited_accounting')
+                state['ordinal'] = ordinal
+                return
+            state['boundary_reached'] = True
+        ordinal = event.get('ordinal')
+        state['ordinal'] = ordinal if type(ordinal) is int else None
+        if kind in IGNORED_NATIVE:
+            return
+        when = timestamp(event.get('timestamp'))
+        if kind == 'session_meta':
+            candidate = session_metadata(payload)
+            tid = candidate['id']
+            if tid in data['metadata'] and data['metadata'][tid] != candidate:
+                self.issue('conflicting_session_metadata', sid)
+            data['metadata'][tid] = candidate
+            data['source_threads'].add(tid)
+        elif kind == 'token_usage_record':
+            record_payload(payload)
+            if any(payload[key] != state['owner'][meta_key] for key, meta_key in
+                   (('thread_id', 'id'), ('session_id', 'session_id'))):
+                self.issue('record_ownership', sid)
+            self.accept_record(payload, when, sid)
+        elif kind == 'compacted':
+            if not isinstance(payload, dict):
+                raise Invalid('unsupported_native_schema')
+            latest = payload.get('latest_token_usage_record')
+            if latest is not None:
+                self.accept_record(latest, when, sid, embedded=True)
+            data['checkpoints'].append({
+                'source': sid,
+                'compaction_response_id': payload.get('compaction_response_id'),
+                'window_id': payload.get('window_id'),
+                'replacement_history_present': isinstance(payload.get('replacement_history'), list) and bool(payload['replacement_history']),
+                'binding_sha256': hashed(json.dumps(payload, sort_keys=True, separators=(',', ':'))),
+                'checkpoint_sha256': hashlib.sha256(raw).hexdigest()})
+        elif kind == 'event_msg':
+            self.native_event(payload, when, data, sid)
+        else:
+            raise Invalid('unsupported_native_schema')
+
     def read_source(self, source, data):
         sid = source['id']
         digest = hashlib.sha256()
-        meta_seen = False
+        state = dict(owner=None, ordinal=None, boundary=None, inherited_rows=0,
+                     inherited_meta_seen=False, boundary_reached=False, recovery_next=None)
+        pending = None
+        recoveries = []
         try:
             path = Path(source['path'])
             if not path.is_absolute():
                 path = self.manifest_directory / path
             with path.open('rb') as stream:
-                for raw in stream:
+                for line, raw in enumerate(stream, 1):
                     digest.update(raw)
                     try:
-                        event = json.loads(raw)
+                        event = json.loads(raw, object_pairs_hook=unique_object)
                         if not isinstance(event, dict):
                             raise Invalid('unsupported_native_schema')
                         if source['kind'] == 'notifications':
                             self.notification(event, data, sid)
                             continue
-                        kind = event.get('type')
-                        if kind in IGNORED_NATIVE:
-                            continue
-                        when = timestamp(event.get('timestamp'))
-                        payload = event.get('payload')
-                        if kind == 'session_meta':
-                            if not isinstance(payload, dict):
-                                raise Invalid('unsupported_native_schema')
-                            tid = identity(payload.get('id'))
-                            candidate = {k: payload.get(k) for k in ('id', 'session_id', 'parent_thread_id', 'cli_version')}
-                            if tid in data['metadata'] and data['metadata'][tid] != candidate:
-                                self.issue('conflicting_session_metadata', sid)
-                            data['metadata'][tid] = candidate
-                            data['source_threads'].add(tid)
-                            meta_seen = True
-                        elif kind == 'token_usage_record':
-                            self.accept_record(payload, when, sid)
-                        elif kind == 'compacted':
-                            if not isinstance(payload, dict):
-                                raise Invalid('unsupported_native_schema')
-                            latest = payload.get('latest_token_usage_record')
-                            if latest is not None:
-                                self.accept_record(latest, when, sid, embedded=True)
-                            data['checkpoints'].append({
-                                'source': sid,
-                                'compaction_response_id': payload.get('compaction_response_id'),
-                                'window_id': payload.get('window_id'),
-                                'replacement_history_present': isinstance(payload.get('replacement_history'), list) and bool(payload['replacement_history']),
-                                'binding_sha256': hashed(json.dumps(payload, sort_keys=True, separators=(',', ':'))),
-                                'checkpoint_sha256': hashlib.sha256(raw).hexdigest()})
-                        elif kind == 'event_msg':
-                            self.native_event(payload, when, data, sid)
-                        else:
-                            raise Invalid('unsupported_native_schema')
+                        recovered = False
+                        if pending is not None:
+                            partial, partial_line = pending
+                            pending = None
+                            if self.verified_retry(partial, raw, event, state, data):
+                                recovered = True
+                                recoveries.append({'partial_line': partial_line, 'retry_line': line,
+                                    'ordinal': event['ordinal'], 'type': event['type'],
+                                    'partial_sha256': hashlib.sha256(partial).hexdigest(),
+                                    'retry_sha256': hashlib.sha256(raw).hexdigest()})
+                            else:
+                                self.issue('malformed_source', sid)
+                        self.native_row(event, raw, data, sid, state)
+                        if recovered:
+                            state['recovery_next'] = event['ordinal'] + 1
                     except (json.JSONDecodeError, UnicodeDecodeError, ValueError, TypeError):
-                        self.issue('malformed_source', sid)
+                        if source['kind'] == 'native' and pending is None:
+                            pending = raw, line
+                        else:
+                            pending = None
+                            self.issue('malformed_source', sid)
                     except Invalid as error:
                         self.issue(str(error), sid)
         except OSError:
@@ -282,16 +404,40 @@ class Reporter:
             return
         if digest.hexdigest() != source['sha256']:
             self.issue('source_digest_mismatch', sid)
-        if source['kind'] == 'native' and not meta_seen:
+        if pending is not None:
+            self.issue('malformed_source', sid)
+        if source['kind'] == 'native' and not data['source_threads']:
             self.issue('missing_session_metadata', sid)
-        data['sources'].append({'id': sid, 'kind': source['kind'], 'sha256': digest.hexdigest()})
+        summary = {'id': sid, 'kind': source['kind'], 'sha256': digest.hexdigest()}
+        if recoveries:
+            summary['partial_write_recoveries'] = recoveries
+        if state['boundary'] is not None:
+            if not state['boundary_reached'] or not state['inherited_meta_seen']:
+                self.issue('invalid_fork_history_boundary', sid)
+            summary['inherited_history'] = {'start_ordinal': state['boundary'],
+                'excluded_rows': state['inherited_rows'],
+                'parent_thread_id_hash': hashed(state['owner']['parent_thread_id'])}
+        data['sources'].append(summary)
 
-    def native_event(self, payload, when, data, sid):
+    def native_event(self, payload, when, data, sid, inherited=False):
         if not isinstance(payload, dict):
             raise Invalid('unsupported_native_schema')
         kind = payload.get('type', '')
         if not isinstance(kind, str):
             raise Invalid('unsupported_native_schema')
+        if inherited:
+            if kind in ('raw_response_completed', 'response_completed'):
+                raise Invalid('unsupported_inherited_accounting')
+            if kind not in ('token_count', 'task_complete', 'context_compacted', 'error', 'warning',
+                            'turn_aborted', 'stream_error', 'task_started', 'turn_started',
+                            'thread_settings_applied', 'item_started', 'item_completed'):
+                raise Invalid('unsupported_native_schema')
+            if kind == 'token_count' and payload.get('info') is not None:
+                info = payload['info']
+                if not isinstance(info, dict):
+                    raise Invalid('unsupported_native_schema')
+                usage(info.get('total_token_usage'))
+            return
         if kind == 'token_count':
             info = payload.get('info')
             if info is not None:
@@ -348,7 +494,8 @@ class Reporter:
     def run(self, run, start, end):
         data = {'metadata': {}, 'ordinary': [], 'completed': set(), 'completions': [],
                 'started': set(), 'checkpoints': [], 'sources': [], 'notification_totals': [],
-                'compaction_markers': set()}
+                'compaction_markers': set(), 'inherited_metadata': [], 'inherited_records': [],
+                'phases': run['phases'], 'window': (start, end)}
         ordinary_by_thread = {}
         source_threads = {}
         completed_by_thread = defaultdict(set)
@@ -373,6 +520,15 @@ class Reporter:
                     if previous is None or latest[0] > previous[0]:
                         ordinary_by_thread[tid] = latest
         parents = {t['thread_id']: t['parent_thread_id'] for t in run['expected_threads']}
+        for inherited, sid in data['inherited_metadata']:
+            tid = inherited['id']
+            if tid not in source_threads.values() or data['metadata'].get(tid) != inherited:
+                self.issue('invalid_inherited_metadata', sid)
+        for inherited, parent, sid in data['inherited_records']:
+            original = self.records.get(inherited['response_id'])
+            if (inherited['thread_id'] != parent or original is None or original['embedded']
+                    or original['payload'] != inherited or source_threads.get(original['source']) != parent):
+                self.issue('inherited_usage_mismatch', sid)
         for tid, parent in parents.items():
             meta = data['metadata'].get(tid)
             if meta is None:
