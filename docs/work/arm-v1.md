@@ -7,11 +7,11 @@
 | Authorization | Scoped local task commits/integration authorized. Outer coordinator owns GitHub publication. No final merge/release/deployment, auth/trust/config changes or extra trial. |
 | Review baseline | Original public baseline 14ae1c0462e42df8eaff2848e7786811cefc06e8; exact immutable feature review point/starter 01dbac8f5a60a1a5a5be89238971fd13badb3b56. |
 | Working pointers | Integration trial/web-a; implementation branch task/web-a-feature. One record: docs/work/arm-v1.md. |
-| Phase | Integrated and verified; direct desktop/mobile inspection and fresh separate Standards/Spec review in progress. |
+| Phase | Local feature verification and separate Standards/Spec reviews complete; handoff to outer coordinator. |
 | Integration and validation evidence | Launch 2026-11-06T23:39:25.160Z; root model start 23:39:29.252Z. Clean integration and precreated worker both at e608f37. Observed Codex 0.167.0, Node 24.6.0, npm 11.5.1, Python 3.12.8, Chrome 155.0.8059.39; pinned direct application dependencies match lockfile. Fresh arm-owned install reported 136 packages in 3s (outer preparation 3.136s); worker links only this arm tree. No RTK/Graphify activation or index applies to A. Task implementation 34238f7c63f57853d972acab542ae17d0b4c5da2; worker merged trial/web-a at 061321c before edits and confirmed that same current tip before final checks. Local evidence below. |
-| Blockers | Required direct visual evidence and fresh review axes remain; local acceptance evidence is passing. Outer coordinator retains final accounting/source closure and publication. |
+| Blockers | No local feature/review blocker. Full native source/accounting closure, final root response tail, independent comparison and publication belong to the outer coordinator; this live snapshot does not establish a closed measured run. |
 | Amendment | None. |
-| Next action | Capture direct 1440×1000 / 390×844 interactions and screenshots while separate fresh Standards and Spec workers review the integrated root sequentially within native capacity 2. |
+| Next action | Outer coordinator freezes the completed root/descendant accounting sources and accepts this local handoff before any comparative assessment or authorized publication. |
 
 ## Ticket 23 implementation evidence
 
@@ -74,3 +74,66 @@ Pinned browser transport 1.10.1 runs isolated/headless with system Chrome,
 no usage statistics/performance-crux, using only arm-owned npm/temp/XDG state.
 The first browser list-pages call took 0.489s; this is call latency, not total
 transport startup duration. Treatment activation/indexing is not applicable to A.
+
+## Final local verification and review
+
+Installed Matt `code-review` reviewed exact fixed point
+`01dbac8f5a60a1a5a5be89238971fd13badb3b56` through
+`e8b0a0c0789ea0ed7c98fe60a0ca26d918626228`. Fresh read-only Standards and Spec
+workers ran sequentially within native capacity 2, with explicit `fork_turns:
+none`, `gpt-6.1-sol`, `xhigh`; actual native contexts confirm these settings.
+Each axis returned **0 findings**, so no fix worker was needed. Their limitation
+is source/document review; root supplied executed checks and direct browser QA.
+Only this record changes after their reviewed source revision.
+
+Root directly used Chrome at 1440×1000 and 390×844 with the same Plan release /
+Review copy / Publish notes fixture. Native Home/ArrowDown/Enter selection retained
+focus on Status view with a visible 3px outline; Tab reached Edit. Reload restored
+the preference without changing task data. Filtered creation, editing, status
+movement, nonmatching creation and deletion worked; disappearing cards restored
+focus to the view or a visible neighbor. Empty-view text appeared with hidden tasks
+preserved; deleting the whole board focused Task title and remained empty after
+reload. No horizontal overflow or console error/warning was observed. Screenshots
+were visually inspected, including mobile board controls at the fixed viewport.
+
+Private artifact basenames: `desktop-1440x1000.png`, `mobile-390x844.png`,
+`mobile-board-390x844.png`, and `desktop-empty-1440x1000.png`. Full-page images use
+the stated viewport widths/heights and include normal vertical scrolling. Browser
+file-path export rejected two destinations; inline screenshots were saved as their
+original bytes outside Git. The actual retries remain in native accounting.
+
+| Separate quality attribute | Local score | Observation |
+| --- | --- | --- |
+| Correctness | 2 | All frozen starter/feature journeys pass; task/preference data stay separate. |
+| Scope | 2 | Only saved status views and related focused tests/docs; stack and lock unchanged. |
+| Maintainability | 2 | Small additions in existing storage/DOM/styles; meaningful boundary tests. |
+| Visual clarity | 2 | Labeled selection, counts, cards and empty state clear at both sizes. |
+| Interaction | 2 | Native keyboard/pointer operation, visible focus and follow-up controls work. |
+| Regressions | 2 | Existing CRUD, literal rendering, persistence and empty-board recovery pass. |
+
+These are this arm's local observations, not paired comparative assessment.
+Scoped security source/diff review found no unsafe dynamic rendering, credential,
+or logging additions; no dependency/network audit was run. All seven frozen
+script/config/acceptance file hashes match startup; dependencies and 80% coverage
+floors remain unchanged. No lint is configured. Local-only target acceptance is
+verified through the required Chrome journeys; deployment is not applicable.
+
+## Measurement boundary and limits
+
+Launch was 2026-11-06T23:39:25.160Z. Local check/visual/security evidence snapshot
+ended 2026-11-06T23:51:50.809908Z, elapsed **745.650s** from launch. This records
+an executed evidence boundary, not root-turn completion or closed accounting.
+Application preparation was 3.136s externally reported (npm itself printed 3s);
+A has no treatment activation/indexing. Browser first-call latency is recorded
+above with its startup limitation.
+
+At that snapshot the peak reported input was 121,725 root / 95,863 implementation /
+53,443 Standards / 57,565 Spec tokens, each with a reported context limit of
+475,000. Native utilization percentage was unavailable; none is invented.
+All three descendants have native task-complete events; root was still active.
+No compaction or recovery event was observed. Raw canonical sources, response/token
+records, lineage, cumulative counters and snapshot hashes remain privately in this
+arm's native stores. The outer coordinator must include the root's remaining
+responses and apply the pinned usage collector; these snapshots neither claim
+billing completeness nor replace strict source closure. No RTK output estimates,
+savings or adoption result are asserted.
