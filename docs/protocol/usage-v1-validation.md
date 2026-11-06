@@ -32,13 +32,14 @@ assertions failed as intended before accounting implementation.
 | Manifest-relative paths and unsupported accounting schemas | Two assertions failed | Portable source resolution; unknown schemas cannot pass |
 | Ordinary notifications / failed turns | Mismatched notification assertion failed | Cumulative snapshots match ledger prefixes; malformed/failed metadata is incomplete |
 | Missing checkpoint / invalid replacement-history shape | Focused assertions failed against otherwise complete native evidence | Compaction markers require checkpoints; invalid history shape cannot certify persistence |
+| Review fixes: checkpoint ownership/bindings and observed completions | All four new CLI tests failed intended assertions before code changes (22 failing assertions/subtests); the existing 20 passed | Markers require their own thread's checkpoint; conflicting response/window/persisted metadata and completion counters/ownership are incomplete; identical replays remain valid |
 
 After GREEN, source/checkpoint projection was kept minimal and evidence was rerun.
 The original broad omission test also lacked turn-completion evidence; that fixture
 was corrected so its focused RED isolated the missing-checkpoint behavior. This
 avoids claiming a failure caused merely by another missing requirement.
 
-Final command `python3 -m unittest discover -s tests -v`: **20/20 passed**. Subtests
+Final command `python3 -m unittest discover -s tests -v`: **24/24 passed**. Subtests
 cover missing/null usage and identity, category arithmetic, conflicting duplicates,
 unknown runtime/schema, missing descendants/starts/counters/completions, digest and
 file failures, private-input exclusion, open windows/runs, phase overlap/gaps, fixed
@@ -48,14 +49,23 @@ tests. The synthetic policy example charges 15-token phases as 15 for A, 45 raw 
 B, and `105/2` allocated B after the exact half-share; common costs remain visible
 in the full window.
 
+The independent three-case review reproduction was rerun against the fixes: all
+three now return exit 2 / incomplete with null allocations and the specific
+`missing_compaction_checkpoint`, `conflicting_compaction_checkpoint` or
+`completion_reconciliation` issue. Additional public CLI cases retain successful
+own-thread checkpoints, identical checkpoint replays, consistent repeated native
+completions and pinned notification completions. Counter/ownership/schema conflicts
+are rejected rather than described as billing limitations.
+
 ## Measured coverage and final checks
 
 A task-local stdlib `sys.settrace` hook followed each CLI subprocess. Fresh hit files
 for this final source were unioned and compared with AST executable statement-start
-lines, excluding docstrings. Result: **398/447 = 89.04%** for `tools/usage_report.py`.
+lines, excluding docstrings. Result after the review fixes: **446/491 = 90.84%** for
+`tools/usage_report.py`.
 This is statement-line coverage, not branch coverage. Remaining unexecuted lines
 mostly reject additional malformed manifest inventories/labels/cycles/intervals,
-conflicting metadata and optional completion notification variants. It is not a
+conflicting session metadata and additional omission/source-error variants. It is not a
 claim that every possible malformed input or branch was tested. Instrumentation and
 raw logs remain local; no dependency or coverage framework was introduced.
 
@@ -88,6 +98,10 @@ tokens. Reingesting that projection alongside the existing full native sources
 recognizes **49 replayed root responses**, adding zero for them; **five new actual
 root responses** bring the total to 108 / 5,778,005. This reuses the real existing
 restart sample; it is not a new restart experiment.
+
+All three existing private manifests were rerun through the fixed public CLI. Their
+statuses, response/duplicate counts and every usage category remain unchanged:
+108 / 0 for the ordinary sample, 103 / 0 before restart and 108 / 49 after reingestion.
 
 There are **zero live compaction checkpoints** in this sample. Synthetic compaction
 coverage and ordinary native reconciliation do not establish final compaction

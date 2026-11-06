@@ -90,9 +90,22 @@ that difference explicitly; allow it only when it equals the unique persisted
 compaction response usage. Checkpoints need actual response/window IDs, persisted
 replacement-history presence, a checkpoint digest and a matching unique ledger
 record. Failed/rejected requests still contribute their observed usage; unexplained
-differences remain incomplete. This parser does not certify successful installation,
+differences remain incomplete. Markers require a valid checkpoint owned by the same
+thread in this run/session. A checkpoint's source metadata must match its response's
+thread/session ownership. One response binds to one window and one persisted payload;
+one window binds to one response. Identical checkpoint replays add no usage or extra
+checkpoint entry; conflicting window, history or embedded snapshot evidence is
+incomplete. This parser does not certify successful installation,
 item lifecycle, two distinct installs or exact-thread reload: those are required live
 probe evidence, not consequences of parsing a checkpoint.
+
+Observed response completions must reconcile their six counters with the matching
+ledger response in the same run. Native completion events use snake-case counters
+and inherit thread ownership from their source; any supplied thread, turn, root-turn
+or session identity must agree. Supported completion notifications use the pinned
+camel-case counters and explicit thread/turn/response identities. Null, unknown,
+unsupported or contradictory completions are incomplete. Repeated consistent
+completions add no usage. Arbitrary usage metadata never contributes counters.
 
 Raw arm totals contain all `arm` usage and that B workload's `activation`/`indexing`.
 B arm declarations require both first-use categories and shared preflight to be

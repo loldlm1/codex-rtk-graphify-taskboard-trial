@@ -16,6 +16,8 @@ RUNTIME = '0.167.0'
 SOURCE_COMMIT = '086ccc833bc9cf01024ad2dd6af7dbd421b6bf9a'
 KEYS = ('input_tokens', 'cached_input_tokens', 'cache_write_input_tokens',
         'output_tokens', 'reasoning_output_tokens', 'total_tokens')
+CAMEL_KEYS = ('inputTokens', 'cachedInputTokens', 'cacheWriteInputTokens',
+              'outputTokens', 'reasoningOutputTokens', 'totalTokens')
 CATEGORIES = {'common-upgrade', 'fixture', 'evaluation', 'probe',
               'shared-b-preflight', 'arm', 'activation', 'indexing', 'administration'}
 IGNORED_NATIVE = {'response_item', 'world_state', 'turn_context',
@@ -261,9 +263,11 @@ class Reporter:
                             if latest is not None:
                                 self.accept_record(latest, when, sid, embedded=True)
                             data['checkpoints'].append({
+                                'source': sid,
                                 'compaction_response_id': payload.get('compaction_response_id'),
                                 'window_id': payload.get('window_id'),
                                 'replacement_history_present': isinstance(payload.get('replacement_history'), list) and bool(payload['replacement_history']),
+                                'binding_sha256': hashed(json.dumps(payload, sort_keys=True, separators=(',', ':'))),
                                 'checkpoint_sha256': hashlib.sha256(raw).hexdigest()})
                         elif kind == 'event_msg':
                             self.native_event(payload, when, data, sid)
@@ -299,7 +303,7 @@ class Reporter:
             if payload.get('error') is not None:
                 self.issue('known_omission_indicator', sid)
         elif kind in ('raw_response_completed', 'response_completed'):
-            data['completions'].append(payload)
+            data['completions'].append((payload, sid, False))
         elif kind == 'context_compacted':
             data['compaction_markers'].add(sid)
         elif kind in ('error', 'warning', 'turn_aborted', 'stream_error') or any(word in kind for word in ('background', 'speculative', 'usage_record')):
@@ -325,12 +329,10 @@ class Reporter:
             token_usage = params.get('tokenUsage')
             if not isinstance(token_usage, dict) or not isinstance(token_usage.get('total'), dict):
                 raise Invalid('unsupported_notification_schema')
-            camel = ('inputTokens', 'cachedInputTokens', 'cacheWriteInputTokens',
-                     'outputTokens', 'reasoningOutputTokens', 'totalTokens')
             total = token_usage['total']
-            if set(total) != set(camel):
+            if set(total) != set(CAMEL_KEYS):
                 raise Invalid('unsupported_notification_schema')
-            counters = usage({key: total[name] for key, name in zip(KEYS, camel)})
+            counters = usage({key: total[name] for key, name in zip(KEYS, CAMEL_KEYS)})
             data['notification_totals'].append((identity(params.get('threadId')), counters))
         elif method == 'turn/completed':
             turn = params.get('turn')
@@ -341,13 +343,14 @@ class Reporter:
         elif method in ('error', 'turn/aborted') or 'background' in method or 'speculative' in method:
             self.issue('known_omission_indicator', sid)
         elif method in ('thread/rawResponse/completed', 'response/completed'):
-            data['completions'].append(params)
+            data['completions'].append((params, sid, True))
 
     def run(self, run, start, end):
         data = {'metadata': {}, 'ordinary': [], 'completed': set(), 'completions': [],
                 'started': set(), 'checkpoints': [], 'sources': [], 'notification_totals': [],
                 'compaction_markers': set()}
         ordinary_by_thread = {}
+        source_threads = {}
         completed_by_thread = defaultdict(set)
         before = set(self.records)
         for source in run['sources']:
@@ -360,6 +363,7 @@ class Reporter:
                     self.issue('ambiguous_source_metadata', source['id'])
                     continue
                 tid = next(iter(local['source_threads']))
+                source_threads[source['id']] = tid
                 completed_by_thread[tid].update(local['completed'])
                 if local['ordinary']:
                     latest = max(local['ordinary'], key=lambda x: x[0])
@@ -385,7 +389,8 @@ class Reporter:
         for child, parent in parents.items():
             if parent is not None and (parent, child) not in data['started']:
                 self.issue('missing_descendant_start', run['id'])
-        records = [r for rid, r in self.records.items() if rid not in before]
+        run_record_ids = self.records.keys() - before
+        records = [self.records[rid] for rid in run_record_ids]
         root_turns = {r['payload']['turn_id'] for r in records if r['payload']['thread_id'] == run['root_thread_id']}
         grouped = defaultdict(list)
         for entry in records:
@@ -426,19 +431,37 @@ class Reporter:
         compaction_total = zero()
         compaction_ids = set()
         checkpoints = []
-        if data['compaction_markers'] and not data['checkpoints']:
-            self.issue('missing_compaction_checkpoint', run['id'])
+        checkpoint_bindings = {}
+        window_bindings = {}
+        checkpoint_threads = set()
         for checkpoint in data['checkpoints']:
             rid = checkpoint.get('compaction_response_id')
             window = checkpoint.get('window_id')
-            if not isinstance(rid, str) or rid not in self.records or not isinstance(window, str) or not checkpoint['replacement_history_present']:
+            if not isinstance(rid, str) or rid not in run_record_ids or not isinstance(window, str) or not window or not checkpoint['replacement_history_present']:
                 self.issue('incomplete_compaction_checkpoint', run['id'])
                 continue
-            if rid not in compaction_ids:
-                compaction_total = add(compaction_total, self.records[rid]['payload']['usage'])
+            tid = source_threads.get(checkpoint['source'])
+            rec = self.records[rid]['payload']
+            if tid not in parents or rec['thread_id'] != tid or rec['session_id'] != run['session_id']:
+                self.issue('compaction_checkpoint_ownership', checkpoint['source'])
+                continue
+            binding = (tid, window, checkpoint['binding_sha256'])
+            if ((rid in checkpoint_bindings and checkpoint_bindings[rid] != binding)
+                    or (window in window_bindings and window_bindings[window] != rid)):
+                self.issue('conflicting_compaction_checkpoint', checkpoint['source'])
+                continue
+            checkpoint_threads.add(tid)
+            if rid in checkpoint_bindings:
+                continue
+            checkpoint_bindings[rid] = binding
+            window_bindings[window] = rid
+            compaction_total = add(compaction_total, rec['usage'])
             compaction_ids.add(rid)
             checkpoints.append({'response_id_hash': hashed(rid), 'window_id_hash': hashed(window),
                                 'checkpoint_sha256': checkpoint['checkpoint_sha256']})
+        for sid in data['compaction_markers']:
+            if source_threads.get(sid) not in checkpoint_threads:
+                self.issue('missing_compaction_checkpoint', sid)
         for tid in parents:
             current = zero()
             turns = defaultdict(zero)
@@ -479,10 +502,36 @@ class Reporter:
                             'response_count': len(entries), 'ledger_usage': current})
         if any(tid not in parents for tid, _ in data['notification_totals']):
             self.issue('unknown_thread', run['id'])
-        for completion in data['completions']:
-            rid = completion.get('response_id', completion.get('responseId'))
-            if not isinstance(rid, str) or completion.get('usage') is None or rid not in self.records:
-                self.issue('unaccounted_completion', run['id'])
+        for completion, sid, notification in data['completions']:
+            try:
+                if notification:
+                    required = {'threadId', 'turnId', 'responseId', 'usage'}
+                    optional = {'usageMetadata'}
+                    owners = {'thread_id': completion.get('threadId'), 'turn_id': completion.get('turnId')}
+                else:
+                    required = {'type', 'response_id', 'usage'}
+                    optional = {'thread_id', 'turn_id', 'session_id', 'root_turn_id', 'usage_metadata'}
+                    owners = {key: completion[key] for key in optional - {'usage_metadata'} if key in completion}
+                    owners['thread_id'] = source_threads.get(sid)
+                    if 'thread_id' in completion and completion['thread_id'] != owners['thread_id']:
+                        raise Invalid('completion_ownership')
+                if not required <= completion.keys() or set(completion) - required - optional:
+                    raise Invalid('unsupported_completion_schema')
+                rid = completion.get('responseId' if notification else 'response_id')
+                counters = completion['usage']
+                if not isinstance(rid, str) or counters is None or rid not in run_record_ids:
+                    raise Invalid('unaccounted_completion')
+                if notification:
+                    if not isinstance(counters, dict) or set(counters) != set(CAMEL_KEYS):
+                        raise Invalid('unsupported_usage_schema')
+                    counters = {key: counters[name] for key, name in zip(KEYS, CAMEL_KEYS)}
+                rec = self.records[rid]['payload']
+                if any(rec[key] != owner for key, owner in owners.items()):
+                    raise Invalid('completion_ownership')
+                if usage(counters) != rec['usage']:
+                    raise Invalid('completion_reconciliation')
+            except Invalid as error:
+                self.issue(str(error), sid)
         if not run['closed']:
             self.issue('open_run', run['id'])
         self.runs.append({'id': run['id'], 'sources': data['sources'], 'threads': threads,

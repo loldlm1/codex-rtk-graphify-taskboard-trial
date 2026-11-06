@@ -258,6 +258,116 @@ class ReportCLI(unittest.TestCase):
         self.assertEqual(code, 2, report)
         self.assertIn('incomplete_compaction_checkpoint', {x['code'] for x in report['issues']})
 
+    def test_compaction_marker_requires_own_thread_checkpoint(self):
+        root_record = record('response-one')
+        child_record = record('child-response', 'child', 'child-turn')
+        child_checkpoint = row('compacted', {'compaction_response_id': 'child-response',
+            'window_id': 'child-window', 'replacement_history': [{'synthetic': True}],
+            'latest_token_usage_record': child_record['payload']}, 4)
+        files = {
+            'root': [meta(), root_record, count(usage()),
+                     row('event_msg', {'type': 'task_complete', 'turn_id': 'turn'}),
+                     row('event_msg', {'type': 'context_compacted'}, 5)],
+            'child': [meta('child', 'root'), child_record, child_checkpoint, count(usage()),
+                      row('event_msg', {'type': 'task_complete', 'turn_id': 'child-turn'})],
+            'events': [{'method': 'item/started', 'params': {'threadId': 'root', 'item': {
+                'type': 'subAgentActivity', 'kind': 'started', 'agentThreadId': 'child'}}}]}
+        def change(m):
+            m['runs'][0]['expected_threads'].append({'thread_id': 'child', 'parent_thread_id': 'root'})
+        code, report = self.run_report(files, change)
+        self.assertEqual(code, 2, report)
+        self.assertIn('missing_compaction_checkpoint', {x['code'] for x in report['issues']})
+        self.assertIsNone(report['allocated_arm_usage'])
+        root_checkpoint = copy.deepcopy(child_checkpoint)
+        root_checkpoint['payload'].update(compaction_response_id='response-one',
+            window_id='root-window', latest_token_usage_record=root_record['payload'])
+        files['root'].append(root_checkpoint)
+        code, report = self.run_report(files, change)
+        self.assertEqual(code, 0, report)
+        self.assertEqual(len(report['runs'][0]['checkpoints']), 2)
+        # A checkpoint in the root file cannot borrow the child's response identity.
+        files['root'][-1] = child_checkpoint
+        code, report = self.run_report(files, change)
+        self.assertEqual(code, 2, report)
+        self.assertIn('compaction_checkpoint_ownership', {x['code'] for x in report['issues']})
+
+    def test_checkpoint_replay_preserves_response_window_and_persisted_metadata(self):
+        first = record('response-one')
+        second = record('response-two', cumulative=plus(usage(), usage()), second=2)
+        checkpoint = row('compacted', {'compaction_response_id': 'response-one',
+            'window_id': 'window-one', 'replacement_history': [{'synthetic': True}],
+            'latest_token_usage_record': first['payload']}, 4)
+        native = [meta(), first, second, checkpoint, count(plus(usage(), usage())),
+                  row('event_msg', {'type': 'task_complete', 'turn_id': 'turn'})]
+        mutations = {
+            'response-window': {'window_id': 'window-conflicting'},
+            'window-response': {'compaction_response_id': 'response-two',
+                                'latest_token_usage_record': second['payload']},
+            'replacement-history': {'replacement_history': [{'synthetic': 'changed'}]},
+            'embedded-snapshot': {'latest_token_usage_record': second['payload']},
+        }
+        for case, changed in mutations.items():
+            with self.subTest(case=case):
+                conflict = copy.deepcopy(checkpoint)
+                conflict['payload'].update(changed)
+                code, report = self.run_report({'root': native + [conflict]})
+                self.assertEqual(code, 2, report)
+                self.assertIn('conflicting_compaction_checkpoint', {x['code'] for x in report['issues']})
+                self.assertIsNone(report['allocated_arm_usage'])
+        # Identical persisted evidence may recur in another snapshot of this thread.
+        code, report = self.run_report({'root': native, 'replay': copy.deepcopy(native)})
+        self.assertEqual(code, 0, report)
+        self.assertEqual(report['unique_responses'], 2)
+        self.assertEqual(report['window_observed_usage'], plus(usage(), usage()))
+        self.assertEqual(len(report['runs'][0]['checkpoints']), 1)
+
+    def test_observed_completion_usage_must_match_ledger(self):
+        native = [meta(), record('response-one'), count(usage()),
+                  row('event_msg', {'type': 'task_complete', 'turn_id': 'turn'})]
+        for kind in ('raw_response_completed', 'response_completed'):
+            with self.subTest(kind=kind):
+                completion = row('event_msg', {'type': kind, 'response_id': 'response-one',
+                                              'usage': usage(999)})
+                code, report = self.run_report({'root': native + [completion]})
+                self.assertEqual(code, 2, report)
+                self.assertIn('completion_reconciliation', {x['code'] for x in report['issues']})
+                self.assertIsNone(report['allocated_arm_usage'])
+                completion['payload']['usage'] = usage()
+                code, report = self.run_report({'root': native + [completion, completion]})
+                self.assertEqual(code, 0, report)
+                self.assertEqual(report['window_observed_usage'], usage())
+        completion = {'type': 'raw_response_completed', 'response_id': 'response-one', 'usage': usage()}
+        for changed in [dict(thread_id='other'), dict(turn_id='other'), dict(session_id='other'),
+                        dict(root_turn_id='other'), dict(usage={'private-canary': 1}),
+                        dict(unsupported='private-canary')]:
+            with self.subTest(changed=tuple(changed)):
+                code, report = self.run_report({'root': native + [
+                    row('event_msg', dict(completion, **changed))]})
+                self.assertEqual(code, 2, report)
+                self.assertIsNone(report['allocated_arm_usage'])
+
+    def test_completion_notification_counters_schema_and_ownership(self):
+        native = [meta(), record('response-one'), count(usage()),
+                  row('event_msg', {'type': 'task_complete', 'turn_id': 'turn'})]
+        camel = ('inputTokens', 'cachedInputTokens', 'cacheWriteInputTokens',
+                 'outputTokens', 'reasoningOutputTokens', 'totalTokens')
+        params = {'threadId': 'root', 'turnId': 'turn', 'responseId': 'response-one',
+                  'usage': dict(zip(camel, usage().values())), 'usageMetadata': None}
+        for method in ('thread/rawResponse/completed', 'response/completed'):
+            code, report = self.run_report({'root': native, 'events': [{'method': method, 'params': params}]})
+            self.assertEqual(code, 0, report)
+            mutations = [dict(threadId='other'), dict(turnId='other'),
+                         dict(usage=dict(zip(camel, usage(999).values()))),
+                         dict(usage={'private-canary': 1}), dict(responseId='unknown'),
+                         dict(usage=None)]
+            for changed in mutations:
+                with self.subTest(method=method, changed=tuple(changed)):
+                    code, report = self.run_report({'root': native, 'events': [
+                        {'method': method, 'params': dict(params, **changed)}]})
+                    self.assertEqual(code, 2, report)
+                    self.assertIsNone(report['allocated_arm_usage'])
+                    self.assertNotIn('private-canary', json.dumps(report))
+
     def test_standalone_duplicate_timestamp_conflict_fails(self):
         code, report = self.run_report({'root': [meta(), record('response-one'),
             record('response-one', second=2), count(usage()),
