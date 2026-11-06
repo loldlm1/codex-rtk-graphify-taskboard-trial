@@ -107,6 +107,330 @@ class ReportCLI(unittest.TestCase):
         self.assertNotIn('response-one', result.stdout)
         return result.returncode, data
 
+    def window_manifest(self, manifest):
+        """Select a byte-exact full-history root prefix for an active root turn."""
+        manifest['window']['end'] = '2026-01-01T00:00:20Z'
+        run = manifest['runs'][0]
+        run['closed'] = False
+        run['phases'][0]['end'] = manifest['window']['end']
+        source = run['sources'][0]
+        raw = Path(source['path']).read_bytes()
+        last = json.loads(raw.splitlines()[-1])
+        run['window_closure'] = {
+            'kind': 'root-response-boundary', 'source_id': source['id'],
+            'turn_id': 'turn', 'response_id': 'response-one', 'response_ordinal': 1,
+            'source_bytes': len(raw), 'last_ordinal': last.get('ordinal'),
+            'cutoff': manifest['window']['end']}
+
+    def window_rows(self, rows=None):
+        rows = rows or [meta(), record('response-one'), count(usage())]
+        return b''.join(native_line(event, ordinal) for ordinal, event in enumerate(rows))
+
+    def test_root_response_window_closes_only_explicit_active_root_boundary(self):
+        raw = self.window_rows()
+        code, report = self.run_report({'root': raw}, self.window_manifest)
+        self.assertEqual(code, 0, report)
+        self.assertEqual(report['window_observed_usage'], usage())
+        self.assertEqual(report['billing_completeness'], 'not-proven')
+        closure = report['runs'][0]['window_closure']
+        self.assertEqual(closure['kind'], 'root-response-boundary')
+        self.assertEqual(closure['accounting_window'], 'closed')
+        self.assertEqual(closure['root_turn_completion'], 'unclaimed')
+        self.assertEqual(closure['response_id_hash'], hashlib.sha256(b'response-one').hexdigest())
+        self.assertEqual(closure['source_bytes'], len(raw))
+        self.assertEqual(closure['response_ordinal'], 1)
+        self.assertEqual(closure['last_ordinal'], 2)
+        self.assertEqual(closure['source_sha256'], hashlib.sha256(raw).hexdigest())
+        for closed, issue in ((True, 'missing_turn_completion'), (False, 'open_run')):
+            code, report = self.run_report({'root': raw},
+                lambda m: m['runs'][0].update(closed=closed))
+            self.assertEqual(code, 2, report)
+            self.assertIn(issue, {x['code'] for x in report['issues']})
+            self.assertIsNone(report['allocated_arm_usage'])
+
+    def test_root_response_window_requires_other_root_turns_completed(self):
+        earlier = record('earlier', turn='earlier-turn', root_turn='earlier-turn')
+        current = record('response-one', cumulative=plus(usage(), usage()), second=3)
+        current['payload']['turn_token_usage'] = usage()
+        for complete in (False, True):
+            rows = [meta(), earlier]
+            if complete:
+                rows.append(row('event_msg', {'type': 'task_complete', 'turn_id': 'earlier-turn'}, 2))
+            rows.extend([current, count(plus(usage(), usage()))])
+            def change(m):
+                self.window_manifest(m)
+                m['runs'][0]['window_closure']['response_ordinal'] = 3 if complete else 2
+            code, report = self.run_report({'root': self.window_rows(rows)}, change)
+            self.assertEqual(code, 0 if complete else 2, report)
+            if not complete:
+                self.assertIn('missing_turn_completion', {x['code'] for x in report['issues']})
+                self.assertIsNone(report['allocated_arm_usage'])
+
+    def test_root_response_window_requires_every_child_turn_completed(self):
+        for complete in (False, True):
+            child = [meta('child', 'root'), record('child-response', thread='child', turn='child-turn'), count(usage())]
+            if complete:
+                child.append(row('event_msg', {'type': 'task_complete', 'turn_id': 'child-turn'}, 10))
+            files = {'root': self.window_rows(), 'child': child, 'events': [{
+                'method': 'item/completed', 'params': {'threadId': 'root', 'item': {
+                    'type': 'subAgentActivity', 'kind': 'started', 'agentThreadId': 'child'}}}]}
+            def change(m):
+                self.window_manifest(m)
+                m['runs'][0]['expected_threads'].append({'thread_id': 'child', 'parent_thread_id': 'root'})
+            code, report = self.run_report(files, change)
+            self.assertEqual(code, 0 if complete else 2, report)
+            if not complete:
+                self.assertIn('missing_turn_completion', {x['code'] for x in report['issues']})
+                self.assertIsNone(report['allocated_arm_usage'])
+
+    def test_root_response_window_tracks_owning_turns_without_usage(self):
+        for position in ('earlier-root', 'later-root', 'later-child'):
+            with self.subTest(position=position):
+                root = [meta(), record('response-one'), count(usage())]
+                started = row('event_msg', {'type': 'task_started', 'turn_id': 'unfinished'}, 10)
+                if position == 'earlier-root':
+                    started['timestamp'] = meta()['timestamp']
+                    root.insert(1, started)
+                elif position == 'later-root': root.append(started)
+                child = [meta('child', 'root'), record('child-response', thread='child', turn='child-turn'),
+                         count(usage()), row('event_msg', {'type': 'task_complete', 'turn_id': 'child-turn'}, 10)]
+                if position == 'later-child': child.append(started)
+                files = {'root': self.window_rows(root), 'child': child, 'events': [{
+                    'method': 'item/completed', 'params': {'threadId': 'root', 'item': {
+                        'type': 'subAgentActivity', 'kind': 'started', 'agentThreadId': 'child'}}}]}
+                def change(m):
+                    self.window_manifest(m)
+                    m['runs'][0]['expected_threads'].append({'thread_id': 'child', 'parent_thread_id': 'root'})
+                    if position == 'earlier-root':
+                        m['runs'][0]['window_closure']['response_ordinal'] = 2
+                code, report = self.run_report(files, change)
+                self.assertEqual(code, 2, report)
+                self.assertIn('missing_turn_completion', {x['code'] for x in report['issues']})
+                self.assertIsNone(report['allocated_arm_usage'])
+
+    def test_root_response_window_rejects_missing_started_identity(self):
+        for event_type in ('task_started', 'turn_started'):
+            for identity_kind in ('missing', 'null'):
+                with self.subTest(event_type=event_type, identity_kind=identity_kind):
+                    payload = {'type': event_type}
+                    if identity_kind == 'null':
+                        payload['turn_id'] = None
+                    rows = [meta(), record('response-one'), count(usage()),
+                            row('event_msg', payload, 10)]
+                    code, report = self.run_report({'root': self.window_rows(rows)}, self.window_manifest)
+                    self.assertEqual(code, 2, report)
+                    self.assertEqual(report['evidence_status'], 'incomplete')
+                    self.assertIn('missing_response_identity', {x['code'] for x in report['issues']})
+                    self.assertIsNone(report['allocated_arm_usage'])
+                    self.assertEqual(report['runs'][0]['window_closure']['accounting_window'], 'unverified')
+
+    def test_root_response_window_rejects_malformed_started_identity(self):
+        for event_type in ('task_started', 'turn_started'):
+            for value in ('', False, 0, [], {}, 'private-canary' * 80):
+                with self.subTest(event_type=event_type, value=value):
+                    rows = [meta(), record('response-one'), count(usage()),
+                            row('event_msg', {'type': event_type, 'turn_id': value}, 10)]
+                    code, report = self.run_report({'root': self.window_rows(rows)}, self.window_manifest)
+                    self.assertEqual(code, 2, report)
+                    self.assertIn('missing_response_identity', {x['code'] for x in report['issues']})
+                    self.assertIsNone(report['allocated_arm_usage'])
+                    self.assertNotIn('private-canary', json.dumps(report))
+                    self.assertEqual(report['runs'][0]['window_closure']['accounting_window'], 'unverified')
+
+    def test_root_response_window_rejects_child_start_without_identity(self):
+        for event_type in ('task_started', 'turn_started'):
+            for identity_kind in ('missing', 'null'):
+                with self.subTest(event_type=event_type, identity_kind=identity_kind):
+                    payload = {'type': event_type}
+                    if identity_kind == 'null':
+                        payload['turn_id'] = None
+                    child = [meta('child', 'root'),
+                             record('child-response', thread='child', turn='child-turn'), count(usage()),
+                             row('event_msg', {'type': 'task_complete', 'turn_id': 'child-turn'}, 10),
+                             row('event_msg', payload, 11)]
+                    files = {'root': self.window_rows(), 'child': child, 'events': [{
+                        'method': 'item/completed', 'params': {'threadId': 'root', 'item': {
+                            'type': 'subAgentActivity', 'kind': 'started', 'agentThreadId': 'child'}}}]}
+                    def change(m):
+                        self.window_manifest(m)
+                        m['runs'][0]['expected_threads'].append({'thread_id': 'child', 'parent_thread_id': 'root'})
+                    code, report = self.run_report(files, change)
+                    self.assertEqual(code, 2, report)
+                    self.assertIn('missing_response_identity', {x['code'] for x in report['issues']})
+                    self.assertIsNone(report['allocated_arm_usage'])
+
+    def test_valid_started_identity_and_optional_context_identity_remain_accepted(self):
+        for event_type in ('task_started', 'turn_started'):
+            for context_identity in ({}, {'turn_id': None}, {'turn_id': 'turn'}):
+                for window in (False, True):
+                    with self.subTest(event_type=event_type, context_identity=context_identity, window=window):
+                        rows = [meta(), row('event_msg', {'type': event_type, 'turn_id': 'turn'}),
+                                record('response-one'), count(usage()), row('turn_context', context_identity, 10)]
+                        if not window:
+                            rows.append(row('event_msg', {'type': 'task_complete', 'turn_id': 'turn'}, 11))
+                        def change(m):
+                            self.window_manifest(m)
+                            m['runs'][0]['window_closure']['response_ordinal'] = 2
+                        code, report = self.run_report({'root': self.window_rows(rows)}, change if window else None)
+                        self.assertEqual(code, 0, report)
+                        self.assertEqual(report['evidence_status'], 'reconciled')
+                        self.assertEqual(report['window_observed_usage'], usage())
+                        self.assertIsNotNone(report['allocated_arm_usage'])
+                        if window:
+                            self.assertEqual(report['runs'][0]['window_closure']['root_turn_completion'], 'unclaimed')
+
+    def test_strict_closure_requires_started_turns_without_usage_completed(self):
+        for event_type in ('task_started', 'turn_started'):
+            for thread in ('root', 'child'):
+                for complete in (False, True):
+                    with self.subTest(event_type=event_type, thread=thread, complete=complete):
+                        root = [meta(), record('response-one'), count(usage()),
+                                row('event_msg', {'type': 'task_complete', 'turn_id': 'turn'}, 10)]
+                        child = [meta('child', 'root'), record('child-response', thread='child', turn='child-turn'),
+                                 count(usage()), row('event_msg', {'type': 'task_complete', 'turn_id': 'child-turn'}, 10)]
+                        owning = root if thread == 'root' else child
+                        owning.append(row('event_msg', {'type': event_type, 'turn_id': 'nonmodel-turn'}, 11))
+                        if complete:
+                            owning.append(row('event_msg', {'type': 'task_complete', 'turn_id': 'nonmodel-turn'}, 12))
+                        files = {'root': root, 'child': child, 'events': [{
+                            'method': 'item/completed', 'params': {'threadId': 'root', 'item': {
+                                'type': 'subAgentActivity', 'kind': 'started', 'agentThreadId': 'child'}}}]}
+                        def change(m):
+                            m['runs'][0]['expected_threads'].append({'thread_id': 'child', 'parent_thread_id': 'root'})
+                        code, report = self.run_report(files, change)
+                        self.assertEqual(code, 0 if complete else 2, report)
+                        self.assertEqual(report['window_observed_usage'], plus(usage(), usage()))
+                        self.assertEqual(report['unique_responses'], 2)
+                        if complete:
+                            self.assertIsNotNone(report['allocated_arm_usage'])
+                        else:
+                            self.assertEqual({x['code'] for x in report['issues']}, {'missing_turn_completion'})
+                            self.assertIsNone(report['allocated_arm_usage'])
+
+    def test_strict_closure_rejects_missing_or_malformed_started_identity(self):
+        for event_type in ('task_started', 'turn_started'):
+            for identity_kind, value in (('missing', None), ('null', None), ('empty', ''),
+                                         ('boolean', False), ('number', 0), ('array', []),
+                                         ('object', {}), ('oversized', 'private-canary' * 80)):
+                with self.subTest(event_type=event_type, identity_kind=identity_kind):
+                    payload = {'type': event_type}
+                    if identity_kind != 'missing':
+                        payload['turn_id'] = value
+                    rows = [meta(), record('response-one'), count(usage()),
+                            row('event_msg', {'type': 'task_complete', 'turn_id': 'turn'}, 10),
+                            row('event_msg', payload, 11)]
+                    code, report = self.run_report({'root': rows})
+                    self.assertEqual(code, 2, report)
+                    self.assertIn('missing_response_identity', {x['code'] for x in report['issues']})
+                    self.assertIsNone(report['allocated_arm_usage'])
+                    self.assertNotIn('private-canary', json.dumps(report))
+
+    def test_root_response_window_rejects_missing_or_mismatched_binding(self):
+        changes = {'kind': 'future-kind', 'source_id': 'absent', 'turn_id': 'absent',
+                   'response_id': 'absent', 'response_ordinal': 0, 'source_bytes': 1,
+                   'last_ordinal': 1, 'cutoff': '2026-01-01T00:00:19Z'}
+        for field, value in changes.items():
+            for missing in (False, True):
+                with self.subTest(field=field, missing=missing):
+                    def change(m):
+                        self.window_manifest(m)
+                        boundary = m['runs'][0]['window_closure']
+                        if missing:
+                            del boundary[field]
+                        else:
+                            boundary[field] = value
+                    code, report = self.run_report({'root': self.window_rows()}, change)
+                    self.assertEqual(code, 2, report)
+                    self.assertIsNone(report['allocated_arm_usage'])
+        for field in ('response_ordinal', 'source_bytes', 'last_ordinal'):
+            for bad in (True, -1, '1'):
+                def change(m):
+                    self.window_manifest(m)
+                    m['runs'][0]['window_closure'][field] = bad
+                code, report = self.run_report({'root': self.window_rows()}, change)
+                self.assertEqual(code, 2, report)
+        for mutation in ('closed-run', 'open-window', 'open-phase', 'admin', 'phase-gap', 'unknown-field'):
+            def change(m):
+                self.window_manifest(m)
+                run = m['runs'][0]
+                if mutation == 'closed-run': run['closed'] = True
+                elif mutation == 'open-window': m['window']['end'] = None
+                elif mutation == 'open-phase': run['phases'][0]['end'] = None
+                elif mutation == 'admin': run['phases'][0]['category'] = 'administration'
+                elif mutation == 'phase-gap': run['phases'][0]['start'] = '2026-01-01T00:00:02Z'
+                else: run['window_closure']['private-canary'] = True
+            code, report = self.run_report({'root': self.window_rows()}, change)
+            self.assertEqual(code, 2, report)
+            self.assertIsNone(report['allocated_arm_usage'])
+
+    def test_root_response_window_rejects_earlier_nonroot_embedded_or_late_anchor(self):
+        for bad in ('earlier', 'embedded', 'foreign-owner', 'at-cutoff', 'before-window', 'later-other-source', 'replayed-earlier'):
+            with self.subTest(bad=bad):
+                root = [meta(), record('response-one'), count(usage())]
+                if bad in ('earlier', 'later-other-source', 'replayed-earlier'):
+                    later = record('response-two', cumulative=plus(usage(), usage()), second=10)
+                    root = [meta(), record('response-one'), later, count(plus(usage(), usage()), 11)]
+                    if bad == 'replayed-earlier': root.insert(3, record('response-one'))
+                elif bad == 'embedded':
+                    root[1] = row('compacted', {'latest_token_usage_record': record('response-one')['payload'],
+                        'compaction_response_id': 'response-one', 'window_id': 'window', 'replacement_history': [{}]})
+                elif bad == 'foreign-owner': root[1]['payload']['thread_id'] = 'child'
+                elif bad == 'at-cutoff': root[1]['timestamp'] = '2026-01-01T00:00:20Z'
+                files = {'root': self.window_rows(root)}
+                if bad == 'later-other-source':
+                    files['root'] = self.window_rows()
+                    files['later'] = self.window_rows(root)
+                def change(m):
+                    self.window_manifest(m)
+                    if bad == 'before-window': m['window']['start'] = '2026-01-01T00:00:02Z'
+                    if bad == 'replayed-earlier': m['runs'][0]['window_closure']['response_ordinal'] = 3
+                code, report = self.run_report(files, change)
+                self.assertEqual(code, 2, report)
+                self.assertIsNone(report['allocated_arm_usage'])
+
+    def test_root_response_window_requires_complete_ordinal_prefix_and_ordinary_snapshot(self):
+        for bad in ('first-ordinal', 'gap', 'duplicate', 'missing-ordinal', 'missing-ordinary',
+                    'ordinary-before-response', 'later-row', 'unterminated', 'counter-gap', 'error', 'unknown'):
+            with self.subTest(bad=bad):
+                rows = [meta(), record('response-one'), count(usage())]
+                if bad == 'missing-ordinary': rows.pop()
+                elif bad == 'ordinary-before-response': rows[2]['timestamp'] = rows[0]['timestamp']
+                elif bad == 'later-row': rows.append(row('response_item', {}, 20))
+                elif bad == 'counter-gap': rows[2] = count(usage(11))
+                elif bad in ('error', 'unknown'):
+                    rows.append(row('event_msg', {'type': 'error' if bad == 'error' else 'new-accounting-event'}, 10))
+                raw = self.window_rows(rows)
+                if bad == 'first-ordinal': raw = raw.replace(b'"ordinal":0', b'"ordinal":7', 1)
+                elif bad == 'gap': raw = raw.replace(b'"ordinal":1', b'"ordinal":7', 1)
+                elif bad == 'duplicate': raw = raw.replace(b'"ordinal":2', b'"ordinal":1', 1)
+                elif bad == 'missing-ordinal': raw = raw.replace(b'"ordinal":1,', b'', 1)
+                elif bad == 'unterminated': raw = raw[:-1]
+                code, report = self.run_report({'root': raw}, self.window_manifest)
+                self.assertEqual(code, 2, report)
+                self.assertIsNone(report['allocated_arm_usage'])
+
+    def test_root_response_window_retains_verified_retry_and_compaction_checks(self):
+        partial, retry = partial_retry(record('response-one'))
+        raw = (native_line(meta(), 0) + partial + retry + native_line(count(usage()), 2))
+        code, report = self.run_report({'root': raw}, self.window_manifest)
+        self.assertEqual(code, 0, report)
+        self.assertEqual(len(report['runs'][0]['sources'][0]['partial_write_recoveries']), 1)
+        compact = record('compact', cumulative=plus(usage(), usage()), second=3)
+        checkpoint = row('compacted', {'compaction_response_id': 'compact', 'window_id': 'window',
+            'replacement_history': [{}], 'latest_token_usage_record': compact['payload']}, 4)
+        rows = [meta(), record('response-one'), compact, checkpoint, count(usage(), 5)]
+        def change(m):
+            self.window_manifest(m)
+            m['runs'][0]['window_closure'].update(response_id='compact', response_ordinal=2)
+        code, report = self.run_report({'root': self.window_rows(rows)}, change)
+        self.assertEqual(code, 0, report)
+        self.assertEqual(report['runs'][0]['ordinary_compaction_delta'], usage())
+        rows[-1] = count(usage(11), 5)
+        code, report = self.run_report({'root': self.window_rows(rows)}, change)
+        self.assertEqual(code, 2, report)
+        self.assertIn('ordinary_reconciliation', {x['code'] for x in report['issues']})
+        self.assertIsNone(report['allocated_arm_usage'])
+
     def test_records_native_usage_and_subsets_once(self):
         code, report = self.run_report()
         self.assertEqual(code, 0)

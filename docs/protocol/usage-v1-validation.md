@@ -169,3 +169,88 @@ was charged separately, or missing provider identity was synthesized. Raw files,
 private manifests, digests and detailed evidence remain outside Git. Universal
 billing completeness and the same two-compaction/process-restart live gate remain
 unproven; no full-trial total or readiness acceptance is claimed.
+
+## Active-root response-boundary window
+
+A separately selected opt-in closes an exclusive accounting window while its actual
+root turn remains active. The [manifest contract and capture recipe](usage-v1.md#explicit-active-root-window-closure)
+retain strict default run closure. The optional run `window_closure` requires
+`closed: false`, an actual standalone terminal root provider response/turn, its
+ordinal, a full-history prefix's exact byte count/final ordinal and existing digest,
+and the exclusive cutoff. Output explicitly states `accounting_window: closed`,
+`kind: root-response-boundary` and `root_turn_completion: unclaimed`. Every other
+owning root/child turn still requires real completion; counters, omissions,
+compaction checks, fixed allocation and billing/readiness limits remain mandatory.
+
+ECC TDD supplied the sole implementation cycle with no checkpoint commits. Eight
+new public CLI test methods cover the positive boundary and parameterized strict
+negatives. The initial 42-test usage target had four intended assertion failures
+because the new contract was unsupported. A further focused RED had three failures
+for started owning turns without usage; those turns are now completion-checked.
+An explicit output-field RED failed on the missing window status. Final review
+then produced an actual false-pass RED for an older response replayed after a newer
+one. First-seen distinct response order prevents that replay from moving the old
+identity forward. Each affected target was rerun to GREEN. Strict mode, other root
+turns, unfinished workers, unknown/missing bindings, embedded/foreign/earlier anchors,
+open windows/phases, ordinal/byte gaps, later records, counter differences and error
+indicators remain incomplete with null allocation. Verified retries and explained
+compaction differences still reconcile through the opt-in.
+
+The already completed native-21 root/child sample supplies a real boundary check
+without a new native launch or probe. The unchanged full sources reconcile nine
+responses / **265,831 total tokens**. A privately retained, byte-exact full-history
+root prefix ends at ordinal 49, after the real last provider record at ordinal 48
+and before the actual final turn-completion event at ordinal 50. The prefix is
+242,360 bytes. Strict mode rejects it solely for missing turn completion; explicit
+window mode reconciles the same nine responses and every usage category, with zero
+ordinary/ledger difference. Original sources remain unchanged. The private original
+and prefix digests, byte/ordinal proof, manifests and reports stay outside Git; the
+raw snapshot and manifest use owner-only access in a private directory.
+
+Final validation: **64/64 tests passed**, including all **43** public usage CLI
+tests and **21** existing Graphify tests, with the three provisioned local runtime
+tests enabled. The original independent false-success reproductions remain **3/3
+PASS**. Existing ordinary / pre-restart / replay samples retain respectively
+108 / 103 / 108 responses and 5,778,005 / 5,276,955 / 5,778,005 tokens; 49 replay
+records still add zero. Compilation, the 14-token strict example, whitespace and
+changed-file input/output privacy review pass. Type checking, lint and external
+security scanners remain unconfigured; no dependency or runtime/configuration was
+added. Fresh statement-line coverage is **631/677 = 93.21%**, measured by a
+new stdlib subprocess trace and AST executable statement-start lines excluding
+docstrings. Branch coverage is unmeasured. The 46 unexecuted statement lines are
+existing additional malformed inventory/label/metadata, notification and omission
+variants; this does not claim exhaustive branch or corruption coverage.
+
+This selected closed sample does not certify the active preparation coordinator or
+the full trial. Universal billing completeness remains unproven; final live
+compaction/restart readiness still belongs to the single selected probe. The
+coordinator must finish/check assessment and report in its owning turn, freeze
+immutable inputs before later administration, and obtain independent review before
+integration. No watcher, later unverified publisher, measured arm, final target
+merge, release or deployment was introduced.
+
+### Owning-start identity correction
+
+Independent review reproduced four false successes when a later `task_started` or
+`turn_started` omitted `turn_id` or supplied null. The focused CLI RED confirmed
+all four, plus four child-start variants. Twelve malformed-identity variants also
+confirmed that the earlier root boundary must not remain certified. In the opt-in
+path every start now requires the existing valid-string identity check; a later
+invalid start leaves the root boundary unverified. A further strict-mode CLI RED
+confirmed four unfinished-start false successes and sixteen malformed/missing/null
+identity false successes. Owning-turn tracking and required start identity checks
+now apply in both modes; completed nonmodel turns need no synthetic usage. The
+pinned optional `turn_context.turn_id` contract is preserved, with absent/null and
+valid context IDs and both valid start-event spellings checked in strict and
+opt-in modes.
+
+The same targets passed after the fix. Final verification passed **70/70 tests**:
+all previous 64 plus six new public CLI methods. The independent original four
+reproductions and earlier three false-success regressions passed. Fresh CLI
+statement-line coverage measured **634/680 = 93.24%** from 245 CLI processes;
+46 statement lines remain uncovered and branch coverage remains unmeasured. The
+retained native-21 full, strict-prefix and opt-in-prefix reports remain exactly
+unchanged: nine responses / 265,831 tokens, all six deltas zero, strict prefix
+rejected only for missing completion, and opt-in root completion unclaimed. No new
+native probe or runtime/configuration change was made. Independent re-review is
+required before integration.
