@@ -7,7 +7,7 @@ A public, agent-built task-board trial repository provides an immutable runnable
 ## Acceptance criteria
 
 - [ ] Create a descriptively named public repository under the maintainer's account using the accepted hybrid workflow, with actual issue/worker/review provenance.
-- [ ] Provide an ordinary small multi-file task-board application whose existing task operations work; do not solve the measured saved-filter task during preparation or pad the application for Graphify.
+- [ ] Provide an ordinary small multi-file task-board application whose existing task operations work; keep the saved-filter task unimplemented during preparation.
 - [ ] Preserve a fixed starter commit/tag and dependency lockfiles, and resolve real setup/build/type/lint/test/browser/coverage commands with actual baseline results.
 - [ ] Freeze the task specification and acceptance for filtering, reload persistence, existing task operations, keyboard/browser behavior, and visual clarity before measured runs.
 - [ ] Keep starter checks and future-task acceptance distinguishable so a runnable starter is not mistaken for an already implemented task.
