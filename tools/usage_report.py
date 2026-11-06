@@ -24,7 +24,7 @@ IGNORED_NATIVE = {'response_item', 'world_state', 'turn_context',
                   'inter_agent_communication_metadata'}
 RETRY_ENVELOPE = re.compile(
     rb'^\{"timestamp":"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z)"'
-    rb'(,"ordinal":(0|[1-9][0-9]*),"type":"(token_usage_record|event_msg)"[^\n]*)\n$')
+    rb'(,"ordinal":(0|[1-9][0-9]*),"type":"(token_usage_record|event_msg|response_item)"[^\n]*)\n$')
 LIMITS = [
     'Native persistence is a version-pinned internal format, not a stable public API.',
     'Null upstream usage, skipped writes, hidden WebSocket retries and background or speculative requests can be unobservable.',
@@ -267,17 +267,20 @@ class Reporter:
                 or not right[2].startswith(left[2]) or len(left[2]) >= len(right[2])
                 or (state['boundary'] is not None and ordinal < state['boundary'])):
             return False
-        payload = event.get('payload')
-        if not isinstance(payload, dict) or payload.get('thread_id') != state['owner']['id']:
-            return False
-        try:
-            identity(payload.get('turn_id'))
-            if left[4] == b'token_usage_record':
-                record_payload(payload)
-            elif payload.get('type') != 'item_completed' or not isinstance(payload.get('item'), dict):
+        # Response items are already ignored: their exact retried bytes supply
+        # no ownership, identities or usage. Accounting events still need these.
+        if left[4] != b'response_item':
+            payload = event.get('payload')
+            if not isinstance(payload, dict) or payload.get('thread_id') != state['owner']['id']:
                 return False
-        except Invalid:
-            return False
+            try:
+                identity(payload.get('turn_id'))
+                if left[4] == b'token_usage_record':
+                    record_payload(payload)
+                elif payload.get('type') != 'item_completed' or not isinstance(payload.get('item'), dict):
+                    return False
+            except Invalid:
+                return False
         earlier = timestamp(left[1].decode('ascii'))
         later = timestamp(right[1].decode('ascii'))
         if earlier >= later:
@@ -376,7 +379,7 @@ class Reporter:
                 'binding_sha256': hashed(json.dumps(payload, sort_keys=True, separators=(',', ':'))),
                 'checkpoint_sha256': hashlib.sha256(raw).hexdigest()})
         elif kind == 'event_msg':
-            self.native_event(payload, when, data, sid)
+            self.native_event(payload, when, data, sid, state=state)
         else:
             raise Invalid('unsupported_native_schema')
 
@@ -466,7 +469,7 @@ class Reporter:
         if prefix:
             data['source_states'][sid] = state
 
-    def native_event(self, payload, when, data, sid, inherited=False):
+    def native_event(self, payload, when, data, sid, inherited=False, state=None):
         if not isinstance(payload, dict):
             raise Invalid('unsupported_native_schema')
         kind = payload.get('type', '')
@@ -497,12 +500,27 @@ class Reporter:
                 self.issue('known_omission_indicator', sid)
         elif kind in ('raw_response_completed', 'response_completed'):
             data['completions'].append((payload, sid, False))
+        elif kind in ('item_started', 'item_completed'):
+            item = payload.get('item')
+            if not isinstance(item, dict):
+                raise Invalid('unsupported_native_schema')
+            if item.get('type') == 'SubAgentActivity' and item.get('kind') == 'started':
+                try:
+                    parent = identity(payload.get('thread_id'))
+                    turn = identity(payload.get('turn_id'))
+                    child = identity(item.get('agent_thread_id'))
+                except Invalid:
+                    raise Invalid('invalid_descendant_start_identity') from None
+                if parent != state['owner']['id'] or child == parent:
+                    raise Invalid('descendant_start_ownership')
+                if turn != state['last_owning_turn'] or turn in data['completed']:
+                    raise Invalid('descendant_start_turn_ownership')
+                data['started'].add((parent, child))
         elif kind == 'context_compacted':
             data['compaction_markers'].add(sid)
         elif kind in ('error', 'warning', 'turn_aborted', 'stream_error') or any(word in kind for word in ('background', 'speculative', 'usage_record')):
             self.issue('known_omission_indicator', sid)
-        elif kind not in ('task_started', 'turn_started', 'thread_settings_applied',
-                          'item_started', 'item_completed'):
+        elif kind not in ('task_started', 'turn_started', 'thread_settings_applied'):
             raise Invalid('unsupported_native_schema')
 
     def notification(self, event, data, sid):

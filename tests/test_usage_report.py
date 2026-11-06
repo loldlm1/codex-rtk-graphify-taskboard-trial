@@ -463,6 +463,64 @@ class ReportCLI(unittest.TestCase):
         self.assertEqual(recoveries[0]['retry_sha256'], hashlib.sha256(retry).hexdigest())
         self.assertNotIn('private-canary', json.dumps(report))
 
+    def test_exact_response_item_retry_is_audited_and_adds_no_usage(self):
+        for item_type in ('reasoning', 'custom_tool_call'):
+            for short in (False, True):
+                with self.subTest(item_type=item_type, short=short):
+                    event = row('response_item', {'type': item_type, 'private': 'private-canary',
+                                                 'usage': usage(999)})
+                    partial, retry = partial_retry(event)
+                    if short:
+                        partial = partial[:partial.index(b'"payload":') + 3] + b'\n'
+                    raw = native_line(meta(), 0) + partial + retry
+                    raw += native_line(record('response-one', second=2), 2)
+                    raw += native_line(count(usage()), 3)
+                    raw += native_line(row('event_msg', {'type': 'task_complete', 'turn_id': 'turn'}), 4)
+                    code, report = self.run_report({'root': raw})
+                    self.assertEqual(code, 0, report)
+                    self.assertEqual(report['unique_responses'], 1)
+                    self.assertEqual(report['window_observed_usage'], usage())
+                    source = report['runs'][0]['sources'][0]
+                    self.assertEqual(source['sha256'], hashlib.sha256(raw).hexdigest())
+                    recovery = source['partial_write_recoveries'][0]
+                    self.assertEqual((recovery['partial_line'], recovery['retry_line'], recovery['ordinal'], recovery['type']),
+                                     (2, 3, 1, 'response_item'))
+                    self.assertEqual(recovery['partial_sha256'], hashlib.sha256(partial).hexdigest())
+                    self.assertEqual(recovery['retry_sha256'], hashlib.sha256(retry).hexdigest())
+                    self.assertNotIn('private-canary', json.dumps(report))
+
+    def test_response_item_retry_preserves_exact_envelope_and_boundary_requirements(self):
+        for bad in ('ordinal', 'type', 'prefix', 'timestamp', 'intervening', 'multiple-partials',
+                    'incomplete-type', 'previous-ordinal', 'next-ordinal', 'phase', 'window', 'other-ignored-type'):
+            with self.subTest(bad=bad):
+                event = row('response_item', {'type': 'reasoning', 'private': 'private-canary'})
+                partial, retry = partial_retry(event)
+                if bad == 'ordinal': retry = retry.replace(b'"ordinal":1', b'"ordinal":2')
+                elif bad == 'type': retry = retry.replace(b'"type":"response_item"', b'"type":"world_state"')
+                elif bad == 'prefix': retry = retry.replace(b'private-canary', b'changed-canary')
+                elif bad == 'timestamp': retry = retry.replace(b'.100Z', b'.000Z')
+                elif bad == 'intervening': retry = native_line(row('response_item', {}), 1) + retry
+                elif bad == 'multiple-partials': retry = partial + retry
+                elif bad == 'incomplete-type': partial = partial[:partial.index(b'response_item') + 4] + b'\n'
+                elif bad == 'other-ignored-type':
+                    partial = partial.replace(b'response_item', b'world_state')
+                    retry = retry.replace(b'response_item', b'world_state')
+                raw = native_line(meta(), 5 if bad == 'previous-ordinal' else 0) + partial + retry
+                raw += native_line(record('response-one', second=2), 9 if bad == 'next-ordinal' else 2)
+                raw += native_line(count(usage()), 3)
+                raw += native_line(row('event_msg', {'type': 'task_complete', 'turn_id': 'turn'}), 4)
+                def change(m):
+                    if bad == 'window': m['window']['start'] = '2026-01-01T00:00:01.050Z'
+                    elif bad == 'phase':
+                        phase = m['runs'][0]['phases'][0]
+                        phase['end'] = '2026-01-01T00:00:01.050Z'
+                        m['runs'][0]['phases'].append(dict(phase, id='next', start=phase['end'], end='2026-01-01T00:01:00Z'))
+                code, report = self.run_report({'root': raw}, change)
+                self.assertEqual(code, 2, report)
+                self.assertIn('invalid_retry_ordinal' if bad == 'next-ordinal' else 'malformed_source',
+                              {x['code'] for x in report['issues']})
+                self.assertIsNone(report['allocated_arm_usage'])
+
     def test_partial_recovery_rejects_unmatched_changed_and_ambiguous_rows(self):
         first, retry = partial_retry(record('response-one'))
         cases = {
@@ -660,6 +718,119 @@ class ReportCLI(unittest.TestCase):
             code, report = self.run_fork(files)
             self.assertEqual(code, 2, report)
             self.assertIsNone(report['allocated_arm_usage'])
+
+    def native_start_files(self, event_type='item_completed'):
+        start = row('event_msg', {'type': event_type, 'thread_id': 'root',
+            'turn_id': 'turn', 'item': {'type': 'SubAgentActivity', 'kind': 'started',
+                'agent_thread_id': 'child', 'model': 'synthetic-model',
+                'reasoning_effort': 'high', 'id': 'synthetic-call', 'agent_path': '/synthetic'}}, 2)
+        return {'root': [meta(), row('event_msg', {'type': 'task_started', 'turn_id': 'turn'}),
+                         start, record('response-one', second=3), count(usage()),
+                         row('event_msg', {'type': 'task_complete', 'turn_id': 'turn'})],
+                'child': [meta('child', 'root'), record('child-response', 'child', 'child-turn'),
+                          count(usage()), row('event_msg', {'type': 'task_complete', 'turn_id': 'child-turn'})]}
+
+    def run_native_start(self, files, change=None):
+        def manifest(m):
+            m['runs'][0]['expected_threads'].append({'thread_id': 'child', 'parent_thread_id': 'root'})
+            if change:
+                change(m)
+        return self.run_report(files, manifest)
+
+    def test_persisted_native_starts_supply_descendant_inventory_without_notifications(self):
+        for event_type in ('item_started', 'item_completed'):
+            with self.subTest(event_type=event_type):
+                files = self.native_start_files(event_type)
+                files['root'].insert(3, copy.deepcopy(files['root'][2]))
+                files['replay'] = copy.deepcopy(files['root'])
+                code, report = self.run_native_start(files)
+                self.assertEqual(code, 0, report)
+                self.assertEqual(report['unique_responses'], 2)
+                self.assertEqual(report['duplicate_records'], 1)
+                self.assertEqual(report['window_observed_usage'], plus(usage(), usage()))
+                self.assertEqual(report['runs'][0]['ordinary_compaction_delta'], dict.fromkeys(KEYS, 0))
+
+    def test_native_start_rejects_missing_or_invalid_provenance_identities(self):
+        for field in ('thread_id', 'turn_id', 'agent_thread_id'):
+            for value in ('missing', None, '', True, [], {}, 'x' * 1025):
+                with self.subTest(field=field, value=value):
+                    files = self.native_start_files()
+                    payload = files['root'][2]['payload']
+                    target = payload['item'] if field == 'agent_thread_id' else payload
+                    if value == 'missing': target.pop(field)
+                    else: target[field] = value
+                    code, report = self.run_native_start(files)
+                    self.assertEqual(code, 2, report)
+                    self.assertIn('invalid_descendant_start_identity', {x['code'] for x in report['issues']})
+                    self.assertIsNone(report['allocated_arm_usage'])
+
+    def test_native_start_rejects_foreign_parent_self_child_and_unobserved_turn(self):
+        for bad in ('foreign-parent', 'self-child', 'wrong-turn', 'missing-owning-turn', 'completed-turn'):
+            with self.subTest(bad=bad):
+                files = self.native_start_files()
+                payload = files['root'][2]['payload']
+                issue = 'descendant_start_ownership'
+                if bad == 'foreign-parent': payload['thread_id'] = 'foreign'
+                elif bad == 'self-child': payload['item']['agent_thread_id'] = 'root'
+                else:
+                    issue = 'descendant_start_turn_ownership'
+                    if bad == 'wrong-turn': payload['turn_id'] = 'other-turn'
+                    elif bad == 'missing-owning-turn': files['root'].pop(1)
+                    elif bad == 'completed-turn':
+                        files['root'].insert(2, row('event_msg', {'type': 'task_complete', 'turn_id': 'turn'}))
+                code, report = self.run_native_start(files)
+                self.assertEqual(code, 2, report)
+                self.assertIn(issue, {x['code'] for x in report['issues']})
+                self.assertIsNone(report['allocated_arm_usage'])
+
+    def test_native_activity_targets_and_notification_shapes_do_not_supply_native_births(self):
+        for bad in ('wait', 'notification-case', 'missing-item', 'invalid-item'):
+            with self.subTest(bad=bad):
+                files = self.native_start_files()
+                payload = files['root'][2]['payload']
+                if bad == 'wait': payload['item']['kind'] = 'waiting'
+                elif bad == 'notification-case':
+                    payload['item'] = {'type': 'subAgentActivity', 'kind': 'started', 'agentThreadId': 'child'}
+                elif bad == 'missing-item': payload.pop('item')
+                else: payload['item'] = []
+                code, report = self.run_native_start(files)
+                self.assertEqual(code, 2, report)
+                self.assertIn('missing_descendant_start', {x['code'] for x in report['issues']})
+                self.assertIsNone(report['allocated_arm_usage'])
+
+    def test_native_start_requires_child_source_and_declared_lineage(self):
+        for bad in ('missing-source', 'missing-inventory', 'wrong-parent'):
+            with self.subTest(bad=bad):
+                files = self.native_start_files()
+                def change(m):
+                    threads = m['runs'][0]['expected_threads']
+                    if bad == 'missing-inventory': threads.pop()
+                    elif bad == 'wrong-parent':
+                        threads.append({'thread_id': 'other', 'parent_thread_id': 'root'})
+                        threads[1]['parent_thread_id'] = 'other'
+                if bad == 'missing-source': files.pop('child')
+                code, report = self.run_native_start(files, change)
+                self.assertEqual(code, 2, report)
+                self.assertIn('session_lineage_mismatch' if bad == 'wrong-parent' else 'missing_descendant',
+                              {x['code'] for x in report['issues']})
+                self.assertIsNone(report['allocated_arm_usage'])
+
+    def test_inherited_native_start_cannot_replace_canonical_parent_birth(self):
+        for original in (True, False):
+            with self.subTest(original=original):
+                files = self.fork_files()
+                files.pop('events')
+                start = self.native_start_files()['root'][2]
+                files['child'][2] = copy.deepcopy(start)
+                if original:
+                    files['root'].insert(1, row('event_msg', {'type': 'task_started', 'turn_id': 'turn'}))
+                    files['root'].insert(2, start)
+                code, report = self.run_fork(files)
+                self.assertEqual(code, 0 if original else 2, report)
+                self.assertEqual(report['unique_responses'], 2)
+                if not original:
+                    self.assertIn('missing_descendant_start', {x['code'] for x in report['issues']})
+                    self.assertIsNone(report['allocated_arm_usage'])
 
     def test_descendants_retry_replay_and_embedded_compaction(self):
         first = record('response-one')

@@ -254,3 +254,51 @@ unchanged: nine responses / 265,831 tokens, all six deltas zero, strict prefix
 rejected only for missing completion, and opt-in root completion unclaimed. No new
 native probe or runtime/configuration change was made. Independent re-review is
 required before integration.
+
+
+## Retained native starts and ignored response-item retries
+
+Retained native sources exposed descendant births that had no accompanying live
+notification stream. Native `SubAgentActivity` started items are now bound directly
+to their canonical source owner and observed current, uncompleted owning turn.
+Missing/malformed parent, turn or child identities and foreign ownership fail
+closed. Inherited parent starts, waiting/activity targets and notification-shaped
+native items cannot establish this owner's children. Existing notification mode,
+child-source/lineage checks, counters, closure and allocation remain unchanged.
+
+ECC TDD supplied the sole implementation cycle with no checkpoint commits. The
+focused native-start target produced 30 intended failing assertions across five
+methods, then passed after the fix; a sixth method checks rejected activity targets.
+Two exact ignored `response_item` write retries exposed the same pinned envelope
+recovery gap. Their two-method target produced five intended failures, then passed.
+Only this already ignored type was added to recovery; exact byte-prefix, adjacent
+same-ordinal retry, later timestamp, pinned writer, following ordinal and identical
+phase/window checks remain required. Its payload supplies no identities or counters
+and is neither inspected nor decrypted. Changed, incomplete, intervening, repeated,
+wrong-type/ordinal/timestamp and cross-boundary fragments remain incomplete.
+
+Two fresh private manifests omit only the notification-source entries from the
+existing closed native preflight trees. Their full native files and digests remain
+unchanged. Against the original collector each returns exit 2 solely for missing
+descendant starts; against the fix both return exit 0 with zero issues: **7 responses
+/ 211,391 tokens** and **9 responses / 265,831 tokens**. Every usage category and
+ordinary/ledger reconciliation is preserved. The larger unchanged source checkpoint
+also loses its missing-start and malformed-source errors while retaining all 2,615
+observed responses. All three root retry pairs and the original five outer retry
+pairs are audited. That checkpoint still reports incomplete for unfinished-turn
+and ordinary-reconciliation evidence; this is no complete-window acceptance claim.
+No source row, notification, completion or provider identity was synthesized.
+
+Final `GRAPHIFY_TEST_PREFIX=<provisioned-local-prefix> python3 -m unittest discover
+-s tests -v` passed **78/78**, with all three real Graphify runtime tests enabled
+and zero skips: the previous 70 tests plus eight new public CLI methods. Fresh
+stdlib subprocess tracing measured **654/696 = 93.97%** executable statement-start
+lines in `tools/usage_report.py` from 298 CLI processes, excluding docstrings.
+Branch coverage remains unmeasured. The 42 uncovered statements cover existing
+additional malformed manifest, metadata, notification and omission variants.
+Compilation, the 14-token example, whitespace, documentation links, scoped diff
+and output/privacy checks passed. No new dependency or configured build/type/lint
+command applies. Raw manifests, unchanged native files, source/retry proofs and
+trace logs remain private. Root coordination still owns independent review,
+integration, integrity-hash refresh and revalidation of the same original recovery
+proof; no new native probe or measured arm was launched by this fix.
