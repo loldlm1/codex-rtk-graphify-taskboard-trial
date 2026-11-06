@@ -35,3 +35,8 @@ CLI, synthetic runnable example, strict incomplete results and fixed first-use
 allocation on `protocol/v1`. Ordinary native delegation/restart has reconciled;
 measurement readiness remains pending the same separate live compaction/restart
 probe. [Validation evidence](docs/protocol/usage-v1-validation.md) records its limits.
+
+The isolated [Graphify local preflight](docs/protocol/graphify-local-v1.md) records
+the official pinned runtime, hash-locked provisioning, per-worktree freshness guard
+and actual native coordinator/worker query evidence. It does not activate tooling
+for a normal checkout or establish a measured savings result.
