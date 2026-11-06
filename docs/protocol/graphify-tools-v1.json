@@ -1,0 +1,194 @@
+{
+  "tools": [
+    {
+      "description": "Search the knowledge graph using BFS or DFS. Returns relevant nodes and edges as text context.",
+      "inputSchema": {
+        "properties": {
+          "question": {
+            "type": "string",
+            "description": "Natural language question or keyword search"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "bfs",
+              "dfs"
+            ],
+            "default": "bfs",
+            "description": "bfs=broad context, dfs=trace a specific path"
+          },
+          "depth": {
+            "type": "integer",
+            "default": 3,
+            "description": "Traversal depth (1-6)"
+          },
+          "token_budget": {
+            "type": "integer",
+            "default": 2000,
+            "description": "Max output tokens"
+          },
+          "context_filter": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Optional explicit edge-context filter, e.g. ['call', 'field']"
+          },
+          "project_path": {
+            "type": "string",
+            "description": "Absolute path to a project directory containing graphify-out/graph.json. Optional \u2014 defaults to the graph this server was started with."
+          }
+        },
+        "required": [
+          "question"
+        ],
+        "type": "object"
+      },
+      "name": "query_graph"
+    },
+    {
+      "description": "Get full details for a specific node by label or ID.",
+      "inputSchema": {
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Node label or ID to look up"
+          },
+          "node_id": {
+            "type": "string",
+            "description": "Alias for label (node id)"
+          },
+          "project_path": {
+            "type": "string",
+            "description": "Absolute path to a project directory containing graphify-out/graph.json. Optional \u2014 defaults to the graph this server was started with."
+          }
+        },
+        "type": "object"
+      },
+      "name": "get_node"
+    },
+    {
+      "description": "Get all direct neighbors of a node with edge details.",
+      "inputSchema": {
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "node_id": {
+            "type": "string",
+            "description": "Alias for label (node id)"
+          },
+          "relation_filter": {
+            "type": "string",
+            "description": "Optional: filter by relation type"
+          },
+          "token_budget": {
+            "type": "integer",
+            "default": 2000,
+            "description": "Max output tokens"
+          },
+          "project_path": {
+            "type": "string",
+            "description": "Absolute path to a project directory containing graphify-out/graph.json. Optional \u2014 defaults to the graph this server was started with."
+          }
+        },
+        "type": "object"
+      },
+      "name": "get_neighbors"
+    },
+    {
+      "description": "Get all nodes in a community by community ID.",
+      "inputSchema": {
+        "properties": {
+          "community_id": {
+            "type": "integer",
+            "description": "Community ID (0-indexed by size)"
+          },
+          "token_budget": {
+            "type": "integer",
+            "default": 2000,
+            "description": "Max output tokens"
+          },
+          "project_path": {
+            "type": "string",
+            "description": "Absolute path to a project directory containing graphify-out/graph.json. Optional \u2014 defaults to the graph this server was started with."
+          }
+        },
+        "required": [
+          "community_id"
+        ],
+        "type": "object"
+      },
+      "name": "get_community"
+    },
+    {
+      "description": "Return the most connected nodes - the core abstractions of the knowledge graph.",
+      "inputSchema": {
+        "properties": {
+          "top_n": {
+            "type": "integer",
+            "default": 10
+          },
+          "exclude_hubs_percentile": {
+            "type": "number",
+            "description": "Suppress nodes whose degree exceeds this percentile (0-100) of the degree distribution, matching cluster()'s hub exclusion"
+          },
+          "project_path": {
+            "type": "string",
+            "description": "Absolute path to a project directory containing graphify-out/graph.json. Optional \u2014 defaults to the graph this server was started with."
+          }
+        },
+        "type": "object"
+      },
+      "name": "god_nodes"
+    },
+    {
+      "description": "Return summary statistics: node count, edge count, communities, confidence breakdown.",
+      "inputSchema": {
+        "properties": {
+          "project_path": {
+            "type": "string",
+            "description": "Absolute path to a project directory containing graphify-out/graph.json. Optional \u2014 defaults to the graph this server was started with."
+          }
+        },
+        "type": "object"
+      },
+      "name": "graph_stats"
+    },
+    {
+      "description": "Find the shortest path between two concepts in the knowledge graph. Follows stored edge direction by default; set undirected=true to ignore it. Ends with the path's confidence, which is that of its weakest hop.",
+      "inputSchema": {
+        "properties": {
+          "source": {
+            "type": "string",
+            "description": "Source concept label or keyword"
+          },
+          "target": {
+            "type": "string",
+            "description": "Target concept label or keyword"
+          },
+          "max_hops": {
+            "type": "integer",
+            "default": 8,
+            "description": "Maximum hops to consider"
+          },
+          "undirected": {
+            "type": "boolean",
+            "default": false,
+            "description": "Ignore stored edge direction when searching"
+          },
+          "project_path": {
+            "type": "string",
+            "description": "Absolute path to a project directory containing graphify-out/graph.json. Optional \u2014 defaults to the graph this server was started with."
+          }
+        },
+        "required": [
+          "source",
+          "target"
+        ],
+        "type": "object"
+      },
+      "name": "shortest_path"
+    }
+  ]
+}
