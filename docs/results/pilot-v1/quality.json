@@ -28,7 +28,9 @@
     },
     "canvas": {
       "sha256": "0d1191de1b38668bb5694f8c6f64905cd93b0c7589b1c7b19ce5db36ed687c64",
-      "path": "quality-canvas.md"
+      "path": "quality-canvas.md",
+      "public_projection_sha256": "67019c70dc58976de31aa92ec70d39cb9ce7d7c330c23d877239bb726d720390",
+      "projection": "Only eleven private filesystem link targets rebound to exact public source commits/line anchors. Frozen judgments unchanged; original private SHA retained."
     }
   },
   "checks": {
