@@ -7,11 +7,11 @@
 | Authorization | Scoped local task commits/integration authorized. Outer coordinator owns GitHub publication. No final merge/release/deployment, auth/trust/config changes or extra trial. |
 | Review baseline | Original public baseline 14ae1c0462e42df8eaff2848e7786811cefc06e8; exact immutable feature review point/starter 01dbac8f5a60a1a5a5be89238971fd13badb3b56. |
 | Working pointers | Integration trial/web-b; precreated implementation worktree/branch provided by outer coordinator. One record: docs/work/arm-v1.md. |
-| Phase | Implementation locally verified on task/web-b-feature from integration f8f79ef0c49f758de2506d18f021ba3aa47c96a5; handing off for integrated verification, desktop/mobile QA and independent Standards/Spec review. |
+| Phase | Integrated 3c183b76cf59a4123ee56ef0efb37430edba3803 by fast-forward on trial/web-b; root verification and desktop/mobile QA in progress; fresh Standards/Spec reviews follow. |
 | Integration and validation evidence | Launch 2026-11-07T00:10:41.432Z; model start 00:10:50.999Z. Coordinator native 0.167.0, gpt-6.1-sol/ultra/default; worker gpt-6.1-sol/xhigh, total concurrency 2. Node 24.6.0/npm 11.5.1/Python 3.12.8/Chrome 155.0.8059.39; fresh arm-owned locked install (136 packages). RTK 1.1.0 pinned hash verified; actual config succeeds, telemetry false and environment-blocked. Activation 3.278s; coordinator initial indexing 2.375s. Worker commands and measured results are below; raw sessions, timings, RED artifacts and tool state remain outside Git. |
 | Blockers | No worker implementation blocker. Integrated gates, frozen-rubric screenshots/QA, and independent review are still required before acceptance. |
 | Amendment | None. |
-| Next action | Coordinator integrates the scoped worker commit, repeats required checks and direct desktop/mobile QA, then obtains the separate Standards/Spec review against the original baselines. |
+| Next action | Repeat the frozen checks on integration, inspect desktop/mobile behavior and obtain separate Standards/Spec reviews against exact 01dbac8f5a60a1a5a5be89238971fd13badb3b56. |
 
 ## Worker implementation evidence
 
