@@ -1,0 +1,40 @@
+{
+  "status": "selected-assessment-report-window-frozen",
+  "window": {
+    "start": "2026-11-06T17:52:34.516Z",
+    "end": "2026-11-07T01:29:20.156001Z",
+    "end_policy": "assessment-report-evidence-freeze"
+  },
+  "assessment_complete_before_capture_call": true,
+  "all_review_descendants_finished": true,
+  "native_runs_closed": 8,
+  "operator_root_turn_completion": "unclaimed; continuing session is not declared complete",
+  "root_boundary": {
+    "accounting_window": "closed",
+    "cutoff": "2026-11-07T01:29:20.156001Z",
+    "kind": "root-response-boundary",
+    "last_ordinal": 9033,
+    "response_id_hash": "2b1b7cbe97d5f790f3c842f2c9e8d54212987181b2a2a635c6965b2ac6f5ff4c",
+    "response_ordinal": 9030,
+    "root_turn_completion": "unclaimed",
+    "source_bytes": 27498864,
+    "source_id": "main-native-000",
+    "source_sha256": "bf9b0738b62ff17124457f0d8e950cda24e1207f5f8c9646a8fa5ec91b24bb52",
+    "turn_id_hash": "2dea0ea1280ea398fe13443d0e3b6676a45bd65388347583038b9a3fb87d9e27"
+  },
+  "collector_sha256": "93e1cc6a21bc6dbd1a805b3a90975bd4c807d7a4cc261fd7d33e1d3648a6d8be",
+  "capture_manifest_sha256": "32e2202f40174b9da40d26efbe9872dddae6231ac07baf9aaadfce26b2de1c66",
+  "capture_report_sha256": "1dcd44279dfa219408c4e766a1a905546ebae97f806767271087cc47c821166c",
+  "phase_registry_before_sha256": "4f21f2ca7c9e1189bcc557448bd7a7faa60de1c890df6ff58cef940a0523c7bc",
+  "phase_registry_after_sha256": "72c69953921b613d1f5507c736a65540b8e063ed8b008d527064eafe401ad30f",
+  "unchanged_arm_shared_allocations": true,
+  "administration_excluded": "Only later mechanical export, publication, execution-record/PR delivery and human handoff. Any new substantive assessment/failure reopens the window.",
+  "reconciliation": {
+    "all_six_ledger_match": true,
+    "ordinary_compaction_deltas_explained": true,
+    "uncompleted_descendants": 0,
+    "known_omission_indicators": 0,
+    "collector_issues": []
+  },
+  "billing_completeness": "not-proven"
+}

@@ -31,7 +31,7 @@ start with proportional compatibility/recovery checks; full comparisons need a
 material reason, and tasks rotate when contamination or relevance requires it.
 
 Current phase: all four implementations and neutral quality reviews are complete;
-final selected-scope review and report-evidence freeze are in progress. Retained
+final selected-scope reviews and report-evidence freeze are complete. Retained
 solutions are linked from the report. Trial PRs remain unmerged; user acceptance
 and final plugin-update merge authorization are separate.
 

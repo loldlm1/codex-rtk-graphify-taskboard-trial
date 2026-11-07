@@ -2,7 +2,7 @@
   "purpose": "Window-only hashed response ledger; six-counter per-phase sums independently match accepted collector. No prompts or raw identities.",
   "window": {
     "start": "2026-11-06T17:52:34.516Z",
-    "end": "2026-11-07T01:20:12.145001Z",
+    "end": "2026-11-07T01:29:20.156001Z",
     "end_policy": "assessment-report-evidence-freeze"
   },
   "phases": [
@@ -140,7 +140,7 @@
       "id": "comparative-assessment",
       "category": "evaluation",
       "start": "2026-11-07T01:16:27.132Z",
-      "end": "2026-11-07T01:20:12.145001Z"
+      "end": "2026-11-07T01:29:20.156001Z"
     }
   ],
   "records": [
@@ -12830,6 +12830,550 @@
         "output_tokens": 282,
         "reasoning_output_tokens": 176,
         "total_tokens": 119016
+      }
+    },
+    {
+      "response_id_hash": "fa29944db9f0a22a6d7150ac42ed683c6ecf26b76c2d1136bb757e98902836ad",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:20:15.140Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 119160,
+        "cached_input_tokens": 118528,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 89,
+        "reasoning_output_tokens": 34,
+        "total_tokens": 119249
+      }
+    },
+    {
+      "response_id_hash": "d918187763585515771dd51adcaedce380e3a002beb003481c85e8a8610b16e0",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:20:29.426Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 119309,
+        "cached_input_tokens": 119040,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 601,
+        "reasoning_output_tokens": 142,
+        "total_tokens": 119910
+      }
+    },
+    {
+      "response_id_hash": "8053ebbc6e68e689a18c2326592a28cc2dfc94b4bc874a96bb88682908eda3cb",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:20:36.959Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 120312,
+        "cached_input_tokens": 119680,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 305,
+        "reasoning_output_tokens": 43,
+        "total_tokens": 120617
+      }
+    },
+    {
+      "response_id_hash": "fe78b0146fa6830a88543a669bc61b581d16c53cfdf41ed085f962056581cf15",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:20:51.649Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 121597,
+        "cached_input_tokens": 120448,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 611,
+        "reasoning_output_tokens": 492,
+        "total_tokens": 122208
+      }
+    },
+    {
+      "response_id_hash": "3c4241bb026853daa8c7a8e613598e4c4d3277ace53ca119f0c179adcbaed59b",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:21:03.640Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 122641,
+        "cached_input_tokens": 121984,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 522,
+        "reasoning_output_tokens": 336,
+        "total_tokens": 123163
+      }
+    },
+    {
+      "response_id_hash": "64aa4055d6c3684b63fcd40e3dce5c1627aab19d6dd77c563f39287fbe33f568",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:21:29.503Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 123252,
+        "cached_input_tokens": 123008,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1224,
+        "reasoning_output_tokens": 186,
+        "total_tokens": 124476
+      }
+    },
+    {
+      "response_id_hash": "7ee35333591450fee0eda760366680c68167ef18bc14fe958435921ad3b0c252",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:22:03.181Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 124541,
+        "cached_input_tokens": 124288,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1556,
+        "reasoning_output_tokens": 516,
+        "total_tokens": 126097
+      }
+    },
+    {
+      "response_id_hash": "3c35ef3ebdc263e762ad0d76a26b5543e21b246826520413a729ac35bd0cb923",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:22:14.993Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 126242,
+        "cached_input_tokens": 125952,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 509,
+        "reasoning_output_tokens": 136,
+        "total_tokens": 126751
+      }
+    },
+    {
+      "response_id_hash": "ff0ac42013297c22e2f5d67fc7cea94597c82af4a4f22eec2a8ac9d6f26167f9",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:22:42.579Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 126865,
+        "cached_input_tokens": 126592,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1282,
+        "reasoning_output_tokens": 660,
+        "total_tokens": 128147
+      }
+    },
+    {
+      "response_id_hash": "836ff856dedd93415b737c6d4199047971af172e6308578f7f88dcf006a71794",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:23:48.850Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 128589,
+        "cached_input_tokens": 128000,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3237,
+        "reasoning_output_tokens": 301,
+        "total_tokens": 131826
+      }
+    },
+    {
+      "response_id_hash": "db2408fa1b57296affc1d02989607ca71afc482d028d13423aca3db696219417",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:24:11.657Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 131935,
+        "cached_input_tokens": 131584,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1069,
+        "reasoning_output_tokens": 516,
+        "total_tokens": 133004
+      }
+    },
+    {
+      "response_id_hash": "0d60b2a5a8d7ff481e25fdd207f5daca1724c77c30345dc1e72b6d2b4d86a7ac",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:24:30.684Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 133524,
+        "cached_input_tokens": 132864,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 884,
+        "reasoning_output_tokens": 195,
+        "total_tokens": 134408
+      }
+    },
+    {
+      "response_id_hash": "aa0fb4a8ceecae783c5decda094c3346d8944c10e4c2c2ce92e10e9d9ecf7028",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:24:48.344Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 134562,
+        "cached_input_tokens": 134272,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 818,
+        "reasoning_output_tokens": 22,
+        "total_tokens": 135380
+      }
+    },
+    {
+      "response_id_hash": "786be1d3fba5618026a0cfa424b05587d54a493768e550f85ada9fba71361453",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:25:05.801Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 135404,
+        "cached_input_tokens": 135168,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 803,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 136207
+      }
+    },
+    {
+      "response_id_hash": "ed72b5ec07bf2a71ec127665ec0cac3ac86ba495455c41ed090c59a6fb294b40",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:25:15.998Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 136229,
+        "cached_input_tokens": 136064,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 423,
+        "reasoning_output_tokens": 109,
+        "total_tokens": 136652
+      }
+    },
+    {
+      "response_id_hash": "9d7b05ab377a2bc5b9180d8511697a484a7beb639e8b47a62a9db8bde5c52a77",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:25:30.546Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 142964,
+        "cached_input_tokens": 136448,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 493,
+        "reasoning_output_tokens": 425,
+        "total_tokens": 143457
+      }
+    },
+    {
+      "response_id_hash": "7badfe6a6f1085acd73a8195ea80d1777b922c50484fd13ac43d4ce5732bba20",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:25:34.006Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 144611,
+        "cached_input_tokens": 143232,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 67,
+        "reasoning_output_tokens": 62,
+        "total_tokens": 144678
+      }
+    },
+    {
+      "response_id_hash": "79c03acfbda2b5f31eeaf13136aa042e249cecc72cbe31da1eb93d637a255470",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:26:03.433Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 144780,
+        "cached_input_tokens": 144512,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1034,
+        "reasoning_output_tokens": 1034,
+        "total_tokens": 145814
+      }
+    },
+    {
+      "response_id_hash": "cc0928cd0cade41364b6413cab6ab89d6bcbab88269a631adb958900a0303b93",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:26:08.055Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 146060,
+        "cached_input_tokens": 144640,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 167,
+        "reasoning_output_tokens": 68,
+        "total_tokens": 146227
+      }
+    },
+    {
+      "response_id_hash": "e41d42f846d8cf1510fa75d6fb0b47e493b3d76c14273e2918a835d357e8cd81",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:26:24.111Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 146938,
+        "cached_input_tokens": 146048,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 742,
+        "reasoning_output_tokens": 86,
+        "total_tokens": 147680
+      }
+    },
+    {
+      "response_id_hash": "c7cec6f0dc5e25febc29bb838a6d7fce9d16d29ff6824adfe3323ab3ee51b0c3",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:26:27.600Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 147774,
+        "cached_input_tokens": 147456,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 97,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 147871
+      }
+    },
+    {
+      "response_id_hash": "f753f483a8419bbee7697a60ddb1fe610e6468b437c2bbbcc2bf50681aeceac3",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:26:30.616Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 147883,
+        "cached_input_tokens": 147712,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 87,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 147970
+      }
+    },
+    {
+      "response_id_hash": "a56b7808118da41dd1103efd84284f4d2431bc9175a92bbf802804d5ac9bf6b9",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:27:01.260Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 147982,
+        "cached_input_tokens": 147840,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1446,
+        "reasoning_output_tokens": 516,
+        "total_tokens": 149428
+      }
+    },
+    {
+      "response_id_hash": "69d686bc9b39238d697599a9f6ba52559432194b4afd21cc00275850645818ec",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:27:26.417Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 149484,
+        "cached_input_tokens": 149248,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 966,
+        "reasoning_output_tokens": 877,
+        "total_tokens": 150450
+      }
+    },
+    {
+      "response_id_hash": "c9a98d8b93eb6e15d48b3bbc37a16d11ea1ae999cfced4e2552b7f790023a47c",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:27:32.446Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 153178,
+        "cached_input_tokens": 150272,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 215,
+        "reasoning_output_tokens": 53,
+        "total_tokens": 153393
+      }
+    },
+    {
+      "response_id_hash": "d8adc55445d9acf1130de85bd667fb0480e1f9d914a98ea826ec6d1d360f072c",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:27:36.401Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 153405,
+        "cached_input_tokens": 153216,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 119,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 153524
+      }
+    },
+    {
+      "response_id_hash": "cf8b1669f9316f13828920a3191b0fc07919c8cba6647a055b0bdf6e6e5edcc3",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:27:42.632Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 153702,
+        "cached_input_tokens": 153344,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 206,
+        "reasoning_output_tokens": 193,
+        "total_tokens": 153908
+      }
+    },
+    {
+      "response_id_hash": "3c6f7da3daa314549bd6fd4580aef8b6b3dc7ffbdbed7769044af55b568643f5",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:27:52.067Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 153998,
+        "cached_input_tokens": 153472,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 413,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 154411
+      }
+    },
+    {
+      "response_id_hash": "100c7c679d4309be785ce67c4aee981c0e2a988b743b6c5ba3b09a563739ebaf",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:27:56.247Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 154503,
+        "cached_input_tokens": 154240,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 138,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 154641
+      }
+    },
+    {
+      "response_id_hash": "682b854cc8042d91ce54cfbda2789a89ad1dbe3a2ca545b8a71e64104537ca7f",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:28:11.219Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 154822,
+        "cached_input_tokens": 154496,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 516,
+        "reasoning_output_tokens": 516,
+        "total_tokens": 155338
+      }
+    },
+    {
+      "response_id_hash": "b6059a48c4f1e4c8ce2dc73270ca0055ccf3274268ba714fbaa6dbfad2309497",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:28:23.709Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 155496,
+        "cached_input_tokens": 154624,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 481,
+        "reasoning_output_tokens": 478,
+        "total_tokens": 155977
+      }
+    },
+    {
+      "response_id_hash": "4ac1122c6e499aa7d78f9b1864eebab623b6740bf5b4245155e9ce76389adb0d",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:28:39.322Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 156126,
+        "cached_input_tokens": 155264,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 522,
+        "reasoning_output_tokens": 522,
+        "total_tokens": 156648
+      }
+    },
+    {
+      "response_id_hash": "cb16b34f1706ecd7ff57bea623ab5ae5cdce998c2a3ffbab3ba611352e24ff4d",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:28:54.645Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 156863,
+        "cached_input_tokens": 155904,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 686,
+        "reasoning_output_tokens": 38,
+        "total_tokens": 157549
+      }
+    },
+    {
+      "response_id_hash": "2b1b7cbe97d5f790f3c842f2c9e8d54212987181b2a2a635c6965b2ac6f5ff4c",
+      "thread_id_hash": "d1310e30b01f573334b177f01630fac7f07bd9376a6b0dd0dda493472250777d",
+      "timestamp": "2026-11-07T01:29:20.055Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 158762,
+        "cached_input_tokens": 157312,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1169,
+        "reasoning_output_tokens": 742,
+        "total_tokens": 159931
       }
     },
     {
@@ -37982,6 +38526,934 @@
         "output_tokens": 255,
         "reasoning_output_tokens": 117,
         "total_tokens": 85166
+      }
+    },
+    {
+      "response_id_hash": "a49d7e1d07f6cd7086970de1234a72a7c0da546cf2e009559fa138866161adb3",
+      "thread_id_hash": "011e16f75d8823c7ea7e9dce58cdfd084e2b6260d8d4523ac718dcf962adc2b5",
+      "timestamp": "2026-11-07T01:24:54.175Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 29299,
+        "cached_input_tokens": 28288,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 198,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 29497
+      }
+    },
+    {
+      "response_id_hash": "672a561e74d8bbdedd57865539248e5fded3fd26866ffbfb9bc677143974deac",
+      "thread_id_hash": "011e16f75d8823c7ea7e9dce58cdfd084e2b6260d8d4523ac718dcf962adc2b5",
+      "timestamp": "2026-11-07T01:25:02.039Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 32807,
+        "cached_input_tokens": 29312,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 347,
+        "reasoning_output_tokens": 21,
+        "total_tokens": 33154
+      }
+    },
+    {
+      "response_id_hash": "a4f1f4bcc8c386c129f64ea9319bf5d0f19f65ba70a8b0013734677fb686f326",
+      "thread_id_hash": "011e16f75d8823c7ea7e9dce58cdfd084e2b6260d8d4523ac718dcf962adc2b5",
+      "timestamp": "2026-11-07T01:25:10.438Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 35941,
+        "cached_input_tokens": 33024,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 346,
+        "reasoning_output_tokens": 33,
+        "total_tokens": 36287
+      }
+    },
+    {
+      "response_id_hash": "b9cc1e2bb19d76cfe026dad474fcff17aded732d64011f2de6e2537e38649d22",
+      "thread_id_hash": "011e16f75d8823c7ea7e9dce58cdfd084e2b6260d8d4523ac718dcf962adc2b5",
+      "timestamp": "2026-11-07T01:25:19.288Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 44744,
+        "cached_input_tokens": 36096,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 373,
+        "reasoning_output_tokens": 13,
+        "total_tokens": 45117
+      }
+    },
+    {
+      "response_id_hash": "acbc962d776b7d0bd9a018031e09c712f7483699524f5183e3b14b73844961a4",
+      "thread_id_hash": "011e16f75d8823c7ea7e9dce58cdfd084e2b6260d8d4523ac718dcf962adc2b5",
+      "timestamp": "2026-11-07T01:25:27.047Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 54099,
+        "cached_input_tokens": 44928,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 330,
+        "reasoning_output_tokens": 78,
+        "total_tokens": 54429
+      }
+    },
+    {
+      "response_id_hash": "9d61cbf046803fddd82c946145a00b5ebb5d4148c149c243414806b650e5206d",
+      "thread_id_hash": "011e16f75d8823c7ea7e9dce58cdfd084e2b6260d8d4523ac718dcf962adc2b5",
+      "timestamp": "2026-11-07T01:25:30.960Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 64804,
+        "cached_input_tokens": 54272,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 139,
+        "reasoning_output_tokens": 48,
+        "total_tokens": 64943
+      }
+    },
+    {
+      "response_id_hash": "23100ba53ae9faec411d0ead4e4c8c1ebd0bf80ec0f45e8add62b9ad69c793e8",
+      "thread_id_hash": "011e16f75d8823c7ea7e9dce58cdfd084e2b6260d8d4523ac718dcf962adc2b5",
+      "timestamp": "2026-11-07T01:25:36.318Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 64955,
+        "cached_input_tokens": 64768,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 210,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 65165
+      }
+    },
+    {
+      "response_id_hash": "c6ad1211d04cf52c6db786b1f9769d269eb0c5e6d57666d557f32dcf9d1fd919",
+      "thread_id_hash": "011e16f75d8823c7ea7e9dce58cdfd084e2b6260d8d4523ac718dcf962adc2b5",
+      "timestamp": "2026-11-07T01:25:46.453Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 75061,
+        "cached_input_tokens": 65024,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 433,
+        "reasoning_output_tokens": 185,
+        "total_tokens": 75494
+      }
+    },
+    {
+      "response_id_hash": "de1d9e7ca77c40efd4511b8d8e297fa8d62a1e95c822d25c5dc0a08a53b3c5cd",
+      "thread_id_hash": "011e16f75d8823c7ea7e9dce58cdfd084e2b6260d8d4523ac718dcf962adc2b5",
+      "timestamp": "2026-11-07T01:25:51.690Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 84929,
+        "cached_input_tokens": 75264,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 150,
+        "reasoning_output_tokens": 19,
+        "total_tokens": 85079
+      }
+    },
+    {
+      "response_id_hash": "3bd858808b27e0eb7e488e638f5eb6b21106c90c6a501e35cf7b200c750dc133",
+      "thread_id_hash": "011e16f75d8823c7ea7e9dce58cdfd084e2b6260d8d4523ac718dcf962adc2b5",
+      "timestamp": "2026-11-07T01:25:58.994Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 85091,
+        "cached_input_tokens": 84864,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 306,
+        "reasoning_output_tokens": 70,
+        "total_tokens": 85397
+      }
+    },
+    {
+      "response_id_hash": "ae0441b3d1530ff170dfa798cb82c604fd9d7d2ad80cf9dbb4c79e3fd8523b93",
+      "thread_id_hash": "011e16f75d8823c7ea7e9dce58cdfd084e2b6260d8d4523ac718dcf962adc2b5",
+      "timestamp": "2026-11-07T01:26:20.013Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 86766,
+        "cached_input_tokens": 85248,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 816,
+        "reasoning_output_tokens": 26,
+        "total_tokens": 87582
+      }
+    },
+    {
+      "response_id_hash": "bd68d8824e02c34b7b62d82bfc52347c173d31f7369643b384633c9b373069fe",
+      "thread_id_hash": "011e16f75d8823c7ea7e9dce58cdfd084e2b6260d8d4523ac718dcf962adc2b5",
+      "timestamp": "2026-11-07T01:26:37.926Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 89382,
+        "cached_input_tokens": 87424,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 818,
+        "reasoning_output_tokens": 57,
+        "total_tokens": 90200
+      }
+    },
+    {
+      "response_id_hash": "af7be289b62e83bbaad8450648c15589a56551d9808cd1fd99c9c0f8652a2d92",
+      "thread_id_hash": "011e16f75d8823c7ea7e9dce58cdfd084e2b6260d8d4523ac718dcf962adc2b5",
+      "timestamp": "2026-11-07T01:26:50.146Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 90869,
+        "cached_input_tokens": 89984,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 549,
+        "reasoning_output_tokens": 14,
+        "total_tokens": 91418
+      }
+    },
+    {
+      "response_id_hash": "e6d6d55faf5ffa92838930073e0830a631fff5d57704356389267bf26f66a2a8",
+      "thread_id_hash": "011e16f75d8823c7ea7e9dce58cdfd084e2b6260d8d4523ac718dcf962adc2b5",
+      "timestamp": "2026-11-07T01:27:04.519Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 92600,
+        "cached_input_tokens": 91264,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 575,
+        "reasoning_output_tokens": 500,
+        "total_tokens": 93175
+      }
+    },
+    {
+      "response_id_hash": "a992a8c37f613a7ee62f933901bc2f41f4b47289b0431a9fff414d08eff664a3",
+      "thread_id_hash": "011e16f75d8823c7ea7e9dce58cdfd084e2b6260d8d4523ac718dcf962adc2b5",
+      "timestamp": "2026-11-07T01:27:13.176Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 96769,
+        "cached_input_tokens": 93056,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 354,
+        "reasoning_output_tokens": 97,
+        "total_tokens": 97123
+      }
+    },
+    {
+      "response_id_hash": "fd1f77275372f48727cfc155d923a1de2a007c1c1f12018a02c29e7d1044fba8",
+      "thread_id_hash": "011e16f75d8823c7ea7e9dce58cdfd084e2b6260d8d4523ac718dcf962adc2b5",
+      "timestamp": "2026-11-07T01:27:31.126Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 101281,
+        "cached_input_tokens": 96896,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 781,
+        "reasoning_output_tokens": 182,
+        "total_tokens": 102062
+      }
+    },
+    {
+      "response_id_hash": "8f4c6dcfd485ebf8b08416c8f3753002a251d07285de9a5a7739bacba8666b6c",
+      "thread_id_hash": "011e16f75d8823c7ea7e9dce58cdfd084e2b6260d8d4523ac718dcf962adc2b5",
+      "timestamp": "2026-11-07T01:27:35.616Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 102134,
+        "cached_input_tokens": 101888,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 150,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 102284
+      }
+    },
+    {
+      "response_id_hash": "f6ee29315cbfb2be0ea1a439efece2057734eb3ecca86a48e1a1c2a42ee54338",
+      "thread_id_hash": "011e16f75d8823c7ea7e9dce58cdfd084e2b6260d8d4523ac718dcf962adc2b5",
+      "timestamp": "2026-11-07T01:27:38.326Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 102296,
+        "cached_input_tokens": 102144,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 64,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 102360
+      }
+    },
+    {
+      "response_id_hash": "24305378cb14719d73ebb8482104c0332ab0ff05ff0969fbc3d9c3f448f3c23d",
+      "thread_id_hash": "011e16f75d8823c7ea7e9dce58cdfd084e2b6260d8d4523ac718dcf962adc2b5",
+      "timestamp": "2026-11-07T01:28:01.494Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 102647,
+        "cached_input_tokens": 102144,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 168,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 102815
+      }
+    },
+    {
+      "response_id_hash": "9c757285f8b80ba189a92233b5fca9310b964384c86e15567932e142ed6c5846",
+      "thread_id_hash": "011e16f75d8823c7ea7e9dce58cdfd084e2b6260d8d4523ac718dcf962adc2b5",
+      "timestamp": "2026-11-07T01:28:05.908Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 104286,
+        "cached_input_tokens": 102656,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 155,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 104441
+      }
+    },
+    {
+      "response_id_hash": "26a27a6c62ddb3766a06da863d398b76adea483c50f7cc5c21a105b064accdcc",
+      "thread_id_hash": "011e16f75d8823c7ea7e9dce58cdfd084e2b6260d8d4523ac718dcf962adc2b5",
+      "timestamp": "2026-11-07T01:28:16.918Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 105835,
+        "cached_input_tokens": 104320,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 450,
+        "reasoning_output_tokens": 314,
+        "total_tokens": 106285
+      }
+    },
+    {
+      "response_id_hash": "f8d4d8fa5eb3cab866783c1abb581b1408f7a82ad04f8659067d7f85d81060f4",
+      "thread_id_hash": "011e16f75d8823c7ea7e9dce58cdfd084e2b6260d8d4523ac718dcf962adc2b5",
+      "timestamp": "2026-11-07T01:28:23.141Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 106297,
+        "cached_input_tokens": 106112,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 253,
+        "reasoning_output_tokens": 61,
+        "total_tokens": 106550
+      }
+    },
+    {
+      "response_id_hash": "a00c9e071d7e9598428fcaa22a873f32ccd3ee3798d03f74e82d0adee278aef6",
+      "thread_id_hash": "011e16f75d8823c7ea7e9dce58cdfd084e2b6260d8d4523ac718dcf962adc2b5",
+      "timestamp": "2026-11-07T01:28:28.131Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 106624,
+        "cached_input_tokens": 106368,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 73,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 106697
+      }
+    },
+    {
+      "response_id_hash": "5656bd765ed6590ec2d10122fe37cbb0ca5baea81e5709c88a5e41814b93721b",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:25:09.396Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 29306,
+        "cached_input_tokens": 28288,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 76,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 29382
+      }
+    },
+    {
+      "response_id_hash": "d6ba5bd51b1bb93b8fb91f8a4d433ea06c8d45ee0914db587d8a64357cb077ef",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:25:19.608Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 32496,
+        "cached_input_tokens": 28288,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 447,
+        "reasoning_output_tokens": 59,
+        "total_tokens": 32943
+      }
+    },
+    {
+      "response_id_hash": "f9c205282018638e0513c5ac2119364af9fac617871c8be61d15934cdda042c1",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:25:23.021Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 42019,
+        "cached_input_tokens": 32768,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 101,
+        "reasoning_output_tokens": 20,
+        "total_tokens": 42120
+      }
+    },
+    {
+      "response_id_hash": "f0ca8087567fdeb343848906f172d24d944ad0e140f7dc0df18f2c5d2d828141",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:25:26.435Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 45806,
+        "cached_input_tokens": 41984,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 106,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 45912
+      }
+    },
+    {
+      "response_id_hash": "47c415941ad1a5aecbc00c09d6d1c82007c002cfe85c616c1eba0db522fb53e8",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:25:32.531Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 50529,
+        "cached_input_tokens": 45696,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 257,
+        "reasoning_output_tokens": 63,
+        "total_tokens": 50786
+      }
+    },
+    {
+      "response_id_hash": "9047125d94400931edc3afe9b2ffda04599df635d47de8355c90e90f49f2c575",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:25:35.209Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 59914,
+        "cached_input_tokens": 50560,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 74,
+        "reasoning_output_tokens": 16,
+        "total_tokens": 59988
+      }
+    },
+    {
+      "response_id_hash": "2693eb3058eed59c0acd0b196f42593d420f4f436fd8daf798d25d27050212bc",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:25:39.185Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 64204,
+        "cached_input_tokens": 59776,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 119,
+        "reasoning_output_tokens": 75,
+        "total_tokens": 64323
+      }
+    },
+    {
+      "response_id_hash": "208c04c3cc58e2a24809936ec3cd1d79fdce7d435d1136a06ed531b2698168a0",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:25:42.655Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 69441,
+        "cached_input_tokens": 64128,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 96,
+        "reasoning_output_tokens": 47,
+        "total_tokens": 69537
+      }
+    },
+    {
+      "response_id_hash": "eb44d18e492fa4dcbe26218ae2f50272f59d6de7400d4511c18955e099ff3ded",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:25:45.572Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 73485,
+        "cached_input_tokens": 69376,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 97,
+        "reasoning_output_tokens": 37,
+        "total_tokens": 73582
+      }
+    },
+    {
+      "response_id_hash": "a70feb9483774e6caf04035713493799f38eea7cc23811d301fc7564c493d4c8",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:25:51.671Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 77084,
+        "cached_input_tokens": 73344,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 241,
+        "reasoning_output_tokens": 60,
+        "total_tokens": 77325
+      }
+    },
+    {
+      "response_id_hash": "3dcb103396eeb6fe56b7b92ef25760840bdcb9f24c747feed6a98bc1018b4fbf",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:25:55.576Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 88507,
+        "cached_input_tokens": 77184,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 130,
+        "reasoning_output_tokens": 41,
+        "total_tokens": 88637
+      }
+    },
+    {
+      "response_id_hash": "4e38e213adca7e8fa37733c4408a175d36a3f42610560a2483a4f4d5cf2f4e39",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:26:07.471Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 88649,
+        "cached_input_tokens": 88448,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 522,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 89171
+      }
+    },
+    {
+      "response_id_hash": "b4c0bdc4866cb233e60163e4c55148098e01bee406ffd7c6b08beba8562bd278",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:26:16.799Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 90831,
+        "cached_input_tokens": 88960,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 287,
+        "reasoning_output_tokens": 31,
+        "total_tokens": 91118
+      }
+    },
+    {
+      "response_id_hash": "95ff678461a02421bd92b5c48c75972ffa441a63f2194208c8e3ef14e19972b6",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:26:19.743Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 92690,
+        "cached_input_tokens": 90880,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 73,
+        "reasoning_output_tokens": 23,
+        "total_tokens": 92763
+      }
+    },
+    {
+      "response_id_hash": "8a99655203eaa1aa56ebed5cce3392fbf7aa2d47741e6f8d8347b1844ab9e433",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:26:22.871Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 92900,
+        "cached_input_tokens": 92544,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 90,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 92990
+      }
+    },
+    {
+      "response_id_hash": "d53198dfd15fb9192e631db5da8d9d13c7cf42f8b45166bd48a227bc78d94dfb",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:26:26.902Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 97855,
+        "cached_input_tokens": 92800,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 142,
+        "reasoning_output_tokens": 48,
+        "total_tokens": 97997
+      }
+    },
+    {
+      "response_id_hash": "3b8d94e5d1749af828bd02a56521a2bd692864dbf03e906bf456599ea9aab8a2",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:26:30.649Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 102825,
+        "cached_input_tokens": 97792,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 106,
+        "reasoning_output_tokens": 18,
+        "total_tokens": 102931
+      }
+    },
+    {
+      "response_id_hash": "d6a0d8d9c60464f3ac3a32c376b7e3cd11090b8192d8a3900babf89e0686bda4",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:26:34.192Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 103105,
+        "cached_input_tokens": 102784,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 119,
+        "reasoning_output_tokens": 37,
+        "total_tokens": 103224
+      }
+    },
+    {
+      "response_id_hash": "4a38df1ef9906f5c1ea81f7a80ad173ebc203bd2e89e7d63755ab9e8645d0e29",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:26:37.163Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 105812,
+        "cached_input_tokens": 103040,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 85,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 105897
+      }
+    },
+    {
+      "response_id_hash": "acb8854128992be399b1037f1667f59e8e2e882662ed02ab8e048e904cce8943",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:26:41.478Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 109590,
+        "cached_input_tokens": 105728,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 152,
+        "reasoning_output_tokens": 73,
+        "total_tokens": 109742
+      }
+    },
+    {
+      "response_id_hash": "26831cfcf47b9f4a269e6df2df9c2f55d82317e87a0dde80d247d5e575abd0f8",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:26:44.523Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 111088,
+        "cached_input_tokens": 109568,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 70,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 111158
+      }
+    },
+    {
+      "response_id_hash": "462aa50fb84e7d5703b682246dc2365c2131e9c643ffcf228c91b90c25905936",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:27:01.629Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 117634,
+        "cached_input_tokens": 110976,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 725,
+        "reasoning_output_tokens": 89,
+        "total_tokens": 118359
+      }
+    },
+    {
+      "response_id_hash": "8f798145f1044ff5c5c598e7f9110acfcad3f8186825645279b95795b68f5307",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:27:08.131Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 118576,
+        "cached_input_tokens": 118144,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 143,
+        "reasoning_output_tokens": 28,
+        "total_tokens": 118719
+      }
+    },
+    {
+      "response_id_hash": "a77a47f931e3748d13e1a6be439712f0da49d8d2160242e131c8fa127003d33a",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:27:13.728Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 123823,
+        "cached_input_tokens": 118528,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 216,
+        "reasoning_output_tokens": 89,
+        "total_tokens": 124039
+      }
+    },
+    {
+      "response_id_hash": "55a471c2644411d53e075a39ad0120c238d311b6667791144f217dca61931193",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:27:19.572Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 128206,
+        "cached_input_tokens": 123904,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 194,
+        "reasoning_output_tokens": 89,
+        "total_tokens": 128400
+      }
+    },
+    {
+      "response_id_hash": "12178c7e333ee9cba85a990ce16b6f1bb942de5e23a08e8c3462ebe5553a2321",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:27:34.645Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 131116,
+        "cached_input_tokens": 128256,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 671,
+        "reasoning_output_tokens": 253,
+        "total_tokens": 131787
+      }
+    },
+    {
+      "response_id_hash": "733a95d199084d0bf46898b9a9f6492890c2ea44f89be8c32985430914b59c42",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:27:38.126Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 132157,
+        "cached_input_tokens": 131584,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 108,
+        "reasoning_output_tokens": 25,
+        "total_tokens": 132265
+      }
+    },
+    {
+      "response_id_hash": "32e865435a79eb9cd14650fcb83ce52b27cab16c766b16eb15ec5bbaf745484d",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:27:41.999Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 132937,
+        "cached_input_tokens": 132096,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 68,
+        "reasoning_output_tokens": 20,
+        "total_tokens": 133005
+      }
+    },
+    {
+      "response_id_hash": "941e037757bf6a186d5b681bbb2afc1894d7b8879ba979befb83cba12f15c366",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:27:45.153Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 133078,
+        "cached_input_tokens": 132864,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 90,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 133168
+      }
+    },
+    {
+      "response_id_hash": "ae37920d63f5472ea729a52f524d644ae19867a2f31de1814b2fbfd231db8b16",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:27:52.937Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 136958,
+        "cached_input_tokens": 132992,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 274,
+        "reasoning_output_tokens": 116,
+        "total_tokens": 137232
+      }
+    },
+    {
+      "response_id_hash": "187634599306a774f4c2b28f29581f4d7de34ae4a6d067c04fdf169e64a075ca",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:27:57.546Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 137244,
+        "cached_input_tokens": 137088,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 119,
+        "reasoning_output_tokens": 17,
+        "total_tokens": 137363
+      }
+    },
+    {
+      "response_id_hash": "3e643b21f7f6d136b898262dd7c19569f3b2361a095f1bfbfadde5104ac6af09",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:28:07.951Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 138685,
+        "cached_input_tokens": 137216,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 413,
+        "reasoning_output_tokens": 267,
+        "total_tokens": 139098
+      }
+    },
+    {
+      "response_id_hash": "0b5daeb7bbcd58bf70b5fe605255a184657cb5b25aed7e6a7c2f4a7dad40dcd4",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:28:11.906Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 139110,
+        "cached_input_tokens": 138880,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 131,
+        "reasoning_output_tokens": 53,
+        "total_tokens": 139241
+      }
+    },
+    {
+      "response_id_hash": "4954c1d6f8beea55d58f344060d8d15c3ee274088bb89ce37f30427e1453fbf3",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:28:27.248Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 139550,
+        "cached_input_tokens": 139008,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 675,
+        "reasoning_output_tokens": 64,
+        "total_tokens": 140225
+      }
+    },
+    {
+      "response_id_hash": "0d24b3ec95449e2ba299173eb6e9eb699a5a67116fcd30c5efb24dd09158e253",
+      "thread_id_hash": "b235e8968b4aeb00a36302e73243cfd99016bd975da88431bb04b06dd5260ecf",
+      "timestamp": "2026-11-07T01:28:31.716Z",
+      "run": "full-trial-main-root",
+      "phase": "comparative-assessment",
+      "category": "evaluation",
+      "usage": {
+        "input_tokens": 140303,
+        "cached_input_tokens": 140032,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 134,
+        "reasoning_output_tokens": 56,
+        "total_tokens": 140437
       }
     },
     {

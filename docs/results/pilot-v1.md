@@ -2,7 +2,7 @@
 
 Four public agentic implementations are retained. A used the updated Matt/ECC hybrid; B used exactly that stack plus **both** RTK and free local Graphify. The fixed decision needs at least **10% fewer first-use allocated tokens on each workload independently**, with no meaningful quality regression. Exactly four implementations ran, in Web A/B then Canvas B/A order. No repetitions, factorial arms, outcome-driven tuning or pooled rescue were added.
 
-**Decision: defer the combined tool treatment.** Both fixed first-use token gates fail. Independent quality judgments are frozen; final review/evaluation costs remain open until the report-evidence freeze.
+**Decision: defer the combined tool treatment.** Both fixed first-use token gates fail. Independent quality judgments and final Standards/Spec reviews are complete; their usage is included through the report-evidence freeze.
 
 ## Applications and checks
 
@@ -41,7 +41,20 @@ Both B coordinators and workers actually queried correct exact-worktree Graphify
 
 Shared B preparation includes the original tool research/provisioning/fidelity/freshness preflight and the generic B launcher preparation, split exactly half each. A provisional Web B activation label for that generic helper was corrected **before any B implementation outcome**, using the already fixed shared-B rule; original/new registry hashes and rationale remain retained. No completed outcome changed allocation.
 
-Interim selected-window total through `2026-11-07T01:20:12.145001Z`: **392,198,416 recorded tokens**, including 382,376,576 cached input. Final review/report preparation is still being counted. Categories: activation 722,153, arm 61,459,167, common-upgrade 113,266,295, evaluation 3,322,429, fixture 53,340,014, indexing 722,281, probe 91,084,885, shared-b-preflight 68,281,192. See [all-six-counter raw/allocated report](pilot-v1/usage-report.json) and [capture audit](pilot-v1/capture-summary.json). The final freeze updates common evaluation only; completed arm/shared-B boundaries remain unchanged.
+Selected-window total through the [verified report-evidence freeze](pilot-v1/freeze.json) at `2026-11-07T01:29:20.156001Z`: **402,347,824 recorded tokens**, including 392,274,176 cached input. This includes all final review and report preparation before the durable root response boundary.
+
+| Full-window category | Recorded tokens |
+| --- | ---: |
+| activation | 722,153 |
+| arm | 61,459,167 |
+| common-upgrade | 113,266,295 |
+| evaluation | 13,471,837 |
+| fixture | 53,340,014 |
+| indexing | 722,281 |
+| probe | 91,084,885 |
+| shared-b-preflight | 68,281,192 |
+
+Categories sum exactly to the window total. The [all-six-counter raw/allocated report](pilot-v1/usage-report.json), [capture audit](pilot-v1/capture-summary.json) and [window response/phase ledger](pilot-v1/response-phases.json) expose the arithmetic. The capture contains 74 actual operator-tree plus 33 independent native threads (117 sources, 3405 distinct full-history responses), zero issues/uncompleted descendants/known omission indicators, matching all six counters and ordinary/compaction deltas. The capture audit describes its snapshot-stage claims; freeze.json records subsequent explicit window closure, without claiming the continuing root turn completed. Later administrative publication/delivery is outside this window. Completed arm/shared-B boundaries and allocated gates are unchanged.
 
 Preparation took materially more work than the requested lightweight pilot: dependency/trust/isolation validation, ENOSPC recovery, accounting repairs and repeated review contributed. It is part of the recorded total rather than hidden as free setup. This is an n=1 paired pilot per workload, with stochastic agent behavior, different tests/implementation choices and one small project of each kind. It cannot establish broad tool performance, isolate each tool's effect, or promise future large-codebase savings. A negative first-use result does not prove either tool useless for every workload.
 
@@ -52,6 +65,8 @@ The pre-outcome [measurement contract](../protocol/measurement-v1.md) and [integ
 Observed native contexts match the same model/effort/freshness for all four arms. All twelve child spawn calls explicitly supplied the identical parent model instead of omitting the model argument as requested; this invocation deviation is retained, not rewritten as literal model inheritance. There was no effective model difference. A second implementation-form deviation concerns MCP configuration: the preflight guide prescribed process-local overrides, while the B launcher wrote the same two server stanzas only to each disposable B home. All non-MCP settings were checked unchanged; the ordinary user home was untouched and the seven-tool schemas, exact-worktree arguments and actual queries were verified. This differs from the frozen guide’s delivery form and limits any claim of literal protocol conformance; it is not silently normalized into the method. The observed negative decision remains defer, with no extra run or adoption claim. Each arm used a fresh home, native root, branch, graph/RTK stores and application dependency/result caches; workers reused only their own arm's dependencies. Independent native sign-in and reviewed hook approval were completed for each home; no account/trust/session/cache copying. A had only common browser MCP, with no tool-treatment activation.
 
 No measured implementation compacted. Input peaks above100k are reported, without claiming a small-context implementation or automatic near-limit resilience. The single accepted [recovery proof](../protocol/recovery-proof-v1.json) used two installed manual compactions, old/new PID exact-thread restart, fresh xhigh workers and resumed actual RTK/MCP queries with stale→rebuild→restoration. Its peak74,333 and4,523,155 recorded tokens belong to the common probe. It proves that short tested recovery path, not arbitrary compactions. All ordinary native token counters report context-window metadata475,000; peak input/window ratios are approximately28.0% WebA,33.3% WebB,35.7% CanvasB and26.1% CanvasA, not a measurement of resident conversation size or automatic compaction behavior; a persisted record and actual tool/freshness checks are needed after recovery.
+
+Final selected-scope review: [Standards one README finding resolved, zero open; Spec zero unresolved](pilot-v1/final-review.json). The disclosed implementation-form deviations remain limitations, with no new runs or adoption claim.
 
 The accepted collector SHA `93e1cc6a21bc6dbd1a805b3a90975bd4c807d7a4cc261fd7d33e1d3648a6d8be` passed78tests including3 actual Graphify tests (zero skips), with93.97%Python statement coverage; branch coverage unmeasured. All six usage counters, actual lineage/turn completion and compaction deltas reconcile. Parser readiness retains its static `pending-live-compaction-restart-validation` label; separate accepted native proof supplies that prerequisite. Universal billing completeness remains **not proven**: hidden upstream retries/background/null usage can be unobservable. Ordinary counters, compactor checkpoints and provider-response identity deduplication prevent replay/inherited history double counting.
 
