@@ -1,7 +1,7 @@
 import { createTask, removeTask, statuses, updateTask } from './tasks';
 import type { Status, Task, TaskInput } from './tasks';
-import { loadTasks, saveTasks } from './storage';
-import type { StorageAccess } from './storage';
+import { loadStatusView, loadTasks, saveStatusView, saveTasks } from './storage';
+import type { StatusView, StorageAccess } from './storage';
 
 function element<K extends keyof HTMLElementTagNameMap>(tag: K, className = '', text = ''): HTMLElementTagNameMap[K] {
   const node = document.createElement(tag);
@@ -23,6 +23,7 @@ function statusSelect(): HTMLSelectElement {
 export function mountTaskboard(root: HTMLElement, storage: StorageAccess = () => window.localStorage): void {
   const loaded = loadTasks(storage);
   let tasks = loaded.tasks;
+  let view = loadStatusView(storage);
   let editingId: string | null = null;
 
   // This template is fixed markup. All task content is assigned with textContent/value.
@@ -62,7 +63,10 @@ export function mountTaskboard(root: HTMLElement, storage: StorageAccess = () =>
           <section class="board" aria-labelledby="board-heading">
             <div class="board-heading"><div><p class="eyebrow">THE BIG PICTURE</p><h2 id="board-heading">Work in motion<span class="heading-dot">.</span></h2></div><span id="task-count" class="task-count"></span></div>
             <div id="board-stats" class="board-stats" aria-label="Task totals"></div>
+            <div id="view-control" class="view-control"><label for="status-view">Status view</label></div>
+            <p id="view-warning" class="notice" role="alert" hidden></p>
             <div id="task-list" class="task-list"></div>
+            <div id="view-empty-state" class="empty-state" hidden><h3>No tasks in this view.</h3><p>Choose another status view or add a task to keep things moving.</p></div>
             <div id="empty-state" class="empty-state" hidden><span aria-hidden="true">✧</span><h3>A clear board. A fresh start.</h3><p>Add a task when you're ready for the next small step.</p></div>
           </section>
         </div>
@@ -79,6 +83,22 @@ export function mountTaskboard(root: HTMLElement, storage: StorageAccess = () =>
   inputStatus.id = 'task-status';
   inputStatus.name = 'status';
   get('#form-status').append(inputStatus);
+  const viewSelect = statusSelect();
+  viewSelect.id = 'status-view';
+  viewSelect.name = 'status-view';
+  const allOption = element('option', '', 'All statuses');
+  allOption.value = 'all';
+  viewSelect.prepend(allOption);
+  viewSelect.value = view;
+  get('#view-control').append(viewSelect);
+  viewSelect.addEventListener('change', () => {
+    view = viewSelect.value as StatusView;
+    const saved = saveStatusView(storage, view);
+    const viewWarning = get('#view-warning');
+    viewWarning.hidden = saved;
+    viewWarning.textContent = saved ? '' : 'Your status view is available in this tab until you reload. Browser storage is unavailable, so it could not be saved.';
+    render();
+  });
   const warning = get('#storage-warning');
   warning.textContent = loaded.warning;
   warning.hidden = !loaded.warning;
@@ -114,7 +134,8 @@ export function mountTaskboard(root: HTMLElement, storage: StorageAccess = () =>
   }
 
   function render(): void {
-    get('#task-count').textContent = `${tasks.length} ${tasks.length === 1 ? 'task' : 'tasks'}`;
+    const visibleTasks = tasks.filter((task) => view === 'all' || task.status === view);
+    get('#task-count').textContent = `${view === 'all' ? tasks.length : `${visibleTasks.length} of ${tasks.length}`} ${tasks.length === 1 ? 'task' : 'tasks'}`;
     const stats = get('#board-stats');
     stats.replaceChildren(...statuses.map(({ value, label }) => {
       const stat = element('span', `stat stat-${value}`);
@@ -124,7 +145,8 @@ export function mountTaskboard(root: HTMLElement, storage: StorageAccess = () =>
     const list = get('#task-list');
     list.replaceChildren();
     get('#empty-state').hidden = tasks.length > 0;
-    for (const task of tasks) {
+    get('#view-empty-state').hidden = tasks.length === 0 || visibleTasks.length > 0;
+    for (const task of visibleTasks) {
       const card = element('article', 'task-card');
       const heading = element('h3', '', task.title);
       heading.id = `task-${task.id}`;
@@ -140,12 +162,13 @@ export function mountTaskboard(root: HTMLElement, storage: StorageAccess = () =>
       const deleteButton = element('button', 'text-button delete-button', 'Delete');
       deleteButton.type = 'button';
       deleteButton.addEventListener('click', () => {
-        const index = tasks.findIndex(({ id }) => id === task.id);
+        const index = visibleTasks.findIndex(({ id }) => id === task.id);
         tasks = removeTask(tasks, task.id);
         if (editingId === task.id) resetForm();
         persist(`“${task.title}” deleted.`);
         render();
-        const next = root.querySelectorAll<HTMLButtonElement>('.task-card .text-button')[Math.min(index, tasks.length - 1) * 2];
+        const editButtons = root.querySelectorAll<HTMLButtonElement>('.task-card .task-actions button:first-child');
+        const next = editButtons[Math.min(index, editButtons.length - 1)];
         (next ?? title).focus();
       });
       actions.append(editButton, deleteButton);
@@ -156,7 +179,8 @@ export function mountTaskboard(root: HTMLElement, storage: StorageAccess = () =>
         tasks = updateTask(tasks, task.id, { ...task, status: move.value as Status });
         persist(`“${task.title}” moved to ${statuses.find(({ value }) => value === move.value)!.label}.`);
         render();
-        root.ownerDocument.getElementById(`task-${task.id}`)?.closest('article')?.querySelector('select')?.focus();
+        const movedSelect = root.ownerDocument.getElementById(`task-${task.id}`)?.closest('article')?.querySelector('select');
+        (movedSelect ?? viewSelect).focus();
       });
       const footer = element('div', 'card-footer');
       footer.append(actions, move);
