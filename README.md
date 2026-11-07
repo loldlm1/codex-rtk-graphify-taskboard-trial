@@ -6,8 +6,14 @@ origin. There is no account or server; use fictional, non-sensitive task content
 
 The fixed statuses are **To do**, **In progress**, and **Done**. A new browser starts
 with six fictional tasks. Deleting every task keeps an empty board after reload.
+Choose **Status view** to show All statuses or one status. The selection stays in
+this browser after reload, separately from your tasks. Changing the view only
+changes which tasks are visible; hidden tasks stay saved. A view with no matches
+shows “No tasks in this view.”
+
 Unavailable browser storage leaves the board usable for the session and displays
-a warning. User text is rendered as text, including text that looks like HTML.
+a warning when changes cannot be saved. A missing or invalid saved view falls
+back to All statuses. User text is rendered as text, including text that looks like HTML.
 
 ## Run locally
 
@@ -30,6 +36,7 @@ npm test
 npm run test:coverage
 npm run test:browser
 npm run verify
+npm run test:feature
 ```
 
 The browser suite uses Playwright's `chrome` channel and a new isolated browser
@@ -43,11 +50,10 @@ includes every `src/**/*.ts` file, with 80% minimum statements, branches, functi
 and lines. CSS and browser rendering are assessed through the actual browser
 journeys and screenshots, rather than assigned a JavaScript coverage percentage.
 
-The separate future task is frozen in
+The saved-status-view task is frozen in
 [saved-status-filter-v1.md](docs/tasks/saved-status-filter-v1.md).
-`npm run test:feature` runs its acceptance suite and is **intentionally RED on this
-starter** because saved status views have not been implemented. It is excluded
-from `npm run verify`. Do not implement the future task as part of starter fixes.
+`npm run test:feature` runs its separate acceptance suite. Both it and the starter
+checks in `npm run verify` are required for this implementation.
 
 ## Structure and provenance
 
@@ -56,7 +62,7 @@ from `npm run verify`. Do not implement the future task as part of starter fixes
 - `src/app.ts`: native, labeled DOM controls and focus management.
 - `src/main.ts`, `src/styles.css`: application entry and responsive presentation.
 - `tests/unit/`, `tests/browser/`: starter checks.
-- `tests/acceptance/`: frozen future behavior, separately runnable.
+- `tests/acceptance/`: frozen saved-status-view behavior, separately runnable.
 
 This starter was built through a maintainer-directed Codex workflow: the human
 defined scope and approvals; agents implemented, tested, and reviewed the code.
