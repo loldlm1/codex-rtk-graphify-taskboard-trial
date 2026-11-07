@@ -1,0 +1,156 @@
+{
+  "judgments_frozen_before_mapping_disclosure": true,
+  "concealed": [
+    "treatment labels",
+    "token totals",
+    "Git metadata",
+    "arm policy",
+    "work records"
+  ],
+  "limitations": [
+    "Executed gate summaries supplied by coordinator; no independent rerun.",
+    "Different screen states/framing limit exact pixel comparison."
+  ],
+  "mapping": {
+    "web": {
+      "cedar": "web-b",
+      "orchid": "web-a"
+    },
+    "canvas": {
+      "cedar": "canvas-a",
+      "orchid": "canvas-b"
+    }
+  },
+  "reports": {
+    "web": {
+      "sha256": "bccae6ffb23de952ea33c90260f72bb5c36954a1f92d8f17f398d136ed966711",
+      "path": "quality-web.md"
+    },
+    "canvas": {
+      "sha256": "0d1191de1b38668bb5694f8c6f64905cd93b0c7589b1c7b19ce5db36ed687c64",
+      "path": "quality-canvas.md"
+    }
+  },
+  "checks": {
+    "web-b": {
+      "unit": 42,
+      "starter_browser": 4,
+      "feature_browser": 5,
+      "coverage": {
+        "statements": 100,
+        "branches": 100,
+        "functions": 100,
+        "lines": 100
+      },
+      "gap": "none measured",
+      "types": "PASS",
+      "build": "PASS",
+      "lint": "unconfigured",
+      "required_checks": "PASS",
+      "skipped": 0,
+      "independent_arm_standards_findings": 0,
+      "independent_arm_spec_findings": 0,
+      "direct_interaction_checks": "PASS; desktop/mobile keyboard, focus, pointer/touch and frozen feature edge cases",
+      "source": "Actual integrated logs and saved direct browser evidence; no comparative test rerun."
+    },
+    "web-a": {
+      "unit": 44,
+      "starter_browser": 4,
+      "feature_browser": 5,
+      "coverage": {
+        "statements": 100,
+        "branches": 98.48,
+        "functions": 100,
+        "lines": 100
+      },
+      "gap": "Delete-focus hidden-card branch not hit by unit suite; frozen browser covers filtered delete.",
+      "types": "PASS",
+      "build": "PASS",
+      "lint": "unconfigured",
+      "required_checks": "PASS",
+      "skipped": 0,
+      "independent_arm_standards_findings": 0,
+      "independent_arm_spec_findings": 0,
+      "direct_interaction_checks": "PASS; desktop/mobile keyboard, focus, pointer/touch and frozen feature edge cases",
+      "source": "Actual integrated logs and saved direct browser evidence; no comparative test rerun."
+    },
+    "canvas-a": {
+      "commands": {
+        "npm run verify": {
+          "result": "PASS",
+          "unit": 30,
+          "browser": 5,
+          "types": "PASS",
+          "build": "PASS"
+        },
+        "npm run test:feature": {
+          "result": "PASS",
+          "unit": 9,
+          "browser": 3
+        }
+      },
+      "coverage": {
+        "lines": {
+          "total": 187,
+          "covered": 187,
+          "skipped": 0,
+          "pct": 100
+        },
+        "statements": {
+          "total": 224,
+          "covered": 223,
+          "skipped": 0,
+          "pct": 99.55
+        },
+        "functions": {
+          "total": 30,
+          "covered": 30,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 87,
+          "covered": 84,
+          "skipped": 0,
+          "pct": 96.55
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": "Unknown"
+        }
+      },
+      "types": "PASS",
+      "build": "PASS",
+      "lint": "unconfigured",
+      "required_checks": "PASS",
+      "skipped": 0,
+      "independent_arm_standards_findings": 0,
+      "independent_arm_spec_findings": 0,
+      "direct_interaction_checks": "PASS; desktop/mobile keyboard, focus, pointer/touch and frozen feature edge cases",
+      "source": "Actual integrated logs and saved direct browser evidence; no comparative test rerun."
+    },
+    "canvas-b": {
+      "unit": 23,
+      "starter_browser": 5,
+      "feature_controller": 9,
+      "feature_browser": 3,
+      "coverage": {
+        "statements": 98.16,
+        "branches": 94.05,
+        "functions": 100,
+        "lines": 99.44
+      },
+      "types": "PASS",
+      "build": "PASS",
+      "lint": "unconfigured",
+      "required_checks": "PASS",
+      "skipped": 0,
+      "independent_arm_standards_findings": 0,
+      "independent_arm_spec_findings": 0,
+      "direct_interaction_checks": "PASS; desktop/mobile keyboard, focus, pointer/touch and frozen feature edge cases",
+      "source": "Actual integrated logs and saved direct browser evidence; no comparative test rerun."
+    }
+  }
+}

@@ -1,0 +1,359 @@
+{
+  "scope": "Closed native-only counts; global usage-report includes outer operator/first-use allocation.",
+  "arms": {
+    "web-a": {
+      "head": "a4cc15bea1373f19826dfde9e85b3a042396b6ae",
+      "starter": "01dbac8f5a60a1a5a5be89238971fd13badb3b56",
+      "method_commit": "d768e3fdba455cb09f6bd14476909b16e93884ef",
+      "profile_sha256": "51ed50320fff77610a9030e0846fbe6f532c39ba6c766466ffb0f1026b4d2f97",
+      "start": "2026-11-06T23:39:25.160Z",
+      "model_start": "2026-11-06T23:39:29.252Z",
+      "native_end": "2026-11-06T23:53:45.409Z",
+      "native_elapsed_seconds": 859.941,
+      "source_closure_at": "2026-11-06T23:55:48.820Z",
+      "native_only_usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 6720128,
+        "input_tokens": 6951001,
+        "output_tokens": 46897,
+        "reasoning_output_tokens": 16383,
+        "total_tokens": 6997898
+      },
+      "native_responses": 88,
+      "native_threads": 4,
+      "native_report_sha256": "70d6016d15295fc4c3cb02e5eba3319c28f519663adb9ccc03d020df34847a4a",
+      "peak_input_tokens": 132788,
+      "reported_context_window": 475000,
+      "peak_input_window_ratio_percent": 27.9554,
+      "compactions": 0,
+      "actual_contexts": [
+        {
+          "thread_id_hash": "42e54dcc4d4b720c877a93a11a153fd42284ff22522217893d890aa754f3ff72",
+          "model": "gpt-6.1-sol",
+          "effort": "ultra",
+          "fresh_context": true,
+          "peak_input_tokens": 132788
+        },
+        {
+          "thread_id_hash": "b09dbb93fa8004e1c259f625dd13612081296c20a653172b0c07b7644e0179d1",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "fresh_context": true,
+          "peak_input_tokens": 95863
+        },
+        {
+          "thread_id_hash": "6efddbb7139aecc88db52d558bf72b8ff07611ec52073098aa4ed1f231ee625c",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "fresh_context": true,
+          "peak_input_tokens": 53443
+        },
+        {
+          "thread_id_hash": "9eeb43173f3ec294e44d9640bf8681694293e1e43bb2b926ac0a0b790d8892f2",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "fresh_context": true,
+          "peak_input_tokens": 57565
+        }
+      ],
+      "spawn_argument_deviation": "All three fresh-none/xhigh workers explicitly supplied identical parent model gpt-6.1-sol; observed effective model matches."
+    },
+    "web-b": {
+      "head": "0d68c1794e0ae656f0cdcf37a5ba8f1fa2827203",
+      "starter": "01dbac8f5a60a1a5a5be89238971fd13badb3b56",
+      "method_commit": "d768e3fdba455cb09f6bd14476909b16e93884ef",
+      "profile_sha256": "51ed50320fff77610a9030e0846fbe6f532c39ba6c766466ffb0f1026b4d2f97",
+      "start": "2026-11-07T00:10:41.432Z",
+      "model_start": "2026-11-07T00:10:50.999Z",
+      "native_end": "2026-11-07T00:25:55.637Z",
+      "native_elapsed_seconds": 914.205,
+      "source_closure_at": "2026-11-07T00:29:04.294Z",
+      "native_only_usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 7688960,
+        "input_tokens": 7987688,
+        "output_tokens": 49753,
+        "reasoning_output_tokens": 14037,
+        "total_tokens": 8037441
+      },
+      "native_responses": 85,
+      "native_threads": 4,
+      "native_report_sha256": "21e740b5eaad8771abb72d2705ece32c103380dab9cdb70e28b9c3e81fcd0334",
+      "peak_input_tokens": 158268,
+      "reported_context_window": 475000,
+      "peak_input_window_ratio_percent": 33.3196,
+      "compactions": 0,
+      "actual_contexts": [
+        {
+          "thread_id_hash": "db52787e525a73544fb94cc0a628e0693fe6b303442eb2cdb9edd94ff6ccfbfa",
+          "model": "gpt-6.1-sol",
+          "effort": "ultra",
+          "fresh_context": true,
+          "peak_input_tokens": 158268
+        },
+        {
+          "thread_id_hash": "581e6b0b71b03c5dc0cc1c914c4237dc7f843cbc3642a85af03ba7493cc2f07c",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "fresh_context": true,
+          "peak_input_tokens": 108140
+        },
+        {
+          "thread_id_hash": "2c74d5547822fada946bf2dc3c908e607f9e615c7909b71139bccbe7bd7c0221",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "fresh_context": true,
+          "peak_input_tokens": 74201
+        },
+        {
+          "thread_id_hash": "3a4da8db50fca3027e121efa5f42fcb5d58b64f582cda25c8e2a4795239c4a0e",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "fresh_context": true,
+          "peak_input_tokens": 72917
+        }
+      ],
+      "spawn_argument_deviation": "All three fresh-none/xhigh workers explicitly supplied identical parent model gpt-6.1-sol; observed effective model matches.",
+      "tool_activity": {
+        "arm": "web-b",
+        "actual_spawns": [
+          {
+            "task_name": "implementation",
+            "fork_turns": "none",
+            "reasoning_effort": "xhigh",
+            "model": "gpt-6.1-sol"
+          },
+          {
+            "task_name": "standards_review",
+            "fork_turns": "none",
+            "reasoning_effort": "xhigh",
+            "model": "gpt-6.1-sol"
+          },
+          {
+            "task_name": "spec_review",
+            "fork_turns": "none",
+            "reasoning_effort": "xhigh",
+            "model": "gpt-6.1-sol"
+          }
+        ],
+        "actual_model_effort_freshness_match": true,
+        "graphify_calls": 8,
+        "graphify_counts": [
+          {
+            "server": "spec13_graphify_root",
+            "tool": "query_graph",
+            "status": "completed",
+            "count": 3
+          },
+          {
+            "server": "spec13_graphify_implementation",
+            "tool": "query_graph",
+            "status": "completed",
+            "count": 2
+          },
+          {
+            "server": "spec13_graphify_root",
+            "tool": "get_node",
+            "status": "completed",
+            "count": 2
+          },
+          {
+            "server": "spec13_graphify_implementation",
+            "tool": "get_node",
+            "status": "completed",
+            "count": 1
+          }
+        ],
+        "correct_exact_worktree_arguments": true,
+        "initial_index_seconds": 2.375,
+        "rtk_estimates": {
+          "wrapped_invocations": 16,
+          "estimated_input_tokens": 6562,
+          "estimated_output_tokens": 6330,
+          "estimated_saved_tokens": 232,
+          "execution_ms": 75737
+        },
+        "rtk_parse_failures": 0,
+        "automatic_hook_decisions": 0,
+        "interpretation": "RTK estimates are command-output heuristics, not provider savings. Graphify call/index activity is observable; independent causal per-tool savings are not measured."
+      }
+    },
+    "canvas-b": {
+      "head": "5da252ce8c3cdc36757af661ab5cfe6bc7ebc5cf",
+      "starter": "a4031c0da42d95f97d3b2e0fed4bdbcd76dd3087",
+      "method_commit": "d768e3fdba455cb09f6bd14476909b16e93884ef",
+      "profile_sha256": "51ed50320fff77610a9030e0846fbe6f532c39ba6c766466ffb0f1026b4d2f97",
+      "start": "2026-11-07T00:34:47.485Z",
+      "model_start": "2026-11-07T00:34:56.533Z",
+      "native_end": "2026-11-07T00:52:43.710Z",
+      "native_elapsed_seconds": 1076.225,
+      "source_closure_at": "2026-11-07T00:53:50.347Z",
+      "native_only_usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 10933888,
+        "input_tokens": 11254958,
+        "output_tokens": 64412,
+        "reasoning_output_tokens": 23654,
+        "total_tokens": 11319370
+      },
+      "native_responses": 108,
+      "native_threads": 4,
+      "native_report_sha256": "300bfa0484698b188b6c1046b588b0c9d751a692e7649dcf2c14a49cdd909b61",
+      "peak_input_tokens": 169448,
+      "reported_context_window": 475000,
+      "peak_input_window_ratio_percent": 35.6733,
+      "compactions": 0,
+      "actual_contexts": [
+        {
+          "thread_id_hash": "d4aa975996488f823df94758b3d41f8fb307e2cffc564d19a595bcf282c3c65e",
+          "model": "gpt-6.1-sol",
+          "effort": "ultra",
+          "fresh_context": true,
+          "peak_input_tokens": 169448
+        },
+        {
+          "thread_id_hash": "117e92ffc58cc3b421efea49362fc5a49ea6e9c1208ca0b73c1ab8f5b6d5fbee",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "fresh_context": true,
+          "peak_input_tokens": 110064
+        },
+        {
+          "thread_id_hash": "8b0daa6d4350fc13e0bfe44fc2cc7dbb7a987ea16486e7f65d799c46dd824d84",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "fresh_context": true,
+          "peak_input_tokens": 69159
+        },
+        {
+          "thread_id_hash": "637ceb7dcf6634f70c2007b7cb5ee18460d373c71539584fdba80ae9f72c20cd",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "fresh_context": true,
+          "peak_input_tokens": 78408
+        }
+      ],
+      "spawn_argument_deviation": "All three fresh-none/xhigh workers explicitly supplied identical parent model gpt-6.1-sol; observed effective model matches.",
+      "tool_activity": {
+        "arm": "canvas-b",
+        "actual_spawns": [
+          {
+            "task_name": "implement_ticket26",
+            "fork_turns": "none",
+            "reasoning_effort": "xhigh",
+            "model": "gpt-6.1-sol"
+          },
+          {
+            "task_name": "standards_review",
+            "fork_turns": "none",
+            "reasoning_effort": "xhigh",
+            "model": "gpt-6.1-sol"
+          },
+          {
+            "task_name": "spec_review",
+            "fork_turns": "none",
+            "reasoning_effort": "xhigh",
+            "model": "gpt-6.1-sol"
+          }
+        ],
+        "native_contexts_match": true,
+        "graphify_calls": 8,
+        "graphify_counts": [
+          {
+            "server": "spec13_graphify_root",
+            "tool": "query_graph",
+            "status": "completed",
+            "count": 2
+          },
+          {
+            "server": "spec13_graphify_implementation",
+            "tool": "query_graph",
+            "status": "completed",
+            "count": 2
+          },
+          {
+            "server": "spec13_graphify_root",
+            "tool": "get_node",
+            "status": "completed",
+            "count": 3
+          },
+          {
+            "server": "spec13_graphify_implementation",
+            "tool": "get_node",
+            "status": "completed",
+            "count": 1
+          }
+        ],
+        "implicit_fixed_binding_calls": 0,
+        "initial_index_seconds": 1.978,
+        "rtk_estimates": {
+          "wrapped_invocations": 21,
+          "estimated_input_tokens": 11056,
+          "estimated_output_tokens": 10775,
+          "estimated_saved_tokens": 281,
+          "execution_ms": 133795
+        },
+        "rtk_parse_failures": 0,
+        "automatic_hook_decisions": 0,
+        "interpretation": "Output estimates and activity are separate from complete provider usage; independent causal per-tool savings are unsupported."
+      }
+    },
+    "canvas-a": {
+      "head": "37a52cb678b4abeff36d8066b7632228b68c7389",
+      "starter": "a4031c0da42d95f97d3b2e0fed4bdbcd76dd3087",
+      "method_commit": "d768e3fdba455cb09f6bd14476909b16e93884ef",
+      "profile_sha256": "51ed50320fff77610a9030e0846fbe6f532c39ba6c766466ffb0f1026b4d2f97",
+      "start": "2026-11-07T00:58:18.818Z",
+      "model_start": "2026-11-07T00:58:24.142Z",
+      "native_end": "2026-11-07T01:15:24.337Z",
+      "native_elapsed_seconds": 1025.255,
+      "source_closure_at": "2026-11-07T01:15:48.009Z",
+      "native_only_usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 7033856,
+        "input_tokens": 7261022,
+        "output_tokens": 57271,
+        "reasoning_output_tokens": 24585,
+        "total_tokens": 7318293
+      },
+      "native_responses": 91,
+      "native_threads": 4,
+      "native_report_sha256": "18f2188f13b9f2e4aba06f7bff0c91d7252873d2377017d715547420accdf5c1",
+      "peak_input_tokens": 124153,
+      "reported_context_window": 475000,
+      "peak_input_window_ratio_percent": 26.1375,
+      "compactions": 0,
+      "actual_contexts": [
+        {
+          "thread_id_hash": "4dcdf979d14221c5769c01c1a758e0cb795d9d6b1988086c411415e6adc93316",
+          "model": "gpt-6.1-sol",
+          "effort": "ultra",
+          "fresh_context": true,
+          "peak_input_tokens": 124153
+        },
+        {
+          "thread_id_hash": "b0849ad94775508670c493a74629b851cc893d2542f0d4fe760e0d7373227bfa",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "fresh_context": true,
+          "peak_input_tokens": 102268
+        },
+        {
+          "thread_id_hash": "2ee9feab390765a5a9d2b9bce9fd429825bf3e750737f5e58883baf5364a3e84",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "fresh_context": true,
+          "peak_input_tokens": 53942
+        },
+        {
+          "thread_id_hash": "c6636941a1584f10faa815a00b28fabd2038203569551cf1c62f4d43f9911693",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "fresh_context": true,
+          "peak_input_tokens": 64615
+        }
+      ],
+      "spawn_argument_deviation": "All three fresh-none/xhigh workers explicitly supplied identical parent model gpt-6.1-sol; observed effective model matches."
+    }
+  }
+}
